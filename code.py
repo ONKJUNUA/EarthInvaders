@@ -1,16 +1,33 @@
+from re import X
+from tkinter import Y
 import pygame, sys
 from player import Player
+import obstacles
 
 class Game:
     def __init__(self):
         player_sprite = Player((screen_width/2,screen_height - 10),screen_width,5)
         self.player = pygame.sprite.GroupSingle(player_sprite)
-        pass
+        
+        self.shape = obstacles.shape
+        self.block_size = 3
+        self.blocks = pygame.sprite.Group()
+        self.create_obstacle(40,400)
+
+    def create_obstacle(self, x_start, y_start):
+        for row_index, row in enumerate(self.shape):
+            for col_index,col in enumerate(row):
+                if col == 'x':
+                    x = x_start + col_index * self.block_size
+                    y = y_start + row_index * self.block_size
+                    block = obstacles.Block(self.block_size,(241,79,80),x,y)
+                    self.blocks.add(block)
 
     def run(self):
         self.player.update()
         self.player.sprite.lasers.draw(screen)
         self.player.draw(screen)
+        self.blocks.draw(screen)
 
 if __name__ == '__main__':
     pygame.init()
