@@ -1,8 +1,8 @@
 import pygame, sys
 from player import Player
 import obstacles
-from alien import Alien
-from random import choice
+from alien import Alien, Extra
+from random import choice, randint
 from laser import Laser
 
 class Game:
@@ -21,6 +21,9 @@ class Game:
         self.alien_setup(rows = 7, cols = 7)
         self.alien_direction = 1
         self.alien_lasers = pygame.sprite.Group()
+
+        self.extra = pygame.sprite.GroupSingle()
+        self.extra_spawn_time = randint (40,80)
 
     def create_obstacle(self, x_start, y_start,offset_x):
         for row_index, row in enumerate(self.shape):
@@ -41,9 +44,9 @@ class Game:
                 x = col_index * x_distance + x_offset
                 y = row_index * y_distance + y_offset
 
-                if row_index <= 1: alien_sprite = Alien('yellow',x,y)
-                elif 2 <= row_index <= 3: alien_sprite = Alien('green',x,y)
-                else: alien_sprite = Alien('red',x,y)
+                if row_index <= 1: alien_sprite = Alien('3',x,y)
+                elif 2 <= row_index <= 3: alien_sprite = Alien('2',x,y)
+                else: alien_sprite = Alien('1',x,y)
                 self.aliens.add(alien_sprite)
 
     def alien_position_checker(self):
@@ -67,17 +70,26 @@ class Game:
             laser_sprite = Laser(random_alien.rect.center,6,screen_height)
             self.alien_lasers.add(laser_sprite)
 
+    def extra_alien_timer(self):
+        self.extra_spawn_time -= 1
+        if self.extra_spawn_time <= 0:
+            self.extra.add(Extra(choice(['right','left']),screen_width))
+            self.extra_spawn_time = randint (400,800)
+
     def run(self):
         self.player.update()
         self.aliens.update(self.alien_direction)
         self.alien_position_checker()
         self.alien_lasers.update()
+        self.extra_alien_timer()
+        self.extra.update()
         self.player.sprite.lasers.draw(screen)
 
         self.player.draw(screen)
         self.blocks.draw(screen)
         self.aliens.draw(screen)
         self.alien_lasers.draw(screen)
+        self.extra.draw(screen)
 
 if __name__ == '__main__':
     pygame.init()
