@@ -1,12 +1,14 @@
 import pygame, sys
+from player import Player
 
 class Game:
     def __init__(self):
+        player_sprite = Player((300,300))
+        self.player = pygame.sprite.GroupSingle(player_sprite)
         pass
 
     def run(self):
-        pass
-
+        self.player.draw(screen)
 
 if __name__ == '__main__':
     pygame.init()
@@ -15,7 +17,7 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode((screen_width,screen_height))
     clock = pygame.time.Clock()
     icon = pygame.image.load('graphics/icon.png').convert_alpha()
-    pygame.display.set_caption('Space Invaders')
+    pygame.display.set_caption('Earth Invaders')
     pygame.display.set_icon(icon)
     game = Game()
 
