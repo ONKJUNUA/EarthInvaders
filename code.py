@@ -18,7 +18,8 @@ class Game:
         self.create_multiple_obstacles(*self.obstacle_x_positions, x_start = screen_width / 12, y_start = 460)
 
         self.aliens = pygame.sprite.Group()
-        self.alien_setup(rows = 5, cols = 7)
+        self.alien_setup(rows = 5, cols = 6)
+        self.alien_direction = 1
 
     def create_obstacle(self, x_start, y_start,offset_x):
         for row_index, row in enumerate(self.shape):
@@ -33,7 +34,7 @@ class Game:
         for offset_x in offset:
             self.create_obstacle(x_start,y_start,offset_x)
 
-    def alien_setup(self,rows,cols,x_distance = 80,y_distance = 80, x_offset = 27, y_offset = 27):
+    def alien_setup(self,rows,cols,x_distance = 90,y_distance = 80, x_offset = 27, y_offset = 27):
         for row_index, row in enumerate(range(rows)):
             for col_index, col in enumerate(range(cols)):
                 x = col_index * x_distance + x_offset
@@ -44,8 +45,19 @@ class Game:
                 else: alien_sprite = Alien('red',x,y)
                 self.aliens.add(alien_sprite)
 
+    def alien_position_checker(self):
+        all_aliens = self.aliens.sprites()
+        for alien in all_aliens:
+            if alien.rect.right >= screen_width - 10:
+                self.alien_direction = -1
+            elif alien.rect.left <= 10:
+                self.alien_direction = 1
+
+
     def run(self):
         self.player.update()
+        self.aliens.update(self.alien_direction)
+        self.alien_position_checker()
         self.player.sprite.lasers.draw(screen)
         self.player.draw(screen)
         self.blocks.draw(screen)
