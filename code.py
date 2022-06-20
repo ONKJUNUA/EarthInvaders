@@ -10,6 +10,10 @@ class Game:
         player_sprite = Player((screen_width/2,screen_height - 10),screen_width,5)
         self.player = pygame.sprite.GroupSingle(player_sprite)
         
+        self.lives = 3
+        self.live_surf = pygame.image.load('graphics/player.png').convert_alpha()
+        self.live_x_start_pos = screen_width - (self.live_surf.get_size()[0] * 2 + 20)
+
         self.shape = obstacles.shape
         self.block_size = 3
         self.blocks = pygame.sprite.Group()
@@ -38,7 +42,7 @@ class Game:
         for offset_x in offset:
             self.create_obstacle(x_start,y_start,offset_x)
 
-    def alien_setup(self,rows,cols,x_distance = 85,y_distance = 80, x_offset = 27, y_offset = 27):
+    def alien_setup(self,rows,cols,x_distance = 85,y_distance = 80, x_offset = 27, y_offset = 100):
         for row_index, row in enumerate(range(rows)):
             for col_index, col in enumerate(range(cols)):
                 x = col_index * x_distance + x_offset
@@ -53,10 +57,10 @@ class Game:
         all_aliens = self.aliens.sprites()
         for alien in all_aliens:
             if alien.rect.right >= screen_width - 10:
-                self.alien_direction = -10
+                self.alien_direction = -1
                 self.alien_move_down(1)
             elif alien.rect.left <= 10:
-                self.alien_direction = 10
+                self.alien_direction = 1
                 self.alien_move_down(1)
 
     def alien_move_down(self,distance):
@@ -92,6 +96,10 @@ class Game:
                     laser.kill()
                 if pygame.sprite.spritecollide(laser,self.player,False):
                     laser.kill()
+                    self.lives -= 1
+                    if self.lives <= 0:
+                        pygame.quit()
+                        sys.exit()
 
         if self.aliens:
             for alien in self.aliens:
@@ -101,6 +109,11 @@ class Game:
                     pygame.quit()
                     sys.exit()
 
+    def display_lives(self):
+        for live in range(self.lives - 1):
+            x = self.live_x_start_pos + (live * (self.live_surf.get_size()[0] + 10))
+            screen.blit(self.live_surf,(x,8))
+
     def run(self):
         self.player.update()
         self.aliens.update(self.alien_direction)
@@ -109,6 +122,7 @@ class Game:
         self.extra_alien_timer()
         self.extra.update()
         self.collision_checks()
+        self.display_lives()
 
         self.player.sprite.lasers.draw(screen)
         self.player.draw(screen)
