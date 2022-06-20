@@ -3,11 +3,12 @@ from player import Player
 
 class Game:
     def __init__(self):
-        player_sprite = Player((300,300))
+        player_sprite = Player((screen_width/2,screen_height - 10),screen_width,5)
         self.player = pygame.sprite.GroupSingle(player_sprite)
         pass
 
     def run(self):
+        self.player.update()
         self.player.draw(screen)
 
 if __name__ == '__main__':
