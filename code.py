@@ -33,6 +33,10 @@ class Game:
         self.extra = pygame.sprite.GroupSingle()
         self.extra_spawn_time = randint (40,80)
 
+    def death(self):
+        pygame.quit()
+        sys.exit()
+
     def create_obstacle(self, x_start, y_start,offset_x):
         for row_index, row in enumerate(self.shape):
             for col_index,col in enumerate(row):
@@ -107,16 +111,14 @@ class Game:
                     laser.kill()
                     self.lives -= 1
                     if self.lives <= 0:
-                        pygame.quit()
-                        sys.exit()
+                        self.death()
 
         if self.aliens:
             for alien in self.aliens:
                 pygame.sprite.spritecollide(alien,self.blocks,True)
 
                 if pygame.sprite.spritecollide(alien,self.player,False):
-                    pygame.quit()
-                    sys.exit()
+                    self.death()
 
     def display_lives(self):
             lives_surf = self.font.render(f'{self.lives - 1}x',False,'white')
