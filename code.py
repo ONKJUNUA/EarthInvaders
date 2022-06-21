@@ -11,7 +11,7 @@ class Game:
         self.player = pygame.sprite.GroupSingle(player_sprite)
         
         self.level = 1
-        self.lives = 3
+        self.lives = 4
         self.live_icon = pygame.image.load('graphics/player.png').convert_alpha()
         self.score = 0
         self.font = pygame.font.Font('font/pixel.ttf', 25)
@@ -23,7 +23,7 @@ class Game:
         self.blocks = pygame.sprite.Group()
         self.obstacle_amount = 4
         self.obstacle_x_positions = [num *(screen_width / self.obstacle_amount) for num in range(self.obstacle_amount)]
-        self.create_multiple_obstacles(*self.obstacle_x_positions, x_start = screen_width / 11, y_start = 750)
+        self.create_multiple_obstacles(*self.obstacle_x_positions, x_start = screen_width / 12, y_start = 770)
 
         self.aliens = pygame.sprite.Group()
         self.alien_setup(rows = 7, cols = 7)
@@ -43,7 +43,7 @@ class Game:
                 if col == 'x':
                     x = x_start + col_index * self.block_size + offset_x
                     y = y_start + row_index * self.block_size
-                    block = obstacles.Block(self.block_size,(247, 74, 74),x,y)
+                    block = obstacles.Block(self.block_size,(157, 219, 224),x,y)
                     self.blocks.add(block)
 
     def create_multiple_obstacles(self,*offset,x_start,y_start):
@@ -55,12 +55,43 @@ class Game:
             for col_index, col in enumerate(range(cols)):
                 x = col_index * x_distance + x_offset
                 y = row_index * y_distance + y_offset
-
-                if row_index <= 1: alien_sprite = Alien('3',x,y)
-                elif 2 <= row_index <= 3: alien_sprite = Alien('2',x,y)
-                else: alien_sprite = Alien('1',x,y)
-                self.aliens.add(alien_sprite)
-
+                
+                if self.level == 1:
+                    if row_index <= 1: alien_sprite = Alien('3',x,y)
+                    elif 2 <= row_index <= 3: alien_sprite = Alien('2',x,y)
+                    else: alien_sprite = Alien('1',x,y)
+                    self.aliens.add(alien_sprite)
+                if self.level == 2:
+                    if row_index <= 1: alien_sprite = Alien('4',x,y)
+                    elif 2 <= row_index <= 3: alien_sprite = Alien('3',x,y)
+                    else: alien_sprite = Alien('2',x,y)
+                    self.aliens.add(alien_sprite)
+                if self.level == 3:
+                    if row_index <= 1: alien_sprite = Alien('5',x,y)
+                    elif 2 <= row_index <= 3: alien_sprite = Alien('4',x,y)
+                    else: alien_sprite = Alien('3',x,y)
+                    self.aliens.add(alien_sprite)
+                if self.level == 4:
+                    if row_index <= 1: alien_sprite = Alien('6',x,y)
+                    elif 2 <= row_index <= 3: alien_sprite = Alien('5',x,y)
+                    else: alien_sprite = Alien('4',x,y)
+                    self.aliens.add(alien_sprite)
+                if self.level == 5:
+                    if row_index <= 1: alien_sprite = Alien('7',x,y)
+                    elif 2 <= row_index <= 3: alien_sprite = Alien('6',x,y)
+                    else: alien_sprite = Alien('5',x,y)
+                    self.aliens.add(alien_sprite)
+                if self.level == 6:
+                    if row_index <= 1: alien_sprite = Alien('8',x,y)
+                    elif 2 <= row_index <= 3: alien_sprite = Alien('7',x,y)
+                    else: alien_sprite = Alien('6',x,y)
+                    self.aliens.add(alien_sprite)
+                if self.level == 7:
+                    if row_index <= 1: alien_sprite = Alien('9',x,y)
+                    elif 2 <= row_index <= 3: alien_sprite = Alien('8',x,y)
+                    else: alien_sprite = Alien('7',x,y)
+                    self.aliens.add(alien_sprite)
+                    
     def alien_position_checker(self):
         all_aliens = self.aliens.sprites()
         for alien in all_aliens:
@@ -103,20 +134,16 @@ class Game:
                         else:
                             killable = False
                             alien.enemy_lives -= 1
-                        print(alien.enemy_lives)
-                    laser.kill()
 
                 aliens_hit = pygame.sprite.spritecollide(laser,self.aliens,killable)
                 if aliens_hit:
                     for alien in aliens_hit:
                         if killable == True:
                             self.score += alien.value
-                        print(alien.enemy_lives)
                     laser.kill()
 
-
                 if pygame.sprite.spritecollide(laser,self.extra,True):
-                    self.score += 50
+                    self.score += 100
                     laser.kill()
 
         if self.alien_lasers:
