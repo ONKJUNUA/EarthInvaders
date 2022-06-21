@@ -170,7 +170,7 @@ if __name__ == '__main__':
     icon = pygame.image.load('graphics/icon.png').convert_alpha()
     pygame.display.set_caption('Earth Invaders')
     pygame.display.set_icon(icon)
-    killable = True
+    killable = False
     game = Game()
 
     ALIENLASER = pygame.USEREVENT + 1
