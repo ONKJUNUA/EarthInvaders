@@ -12,6 +12,7 @@ class Game:
         
         self.level = 1
         self.lives = 3
+        self.enemy_lives = 2
         self.live_icon = pygame.image.load('graphics/player.png').convert_alpha()
         self.score = 0
         self.font = pygame.font.Font('font/pixel.ttf', 25)
@@ -31,7 +32,7 @@ class Game:
         self.alien_lasers = pygame.sprite.Group()
 
         self.extra = pygame.sprite.GroupSingle()
-        self.extra_spawn_time = randint (40,80)
+        self.extra_spawn_time = randint (1500,1500)
 
     def death(self):
         pygame.quit()
@@ -89,16 +90,21 @@ class Game:
             self.extra_spawn_time = randint (1000,2000)
 
     def collision_checks(self):
+        global killable
         if self.player.sprite.lasers:
             for laser in self.player.sprite.lasers:
                 if pygame.sprite.spritecollide(laser,self.blocks,True):
                     laser.kill()
 
-                aliens_hit = pygame.sprite.spritecollide(laser,self.aliens,True)
+                aliens_hit = pygame.sprite.spritecollide(laser,self.aliens,killable)
                 if aliens_hit:
                     for alien in aliens_hit:
-                        self.score += alien.value
+                        if killable == True:
+                            self.score += alien.value
+                            killable = False
+                        else: killable = True 
                     laser.kill()
+
                 if pygame.sprite.spritecollide(laser,self.extra,True):
                     self.score += 50
                     laser.kill()
@@ -122,7 +128,7 @@ class Game:
 
     def display_lives(self):
             lives_surf = self.font.render(f'{self.lives - 1}x',False,'white')
-            screen.blit(lives_surf,(565,30))
+            screen.blit(lives_surf,(565,25))
             screen.blit(self.live_icon,(625,10))
 
     def display_level(self):
@@ -164,6 +170,7 @@ if __name__ == '__main__':
     icon = pygame.image.load('graphics/icon.png').convert_alpha()
     pygame.display.set_caption('Earth Invaders')
     pygame.display.set_icon(icon)
+    killable = True
     game = Game()
 
     ALIENLASER = pygame.USEREVENT + 1
