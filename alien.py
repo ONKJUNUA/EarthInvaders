@@ -1,7 +1,7 @@
 import pygame
 
 class Alien(pygame.sprite.Sprite):
-    def __init__(self,number,x,y):
+    def __init__(self,number,x,y,):
         super().__init__()
         file_path = 'graphics/' + number + '.png'
         self.image = pygame.image.load(file_path).convert_alpha()

@@ -12,7 +12,6 @@ class Game:
         
         self.level = 1
         self.lives = 3
-        self.enemy_lives = 2
         self.live_icon = pygame.image.load('graphics/player.png').convert_alpha()
         self.score = 0
         self.font = pygame.font.Font('font/pixel.ttf', 25)
@@ -96,14 +95,25 @@ class Game:
                 if pygame.sprite.spritecollide(laser,self.blocks,True):
                     laser.kill()
 
+                aliens_hit_check = pygame.sprite.spritecollide(laser,self.aliens,False)
+                if aliens_hit_check:
+                    for alien in aliens_hit_check:
+                        if alien.enemy_lives == 1:
+                            killable = True
+                        else:
+                            killable = False
+                            alien.enemy_lives -= 1
+                        print(alien.enemy_lives)
+                    laser.kill()
+
                 aliens_hit = pygame.sprite.spritecollide(laser,self.aliens,killable)
                 if aliens_hit:
                     for alien in aliens_hit:
                         if killable == True:
                             self.score += alien.value
-                            killable = False
-                        else: killable = True 
+                        print(alien.enemy_lives)
                     laser.kill()
+
 
                 if pygame.sprite.spritecollide(laser,self.extra,True):
                     self.score += 50
@@ -150,7 +160,7 @@ class Game:
         self.alien_position_checker()
         self.extra_alien_timer()
         self.collision_checks()
-        
+
         self.player.sprite.lasers.draw(screen)
         self.player.draw(screen)
         self.blocks.draw(screen)
