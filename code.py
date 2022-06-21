@@ -10,12 +10,14 @@ class Game:
         player_sprite = Player((screen_width/2,screen_height - 10),screen_width,5)
         self.player = pygame.sprite.GroupSingle(player_sprite)
         
+        self.level = 1
         self.lives = 3
-        self.live_surf = pygame.image.load('graphics/player.png').convert_alpha()
-        self.live_x_start_pos = screen_width - (self.live_surf.get_size()[0] * 2 + 20)
+        self.live_icon = pygame.image.load('graphics/player.png').convert_alpha()
         self.score = 0
-        self.font = pygame.font.Font('font/pixel.ttf',30)
-
+        self.font = pygame.font.Font('font/pixel.ttf', 25)
+        self.level_font = pygame.font.Font('font/pixel.ttf', 35)
+        self.title_font = pygame.font.Font('font/pixel.ttf', 50)
+        
         self.shape = obstacles.shape
         self.block_size = 3
         self.blocks = pygame.sprite.Group()
@@ -80,7 +82,7 @@ class Game:
         self.extra_spawn_time -= 1
         if self.extra_spawn_time <= 0:
             self.extra.add(Extra(choice(['right','left']),screen_width))
-            self.extra_spawn_time = randint (400,800)
+            self.extra_spawn_time = randint (1000,2000)
 
     def collision_checks(self):
         if self.player.sprite.lasers:
@@ -94,7 +96,7 @@ class Game:
                         self.score += alien.value
                     laser.kill()
                 if pygame.sprite.spritecollide(laser,self.extra,True):
-                    self.score += 500
+                    self.score += 50
                     laser.kill()
 
         if self.alien_lasers:
@@ -117,9 +119,14 @@ class Game:
                     sys.exit()
 
     def display_lives(self):
-        for live in range(self.lives - 1):
-            x = self.live_x_start_pos + (live * (self.live_surf.get_size()[0] + 10))
-            screen.blit(self.live_surf,(x,8))
+            lives_surf = self.font.render(f'{self.lives - 1}x',False,'white')
+            screen.blit(lives_surf,(565,30))
+            screen.blit(self.live_icon,(625,10))
+
+    def display_level(self):
+        level_surf = self.font.render(f'Level {self.level}',False,'white')
+        level_rect = level_surf.get_rect(topleft = (325,25))
+        screen.blit(level_surf,level_rect)
 
     def display_score(self):
         score_surf = self.font.render(f'Score:{self.score}',False,'white')
@@ -143,6 +150,7 @@ class Game:
         self.alien_lasers.draw(screen)
         self.extra.draw(screen)
         self.display_lives()
+        self.display_level()
         self.display_score()
 
 if __name__ == '__main__':
@@ -157,7 +165,7 @@ if __name__ == '__main__':
     game = Game()
 
     ALIENLASER = pygame.USEREVENT + 1
-    pygame.time.set_timer(ALIENLASER,800)
+    pygame.time.set_timer(ALIENLASER,1000)
 
     while True:
         for event in pygame.event.get():
