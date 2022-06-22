@@ -141,6 +141,7 @@ class Game:
                         if killable == True:
                             self.score += alien.value
                     laser.kill()
+                    
 
                 if pygame.sprite.spritecollide(laser,self.extra,True):
                     self.score += 100
@@ -178,6 +179,16 @@ class Game:
         score_rect = score_surf.get_rect(topleft = (25,25))
         screen.blit(score_surf,score_rect)
 
+    def next_level(self):
+        if not self.aliens.sprites():
+            if self.level <= 6:
+                self.level += 1
+                self.alien_setup(rows = 7, cols = 7)
+            elif self.level == 7:
+                #self.boss_setup
+                pass
+            else: self.death()
+
     def run(self):
         self.player.update()
         self.alien_lasers.update()
@@ -197,6 +208,8 @@ class Game:
         self.display_lives()
         self.display_level()
         self.display_score()
+
+        self.next_level()
 
 if __name__ == '__main__':
     pygame.init()
