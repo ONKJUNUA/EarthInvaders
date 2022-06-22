@@ -19,4 +19,3 @@ shape = [
     '  xxxxxxxxxxxxxxxx',
     '    xxxxxxxxxxxx',
     '        xxxx']
-
