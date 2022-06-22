@@ -3,7 +3,7 @@ import pygame
 class Perks(pygame.sprite.Sprite):
     def __init__(self,symbol,pos,speed,screen_height):
         super().__init__()
-        file_path = 'graphics/p_heart.png'
+        file_path = 'graphics/' + symbol + '.png'
         self.image = pygame.image.load(file_path).convert_alpha()
         self.rect = self.image.get_rect(center = pos)
         self.speed = speed

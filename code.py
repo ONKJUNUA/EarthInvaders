@@ -5,7 +5,6 @@ import obstacles
 from alien import Alien, Extra
 from random import choice, randint
 from laser import Laser
-from perks import Perks
 
 class Game:
     def __init__(self):
@@ -28,7 +27,7 @@ class Game:
         self.create_multiple_obstacles(*self.obstacle_x_positions, x_start = screen_width / 12, y_start = 770)
 
         self.aliens = pygame.sprite.Group()
-        self.alien_setup(rows = 7, cols = 1)
+        self.alien_setup(rows = 7, cols = 7)
         self.alien_direction = 1
         self.alien_lasers = pygame.sprite.Group()
 
@@ -149,6 +148,7 @@ class Game:
 
                 if pygame.sprite.spritecollide(laser,self.extra,True):
                     self.score += 100
+                    self.lives += 1
                     self.drop_heart()
                     laser.kill()
 
