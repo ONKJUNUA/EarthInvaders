@@ -1,9 +1,11 @@
 import pygame, sys
+from perks import Perks
 from player import Player
 import obstacles
 from alien import Alien, Extra
 from random import choice, randint
 from laser import Laser
+from perks import Perks
 
 class Game:
     def __init__(self):
@@ -26,12 +28,14 @@ class Game:
         self.create_multiple_obstacles(*self.obstacle_x_positions, x_start = screen_width / 12, y_start = 770)
 
         self.aliens = pygame.sprite.Group()
-        self.alien_setup(rows = 7, cols = 7)
+        self.alien_setup(rows = 7, cols = 1)
         self.alien_direction = 1
         self.alien_lasers = pygame.sprite.Group()
 
-        self.extra = pygame.sprite.GroupSingle()
-        self.extra_spawn_time = randint (1500,1500)
+        self.extra = pygame.sprite.Group()
+        self.extra_spawn_time = randint (600,600)
+
+        self.perks = pygame.sprite.Group()
 
     def death(self):
         pygame.quit()
@@ -117,7 +121,7 @@ class Game:
         self.extra_spawn_time -= 1
         if self.extra_spawn_time <= 0:
             self.extra.add(Extra(choice(['right','left']),screen_width))
-            self.extra_spawn_time = randint (1000,2000)
+            self.extra_spawn_time = randint (600,600)
 
     def collision_checks(self):
         global killable
@@ -140,11 +144,12 @@ class Game:
                     for alien in aliens_hit:
                         if killable == True:
                             self.score += alien.value
-                    #laser.kill()
+                    laser.kill()
                     
 
                 if pygame.sprite.spritecollide(laser,self.extra,True):
                     self.score += 100
+                    self.drop_heart()
                     laser.kill()
 
         if self.alien_lasers:
@@ -170,7 +175,7 @@ class Game:
             screen.blit(self.live_icon,(625,10))
 
     def display_level(self):
-        if self.level <=8:
+        if self.level <= 8:
             if self.level <= 7: level_surf = self.font.render(f'Level {self.level}',False,'white')
             else: level_surf = self.font.render(f'Boss Fight',False,'white')
             level_rect = level_surf.get_rect(topleft = (325,25))
@@ -181,22 +186,32 @@ class Game:
         score_rect = score_surf.get_rect(topleft = (25,25))
         screen.blit(score_surf,score_rect)
 
+    def drop_perks(self):
+        pass
+
+    def drop_heart(self):
+        if self.extra.sprites():
+            random_extra = choice(self.extra.sprites())
+            heart_sprite = Perks('p_heart',random_extra.rect.center,3,screen_height)
+            self.perks.add(heart_sprite)
+
+    def boss_setup(self):
+        pass
+
     def next_level(self):
         if not self.aliens.sprites():
             if self.level <= 6:
                 self.level += 1
-                #self.drop_perk()
+                self.drop_perks()
                 self.alien_setup(rows = 7, cols = 7)
             elif self.level == 7:
-                #self.boss_setup
-                self.alien_setup(rows = 7, cols = 7)
-                
-            else: self.death()
+                self.boss_setup
 
     def run(self):
         self.player.update()
         self.alien_lasers.update()
         self.extra.update()
+        self.perks.update()
 
         self.aliens.update(self.alien_direction)
         self.alien_position_checker()
@@ -209,6 +224,8 @@ class Game:
         self.aliens.draw(screen)
         self.alien_lasers.draw(screen)
         self.extra.draw(screen)
+        self.perks.draw(screen)
+
         self.display_lives()
         self.display_level()
         self.display_score()

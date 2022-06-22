@@ -1,11 +1,13 @@
 import pygame
 
 class Perks(pygame.sprite.Sprite):
-    def __init__(self,symbol,x,y,):
+    def __init__(self,symbol,pos,speed,screen_height):
         super().__init__()
-        file_path = 'graphics/' + symbol + '.png'
+        file_path = 'graphics/p_heart.png'
         self.image = pygame.image.load(file_path).convert_alpha()
-        self.rect = self.image.get_rect(topleft =(x,y))
+        self.rect = self.image.get_rect(center = pos)
+        self.speed = speed
+        self.height_y_constraint = screen_height
 
         if symbol == 'p_heart': 
             pass
@@ -16,5 +18,10 @@ class Perks(pygame.sprite.Sprite):
         elif symbol == 'p_aim': 
             pass
 
-    def update(self,direction):
-        self.rect.y += direction
+    def destroy(self):
+        if self.rect.y <= -50 or self.rect.y >= self.height_y_constraint + 50:
+            self.kill()
+
+    def update(self):
+        self.rect.y += self.speed
+        self.destroy()
