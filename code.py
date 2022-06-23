@@ -4,11 +4,11 @@ from player import Player
 import obstacles
 from alien import Alien, Extra
 from random import choice, randint
-from laser import Laser
+from laser import Laser, Laser2, Laser3
 
 class Game:
     def __init__(self):
-        player_sprite = Player((screen_width/2, screen_height - 10), screen_width, 5)
+        player_sprite = Player((screen_width/2, screen_height - 10), screen_width)
         self.player = pygame.sprite.GroupSingle(player_sprite)
 
         self.killable = False
@@ -17,6 +17,7 @@ class Game:
         self.dmg = 1
         self.speed_charge = 3
         self.bullet_charge = 3
+        self.damage_charge = 3
         self.live_icon = pygame.image.load('graphics/player.png').convert_alpha()
         self.score = 0
         self.font = pygame.font.Font('font/pixel.ttf', 25)
@@ -127,7 +128,7 @@ class Game:
         self.extra_spawn_time -= 1
         if self.extra_spawn_time <= 0:
             self.extra.add(Extra(choice(['right','left']), screen_width))
-            self.extra_spawn_time = randint (600,600)
+            self.extra_spawn_time = randint (1000,2000)
 
     def collision_checks(self):
         if self.player.sprite.lasers:
@@ -179,13 +180,14 @@ class Game:
                     self.lives += 1
                 if pygame.sprite.spritecollide(player, self.laser_speed, True):
                     player.laser_cooldown -= 100
+                    player.speed += 1
                     self.speed_charge -= 1
                 if pygame.sprite.spritecollide(player, self.bullet, True):
-                    self.lives += 1
+                    player.laser_bullet += 1
                     self.bullet_charge -= 1
-                    print(self.bullet_charge)
                 if pygame.sprite.spritecollide(player, self.damage, True):
                     self.dmg += 1
+                    self.damage_charge -= 1
 
     def display_lives(self):
             lives_surf = self.font.render(f'{self.lives - 1}x', False, 'white')
@@ -217,8 +219,10 @@ class Game:
             bullet_sprite = Bullet((screen_width/4, 200), 3, screen_height)
             self.bullet.add(bullet_sprite)
         else: pass
-        damage_sprite = Damage((screen_width/2, 200), 3, screen_height)
-        self.damage.add(damage_sprite)
+        if self.damage_charge >= 1:
+            damage_sprite = Damage((screen_width/2, 200), 3, screen_height)
+            self.damage.add(damage_sprite)
+        else: pass
 
     def boss_setup(self):
         pass

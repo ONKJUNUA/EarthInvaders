@@ -1,16 +1,17 @@
 import pygame
-from laser import Laser
+from laser import Laser, Laser2, Laser3, Laser4, Laser5, Laser6
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, constraint, speed):
+    def __init__(self, pos, constraint):
         super().__init__()
         self.image = pygame.image.load('graphics/player.png').convert_alpha()
         self.rect = self.image.get_rect(midbottom = pos)
-        self.speed = speed
+        self.speed = 3
         self.max_x_constraint = constraint
         self.ready = True
         self.laser_time = 0
         self.laser_cooldown = 600
+        self.laser_bullet = 1
         self.lasers = pygame.sprite.Group()
 
     def get_input(self):
@@ -39,8 +40,19 @@ class Player(pygame.sprite.Sprite):
             self.rect.right = self.max_x_constraint - 10
 
     def shoot_laser(self):
-        self.lasers.add(Laser(self.rect.center,-8,self.rect.bottom))
-
+        if self.laser_bullet == 1:
+            self.lasers.add(Laser(self.rect.center ,-8,self.rect.bottom))
+        elif self.laser_bullet == 2:
+            self.lasers.add(Laser2(self.rect.bottomleft,-8,self.rect.bottom))
+            self.lasers.add(Laser3(self.rect.bottomright,-8,self.rect.bottom))
+        elif self.laser_bullet == 3:
+            self.lasers.add(Laser(self.rect.center ,-8,self.rect.bottom))
+            self.lasers.add(Laser2(self.rect.bottomleft,-8,self.rect.bottom))
+            self.lasers.add(Laser3(self.rect.bottomright,-8,self.rect.bottom))
+        else:
+            self.lasers.add(Laser4(self.rect.center ,-10,self.rect.bottom))
+            self.lasers.add(Laser5(self.rect.bottomleft,-10,self.rect.bottom))
+            self.lasers.add(Laser6(self.rect.bottomright,-10,self.rect.bottom))
     def update(self):
         self.get_input()
         self.constraint()

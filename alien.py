@@ -50,5 +50,10 @@ class Extra(pygame.sprite.Sprite):
             self.speed = 3
         self.rect = self.image.get_rect(topleft = (x,100))
 
+    def destroy(self):
+        if self.rect.y <= -50 or self.rect.y >= 750:
+            self.kill()
+
     def update(self):
         self.rect.x += self.speed
+        self.destroy()
