@@ -1,10 +1,11 @@
 import pygame, sys
+from random import choice, randint
+import obstacles
 from perks import Bullet, Damage, Heart, Speed
 from player import Player
-import obstacles
 from alien import Alien, Extra
-from random import choice, randint
-from laser import Laser, Laser2, Laser3
+from laser import Laser
+
 
 class Game:
     def __init__(self):
@@ -24,6 +25,7 @@ class Game:
         self.level_font = pygame.font.Font('font/pixel.ttf', 35)
         self.title_font = pygame.font.Font('font/pixel.ttf', 50)
         
+        self.alien_cooldown = 1000
         self.shape = obstacles.shape
         self.block_size = 3
         self.blocks = pygame.sprite.Group()
@@ -43,6 +45,7 @@ class Game:
         self.laser_speed = pygame.sprite.Group()
         self.bullet = pygame.sprite.Group()
         self.damage = pygame.sprite.Group()
+        self.screen = pygame.sprite.Group()
 
     def death(self):
         pygame.quit()
@@ -121,7 +124,7 @@ class Game:
     def alien_shot(self):
         if self.aliens.sprites():
             random_alien = choice(self.aliens.sprites())
-            laser_sprite = Laser(random_alien.rect.center, 6, screen_height)
+            laser_sprite = Laser(random_alien.rect.center, self.level + 5, screen_height)
             self.alien_lasers.add(laser_sprite)
 
     def extra_alien_timer(self):
@@ -150,7 +153,7 @@ class Game:
                     for alien in aliens_hit:
                         if self.killable == True:
                             self.score += alien.value
-                    laser.kill()
+                    #laser.kill()
 
                 if pygame.sprite.spritecollide(laser, self.extra, True):
                     self.score += 100
@@ -197,8 +200,8 @@ class Game:
     def display_level(self):
         if self.level <= 8:
             if self.level <= 7: level_surf = self.font.render(f'Level {self.level}', False, 'white')
-            else: level_surf = self.font.render(f'Boss Fight', False, 'white')
-            level_rect = level_surf.get_rect(topleft = (325,25))
+            else: level_surf = self.font.render(f'Boss', False, 'white')
+            level_rect = level_surf.get_rect(topleft = (350,25))
             screen.blit(level_surf, level_rect)
 
     def display_score(self):
@@ -207,20 +210,20 @@ class Game:
         screen.blit(score_surf, score_rect)
 
     def drop_heart(self):
-        heart_sprite = Heart((screen_width/2, 100), 3, screen_height)
+        heart_sprite = Heart((screen_width/2, 100), 4, screen_height)
         self.heart.add(heart_sprite)
 
     def drop_perks(self):
         if self.speed_charge >= 1:
-            speed_sprite = Speed((screen_width/2 + screen_width/4 ,200), 3, screen_height)
+            speed_sprite = Speed((screen_width/2 + screen_width/4 ,200), 6, screen_height)
             self.laser_speed.add(speed_sprite)
         else: pass
         if self.bullet_charge >= 1:
-            bullet_sprite = Bullet((screen_width/4, 200), 3, screen_height)
+            bullet_sprite = Bullet((screen_width/4, 200), 6, screen_height)
             self.bullet.add(bullet_sprite)
         else: pass
         if self.damage_charge >= 1:
-            damage_sprite = Damage((screen_width/2, 200), 3, screen_height)
+            damage_sprite = Damage((screen_width/2, 200), 6, screen_height)
             self.damage.add(damage_sprite)
         else: pass
 
@@ -233,7 +236,10 @@ class Game:
                 self.level += 1
                 self.drop_perks()
                 self.alien_setup(rows = 7, cols = 7)
+            
             elif self.level == 7:
+                self.level += 1
+                self.drop_perks()
                 self.boss_setup
 
     def run(self):
@@ -255,6 +261,7 @@ class Game:
         self.blocks.draw(screen)
         self.aliens.draw(screen)
         self.alien_lasers.draw(screen)
+        self.screen.draw(screen)
         self.extra.draw(screen)
         self.heart.draw(screen)
         self.laser_speed.draw(screen)
@@ -279,7 +286,7 @@ if __name__ == '__main__':
     game = Game()
 
     ALIENLASER = pygame.USEREVENT + 1
-    pygame.time.set_timer(ALIENLASER, 1000)
+    pygame.time.set_timer(ALIENLASER, game.alien_cooldown)
 
     while True:
         for event in pygame.event.get():

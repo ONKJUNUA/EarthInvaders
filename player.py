@@ -41,18 +41,22 @@ class Player(pygame.sprite.Sprite):
 
     def shoot_laser(self):
         if self.laser_bullet == 1:
-            self.lasers.add(Laser(self.rect.center ,-8,self.rect.bottom))
+            self.bullet_speed = -6
+            self.lasers.add(Laser(self.rect.center ,self.bullet_speed,self.rect.bottom))
         elif self.laser_bullet == 2:
-            self.lasers.add(Laser2(self.rect.bottomleft,-8,self.rect.bottom))
-            self.lasers.add(Laser3(self.rect.bottomright,-8,self.rect.bottom))
+            self.bullet_speed = -8
+            self.lasers.add(Laser2(self.rect.bottomleft,self.bullet_speed,self.rect.bottom))
+            self.lasers.add(Laser3(self.rect.bottomright,self.bullet_speed,self.rect.bottom))
         elif self.laser_bullet == 3:
-            self.lasers.add(Laser(self.rect.center ,-8,self.rect.bottom))
-            self.lasers.add(Laser2(self.rect.bottomleft,-8,self.rect.bottom))
-            self.lasers.add(Laser3(self.rect.bottomright,-8,self.rect.bottom))
+            self.lasers.add(Laser(self.rect.center, self.bullet_speed, self.rect.bottom))
+            self.lasers.add(Laser2(self.rect.bottomleft, self.bullet_speed, self.rect.bottom))
+            self.lasers.add(Laser3(self.rect.bottomright, self.bullet_speed, self.rect.bottom))
         else:
-            self.lasers.add(Laser4(self.rect.center ,-10,self.rect.bottom))
-            self.lasers.add(Laser5(self.rect.bottomleft,-10,self.rect.bottom))
-            self.lasers.add(Laser6(self.rect.bottomright,-10,self.rect.bottom))
+            self.bullet_speed = -10
+            self.lasers.add(Laser(self.rect.center, self.bullet_speed, self.rect.bottom))
+            self.lasers.add(Laser2(self.rect.bottomleft, self.bullet_speed, self.rect.bottom))
+            self.lasers.add(Laser3(self.rect.bottomright, self.bullet_speed, self.rect.bottom))
+            
     def update(self):
         self.get_input()
         self.constraint()
