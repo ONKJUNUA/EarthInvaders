@@ -1,11 +1,11 @@
 import pygame
 
 class Alien(pygame.sprite.Sprite):
-    def __init__(self,number,x,y):
+    def __init__(self, number, x, y):
         super().__init__()
         file_path = 'graphics/' + number + '.png'
         self.image = pygame.image.load(file_path).convert_alpha()
-        self.rect = self.image.get_rect(topleft =(x,y))
+        self.rect = self.image.get_rect(topleft =(x, y))
 
         if number == '1': 
             self.value = 10
@@ -35,11 +35,11 @@ class Alien(pygame.sprite.Sprite):
             self.value = 90
             self.enemy_lives = 9
 
-    def update(self,direction):
+    def update(self, direction):
         self.rect.x += direction
 
 class Extra(pygame.sprite.Sprite):
-    def __init__(self,side,screen_width):
+    def __init__(self, side, screen_width):
         super().__init__()
         self.image = pygame.image.load('graphics/extra.png').convert_alpha()
         if side == 'right':

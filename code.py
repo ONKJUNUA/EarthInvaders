@@ -8,8 +8,7 @@ from laser import Laser
 
 class Game:
     def __init__(self):
-        self.laser_cooldown = 600
-        player_sprite = Player((screen_width/2, screen_height - 10), screen_width, 5, self.laser_cooldown)
+        player_sprite = Player((screen_width/2, screen_height - 10), screen_width, 5)
         self.player = pygame.sprite.GroupSingle(player_sprite)
 
         self.killable = False
@@ -179,7 +178,7 @@ class Game:
                 if pygame.sprite.spritecollide(player, self.heart, True):
                     self.lives += 1
                 if pygame.sprite.spritecollide(player, self.laser_speed, True):
-                    self.laser_cooldown -= 300
+                    player.laser_cooldown -= 100
                     self.speed_charge -= 1
                 if pygame.sprite.spritecollide(player, self.bullet, True):
                     self.lives += 1
