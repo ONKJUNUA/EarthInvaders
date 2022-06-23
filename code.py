@@ -1,5 +1,5 @@
 import pygame, sys
-from perks import Perks
+from perks import Bullet, Damage, Heart, Speed
 from player import Player
 import obstacles
 from alien import Alien, Extra
@@ -8,9 +8,10 @@ from laser import Laser
 
 class Game:
     def __init__(self):
-        player_sprite = Player((screen_width/2,screen_height - 10),screen_width,5)
+        self.laser_cooldown = 600
+        player_sprite = Player((screen_width/2, screen_height - 10), screen_width, 5, self.laser_cooldown)
         self.player = pygame.sprite.GroupSingle(player_sprite)
-        
+
         self.level = 1
         self.lives = 4
         self.live_icon = pygame.image.load('graphics/player.png').convert_alpha()
@@ -32,9 +33,12 @@ class Game:
         self.alien_lasers = pygame.sprite.Group()
 
         self.extra = pygame.sprite.Group()
-        self.extra_spawn_time = randint (600,600)
+        self.extra_spawn_time = randint (1500,1500)
 
-        self.perks = pygame.sprite.Group()
+        self.heart = pygame.sprite.Group()
+        self.laser_speed = pygame.sprite.Group()
+        self.bullet = pygame.sprite.Group()
+        self.damage = pygame.sprite.Group()
 
     def death(self):
         pygame.quit()
@@ -123,7 +127,7 @@ class Game:
             self.extra_spawn_time = randint (600,600)
 
     def collision_checks(self):
-        global killable
+        global killable, dmg
         if self.player.sprite.lasers:
             for laser in self.player.sprite.lasers:
                 if pygame.sprite.spritecollide(laser,self.blocks,True):
@@ -132,11 +136,11 @@ class Game:
                 aliens_hit_check = pygame.sprite.spritecollide(laser,self.aliens,False)
                 if aliens_hit_check:
                     for alien in aliens_hit_check:
-                        if alien.enemy_lives == 1:
+                        if alien.enemy_lives <= 1:
                             killable = True
                         else:
                             killable = False
-                            alien.enemy_lives -= 1
+                            alien.enemy_lives -= dmg
 
                 aliens_hit = pygame.sprite.spritecollide(laser,self.aliens,killable)
                 if aliens_hit:
@@ -148,7 +152,6 @@ class Game:
 
                 if pygame.sprite.spritecollide(laser,self.extra,True):
                     self.score += 100
-                    self.lives += 1
                     self.drop_heart()
                     laser.kill()
 
@@ -169,6 +172,17 @@ class Game:
                 if pygame.sprite.spritecollide(alien,self.player,False):
                     self.death()
 
+        if self.player:
+            for player in self.player:
+                if pygame.sprite.spritecollide(player,self.heart,True):
+                    self.lives += 1
+                if pygame.sprite.spritecollide(player,self.laser_speed,True):
+                    self.laser_cooldown -= 300
+                if pygame.sprite.spritecollide(player,self.bullet,True):
+                    self.lives += 1
+                if pygame.sprite.spritecollide(player,self.damage,True):
+                    dmg += 1
+
     def display_lives(self):
             lives_surf = self.font.render(f'{self.lives - 1}x',False,'white')
             screen.blit(lives_surf,(565,25))
@@ -186,14 +200,17 @@ class Game:
         score_rect = score_surf.get_rect(topleft = (25,25))
         screen.blit(score_surf,score_rect)
 
-    def drop_perks(self):
-        pass
-
     def drop_heart(self):
-        if self.extra.sprites():
-            random_extra = choice(self.extra.sprites())
-            heart_sprite = Perks('p_heart',random_extra.rect.center,3,screen_height)
-            self.perks.add(heart_sprite)
+        heart_sprite = Heart((screen_width/2,100),3,screen_height)
+        self.heart.add(heart_sprite)
+
+    def drop_perks(self):
+        speed_sprite = Speed((screen_width/2,200),3,screen_height)
+        self.laser_speed.add(speed_sprite)
+        bullet_sprite = Bullet((screen_width/4,200),3,screen_height)
+        self.bullet.add(bullet_sprite)
+        damage_sprite = Damage((screen_width/2 + screen_width/4,200),3,screen_height)
+        self.damage.add(damage_sprite)
 
     def boss_setup(self):
         pass
@@ -211,7 +228,10 @@ class Game:
         self.player.update()
         self.alien_lasers.update()
         self.extra.update()
-        self.perks.update()
+        self.heart.update()
+        self.laser_speed.update()
+        self.bullet.update()
+        self.damage.update()
 
         self.aliens.update(self.alien_direction)
         self.alien_position_checker()
@@ -224,7 +244,10 @@ class Game:
         self.aliens.draw(screen)
         self.alien_lasers.draw(screen)
         self.extra.draw(screen)
-        self.perks.draw(screen)
+        self.heart.draw(screen)
+        self.laser_speed.draw(screen)
+        self.bullet.draw(screen)
+        self.damage.draw(screen)
 
         self.display_lives()
         self.display_level()
@@ -242,6 +265,7 @@ if __name__ == '__main__':
     pygame.display.set_caption('Earth Invaders')
     pygame.display.set_icon(icon)
     killable = False
+    dmg = 1
     game = Game()
 
     ALIENLASER = pygame.USEREVENT + 1
