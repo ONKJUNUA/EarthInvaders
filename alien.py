@@ -31,9 +31,18 @@ class Alien(pygame.sprite.Sprite):
         elif number == '8': 
             self.value = 80
             self.enemy_lives = 8
-        else: 
+        elif number == '9': 
             self.value = 90
             self.enemy_lives = 9
+        elif number == '10': 
+            self.value = 100
+            self.enemy_lives = 10
+        elif number == '11': 
+            self.value = 110
+            self.enemy_lives = 11
+        elif number == '12': 
+            self.value = 120
+            self.enemy_lives = 12
 
     def update(self, direction):
         self.rect.x += direction
