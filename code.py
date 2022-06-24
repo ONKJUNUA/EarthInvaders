@@ -109,8 +109,9 @@ class Game:
 
     def alien_shot(self):
         if self.aliens.sprites():
+            global power
             random_alien = choice(self.aliens.sprites())
-            laser_sprite = Laser(random_alien.rect.center, self.level + 5, screen_height)
+            laser_sprite = Laser(random_alien.rect.center, self.level + power, screen_height)
             self.alien_lasers.add(laser_sprite)
         
     def boss_shot(self):
@@ -286,8 +287,16 @@ class Game:
         else: pass
 
     def next_level(self):
+        if self.aliens.sprites():
+            if self.level == 0:
+                pass
+
         if not self.aliens.sprites():
-            if self.level <= 10:
+            if self.level == 0:
+                self.level += 1
+                self.one_alien()
+                pygame.time.set_timer(ALIENSET,1700,loops = 1)
+            elif self.level <= 10:
                 self.level += 1
                 self.drop_perks()
                 self.one_alien()
@@ -349,8 +358,7 @@ class Button1:
                 self.pressed = True
             else:
                 if self.pressed == True:
-                    game.level = 0
-                    gameplay()
+                    menu()
                     self.pressed = False
         else:
             self.top_color = (255,255,255)
@@ -424,7 +432,7 @@ class Button4:
         self.check_click()
 
     def check_click(self):
-        global credit, option
+        global credit, option, start
         mouse_pos = pygame.mouse.get_pos()
         if self.top_rect.collidepoint(mouse_pos):
             self.top_color = (120,120,120)
@@ -434,6 +442,7 @@ class Button4:
                 if self.pressed == True:
                     credit = False
                     option = False
+                    start = False
                     self.pressed = False
         else:
             self.top_color = (255,255,255)
@@ -453,7 +462,6 @@ class Button5:
         self.check_click()
 
     def check_click(self):
-        global credit, option
         mouse_pos = pygame.mouse.get_pos()
         if self.top_rect.collidepoint(mouse_pos):
             self.top_color = (120,120,120)
@@ -481,7 +489,6 @@ class Button6:
         self.check_click()
 
     def check_click(self):
-        global credit, option
         mouse_pos = pygame.mouse.get_pos()
         if self.top_rect.collidepoint(mouse_pos):
             self.top_color = (120,120,120)
@@ -490,6 +497,205 @@ class Button6:
             else:
                 if self.pressed == True:
                     
+                    self.pressed = False
+        else:
+            self.top_color = (255,255,255)
+
+class Button7:
+    def __init__(self,text,width,height,pos):
+        self.pressed = False
+
+        self.top_rect = pygame.Rect(pos,(width,height))
+        self.top_color = (255,255,255)
+        self.text_surf = game_font.render(text,True,(30,30,30))
+        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
+
+    def draw(self):
+        pygame.draw.rect(screen,self.top_color,self.top_rect)
+        screen.blit(self.text_surf,self.text_rect)
+        self.check_click()
+
+    def check_click(self):
+        mouse_pos = pygame.mouse.get_pos()
+        if self.top_rect.collidepoint(mouse_pos):
+            self.top_color = (120,120,120)
+            if pygame.mouse.get_pressed()[0]:
+                self.pressed = True
+            else:
+                if self.pressed == True:
+                    
+                    self.pressed = False
+        else:
+            self.top_color = (255,255,255)
+
+class Button8:
+    def __init__(self,text,width,height,pos):
+        self.pressed = False
+
+        self.top_rect = pygame.Rect(pos,(width,height))
+        self.top_color = (255,255,255)
+        self.text_surf = game_font.render(text,True,(30,30,30))
+        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
+
+    def draw(self):
+        pygame.draw.rect(screen,self.top_color,self.top_rect)
+        screen.blit(self.text_surf,self.text_rect)
+        self.check_click()
+
+    def check_click(self):
+        mouse_pos = pygame.mouse.get_pos()
+        if self.top_rect.collidepoint(mouse_pos):
+            self.top_color = (120,120,120)
+            if pygame.mouse.get_pressed()[0]:
+                self.pressed = True
+            else:
+                if self.pressed == True:
+                    
+                    self.pressed = False
+        else:
+            self.top_color = (255,255,255)
+
+class Button9:
+    def __init__(self,text,width,height,pos):
+        self.pressed = False
+
+        self.top_rect = pygame.Rect(pos,(width,height))
+        self.top_color = (255,255,255)
+        self.text_surf = game_font.render(text,True,(30,30,30))
+        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
+
+    def draw(self):
+        pygame.draw.rect(screen,self.top_color,self.top_rect)
+        screen.blit(self.text_surf,self.text_rect)
+        self.check_click()
+
+    def check_click(self):
+        mouse_pos = pygame.mouse.get_pos()
+        if self.top_rect.collidepoint(mouse_pos):
+            self.top_color = (120,120,120)
+            if pygame.mouse.get_pressed()[0]:
+                self.pressed = True
+            else:
+                if self.pressed == True:
+                    rules()
+                    self.pressed = False
+        else:
+            self.top_color = (255,255,255)
+
+class Button10:
+    def __init__(self,text,width,height,pos):
+        self.pressed = False
+
+        self.top_rect = pygame.Rect(pos,(width,height))
+        self.top_color = (255,255,255)
+        self.text_surf = game_font.render(text,True,(30,30,30))
+        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
+
+    def draw(self):
+        pygame.draw.rect(screen,self.top_color,self.top_rect)
+        screen.blit(self.text_surf,self.text_rect)
+        self.check_click()
+
+    def check_click(self):
+        global power
+        mouse_pos = pygame.mouse.get_pos()
+        if self.top_rect.collidepoint(mouse_pos):
+            self.top_color = (120,120,120)
+            if pygame.mouse.get_pressed()[0]:
+                self.pressed = True
+            else:
+                if self.pressed == True:
+                    game.level = 0
+                    power = 10
+                    gameplay()
+                    self.pressed = False
+        else:
+            self.top_color = (255,255,255)
+
+class Button11:
+    def __init__(self,text,width,height,pos):
+        self.pressed = False
+
+        self.top_rect = pygame.Rect(pos,(width,height))
+        self.top_color = (255,255,255)
+        self.text_surf = game_font.render(text,True,(30,30,30))
+        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
+
+    def draw(self):
+        pygame.draw.rect(screen,self.top_color,self.top_rect)
+        screen.blit(self.text_surf,self.text_rect)
+        self.check_click()
+
+    def check_click(self):
+        global power
+        mouse_pos = pygame.mouse.get_pos()
+        if self.top_rect.collidepoint(mouse_pos):
+            self.top_color = (120,120,120)
+            if pygame.mouse.get_pressed()[0]:
+                self.pressed = True
+            else:
+                if self.pressed == True:
+                    game.level = 0
+                    power = 5
+                    gameplay()
+                    self.pressed = False
+        else:
+            self.top_color = (255,255,255)
+
+class Button12:
+    def __init__(self,text,width,height,pos):
+        self.pressed = False
+
+        self.top_rect = pygame.Rect(pos,(width,height))
+        self.top_color = (255,255,255)
+        self.text_surf = game_font.render(text,True,(30,30,30))
+        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
+
+    def draw(self):
+        pygame.draw.rect(screen,self.top_color,self.top_rect)
+        screen.blit(self.text_surf,self.text_rect)
+        self.check_click()
+
+    def check_click(self):
+        global power
+        mouse_pos = pygame.mouse.get_pos()
+        if self.top_rect.collidepoint(mouse_pos):
+            self.top_color = (120,120,120)
+            if pygame.mouse.get_pressed()[0]:
+                self.pressed = True
+            else:
+                if self.pressed == True:
+                    game.level = 0
+                    power = 3
+                    gameplay()
+                    self.pressed = False
+        else:
+            self.top_color = (255,255,255)
+
+class Button0:
+    def __init__(self,text,width,height,pos):
+        self.pressed = False
+
+        self.top_rect = pygame.Rect(pos,(width,height))
+        self.top_color = (255,255,255)
+        self.text_surf = game_font.render(text,True,(30,30,30))
+        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
+
+    def draw(self):
+        pygame.draw.rect(screen,self.top_color,self.top_rect)
+        screen.blit(self.text_surf,self.text_rect)
+        self.check_click()
+
+    def check_click(self):
+        global rul
+        mouse_pos = pygame.mouse.get_pos()
+        if self.top_rect.collidepoint(mouse_pos):
+            self.top_color = (120,120,120)
+            if pygame.mouse.get_pressed()[0]:
+                self.pressed = True
+            else:
+                if self.pressed == True:
+                    rul = False
                     self.pressed = False
         else:
             self.top_color = (255,255,255)
@@ -503,7 +709,7 @@ def gameplay():
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    
+                    game.run()
                     running = False
             if event.type == ALIENLASER:
                 if game.level <= 10: game.alien_shot()
@@ -664,6 +870,131 @@ def options():
         pygame.display.flip()
         clock.tick(60)
 
+def menu():
+    global start
+    start = True
+    while start:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    start = False
+
+        screen.fill((30,30,30))
+
+        title_text = str('Earth Invaders')
+        title_surface = title_font.render(title_text,True,(255,255,255))
+        title_x = int(screen_width/2)
+        title_y = int(100)
+        title_rect = title_surface.get_rect(center = (title_x,title_y))
+        screen.blit(title_surface,title_rect)
+
+        button_12.draw()
+        button_11.draw()
+        button_10.draw()
+        button_4.draw()
+
+        pygame.display.flip()
+        clock.tick(60)
+
+def rules():
+    global rul
+    rul = True
+    while rul:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    rul = False
+
+        screen.fill((30,30,30))
+
+        title_text = str('Earth Invaders')
+        title_surface = title_font.render(title_text,True,(255,255,255))
+        title_x = int(screen_width/2)
+        title_y = int(100)
+        title_rect = title_surface.get_rect(center = (title_x,title_y))
+        screen.blit(title_surface,title_rect)
+
+        game_text = str('1.Kill Aliens Using Spacebar')
+        game_surface = game_font2.render(game_text,True,(255,255,255))
+        game_x = int(screen_width/2)
+        game_y = int(200)
+        game_rect = game_surface.get_rect(center = (game_x,game_y))
+        screen.blit(game_surface,game_rect)
+
+        game_text = str('2.Move Your Ship Using Arrows')
+        game_surface = game_font2.render(game_text,True,(255,255,255))
+        game_x = int(screen_width/2)
+        game_y = int(250)
+        game_rect = game_surface.get_rect(center = (game_x,game_y))
+        screen.blit(game_surface,game_rect)
+
+        game_text = str('3.Survive By Collecting Perks')
+        game_surface = game_font2.render(game_text,True,(255,255,255))
+        game_x = int(screen_width/2)
+        game_y = int(300)
+        game_rect = game_surface.get_rect(center = (game_x,game_y))
+        screen.blit(game_surface,game_rect)
+
+        game_text = str('4.Watch Out For Your Life')
+        game_surface = game_font2.render(game_text,True,(255,255,255))
+        game_x = int(screen_width/2)
+        game_y = int(350)
+        game_rect = game_surface.get_rect(center = (game_x,game_y))
+        screen.blit(game_surface,game_rect)
+
+        game_text = str('5.Hide Behind Shields')
+        game_surface = game_font2.render(game_text,True,(255,255,255))
+        game_x = int(screen_width/2)
+        game_y = int(400)
+        game_rect = game_surface.get_rect(center = (game_x,game_y))
+        screen.blit(game_surface,game_rect)
+
+        game_text = str('6.Boss Have Multiple Moves')
+        game_surface = game_font2.render(game_text,True,(255,255,255))
+        game_x = int(screen_width/2)
+        game_y = int(450)
+        game_rect = game_surface.get_rect(center = (game_x,game_y))
+        screen.blit(game_surface,game_rect)
+
+        game_text = str('7.Take Down Extra Alien For Health')
+        game_surface = game_font2.render(game_text,True,(255,255,255))
+        game_x = int(screen_width/2)
+        game_y = int(500)
+        game_rect = game_surface.get_rect(center = (game_x,game_y))
+        screen.blit(game_surface,game_rect)
+
+        game_text = str('8.Get The Best Score')
+        game_surface = game_font2.render(game_text,True,(255,255,255))
+        game_x = int(screen_width/2)
+        game_y = int(550)
+        game_rect = game_surface.get_rect(center = (game_x,game_y))
+        screen.blit(game_surface,game_rect)
+
+        game_text = str('9.Try Every Mode')
+        game_surface = game_font2.render(game_text,True,(255,255,255))
+        game_x = int(screen_width/2)
+        game_y = int(600)
+        game_rect = game_surface.get_rect(center = (game_x,game_y))
+        screen.blit(game_surface,game_rect)
+
+        game_text = str('10.And Remember: Always Have Fun!')
+        game_surface = game_font2.render(game_text,True,(255,255,255))
+        game_x = int(screen_width/2)
+        game_y = int(650)
+        game_rect = game_surface.get_rect(center = (game_x,game_y))
+        screen.blit(game_surface,game_rect)
+
+        button_0.draw()
+
+        pygame.display.flip()
+        clock.tick(60)
+
 if __name__ == '__main__':
     pygame.init()
     screen_width = 700
@@ -682,18 +1013,27 @@ if __name__ == '__main__':
     CHILDLASER = pygame.USEREVENT + 4
     BOSS = pygame.USEREVENT + 5
 
+    game_font2 = pygame.font.Font('font/pixel.ttf',20)
     game_font = pygame.font.Font('font/pixel.ttf',30)
     title_font = pygame.font.Font('font/pixel.ttf',45)
 
     button_1 = Button1('Start Game',screen_width/2,100,(screen_width/4,450))
     button_2 = Button2('Options',screen_width/2,100,(screen_width/4,600))
     button_3 = Button3('Credits',screen_width/2,100,(screen_width/4,750))
+
     button_4 = Button4('Back',screen_width/2,100,(screen_width/4,750))
-    button_5 = Button5('Music:ON',screen_width/2,100,(screen_width/4,600))
-    button_6 = Button6('Music:OFF',screen_width/2,100,(screen_width/4,600))
-    button_7 = Button5('Sound:ON',screen_width/2,100,(screen_width/4,450))
-    button_8 = Button6('Music:OFF',screen_width/2,100,(screen_width/4,450))
-    button_9 = Button6('Colors',screen_width/2,100,(screen_width/4,250))
+
+    button_5 = Button5('Music:ON',screen_width/2,100,(screen_width/4,550))
+    button_6 = Button6('Music:OFF',screen_width/2,100,(screen_width/4,550))
+    button_7 = Button7('Sound:ON',screen_width/2,100,(screen_width/4,400))
+    button_8 = Button8('Sound:OFF',screen_width/2,100,(screen_width/4,400))
+    button_9 = Button9('Rules',screen_width/2,100,(screen_width/4,250))
+
+    button_0 = Button0('Back',screen_width/2,100,(screen_width/4,750))
+
+    button_10 = Button10('Impossible',screen_width/2,100,(screen_width/4,550))
+    button_11 = Button11('Hard',screen_width/2,100,(screen_width/4,400))
+    button_12 = Button12('Normal',screen_width/2,100,(screen_width/4,250))
 
 
     main_menu()
