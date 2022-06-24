@@ -328,6 +328,148 @@ class Game:
         self.display_score()
         self.next_level()
 
+class Button1:
+    def __init__(self,text,width,height,pos):
+        self.pressed = False
+
+        self.top_rect = pygame.Rect(pos,(width,height))
+        self.top_color = (200,200,200)
+        self.text_surf = game_font.render(text,True,(20,20,20))
+        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
+
+    def draw(self):
+        pygame.draw.rect(screen,self.top_color,self.top_rect)
+        screen.blit(self.text_surf,self.text_rect)
+        self.check_click()
+
+    def check_click(self):
+        mouse_pos = pygame.mouse.get_pos()
+        if self.top_rect.collidepoint(mouse_pos):
+            self.top_color = (120,120,120)
+            if pygame.mouse.get_pressed()[0]:
+                self.pressed = True
+            else:
+                if self.pressed == True:
+                    gameplay()
+                    self.pressed = False
+        else:
+            self.top_color = (200,200,200)
+
+class Button2:
+    def __init__(self,text,width,height,pos):
+        self.pressed = False
+
+        self.top_rect = pygame.Rect(pos,(width,height))
+        self.top_color = (200,200,200)
+        self.text_surf = game_font.render(text,True,(20,20,20))
+        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
+
+    def draw(self):
+        pygame.draw.rect(screen,self.top_color,self.top_rect)
+        screen.blit(self.text_surf,self.text_rect)
+        self.check_click()
+
+    def check_click(self):
+        mouse_pos = pygame.mouse.get_pos()
+        if self.top_rect.collidepoint(mouse_pos):
+            self.top_color = (120,120,120)
+            if pygame.mouse.get_pressed()[0]:
+                self.pressed = True
+            else:
+                if self.pressed == True:
+                    gameplay()
+                    self.pressed = False
+        else:
+            self.top_color = (200,200,200)
+
+class Button3:
+    def __init__(self,text,width,height,pos):
+        self.pressed = False
+
+        self.top_rect = pygame.Rect(pos,(width,height))
+        self.top_color = (200,200,200)
+        self.text_surf = game_font.render(text,True,(20,20,20))
+        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
+
+    def draw(self):
+        pygame.draw.rect(screen,self.top_color,self.top_rect)
+        screen.blit(self.text_surf,self.text_rect)
+        self.check_click()
+
+    def check_click(self):
+        mouse_pos = pygame.mouse.get_pos()
+        if self.top_rect.collidepoint(mouse_pos):
+            self.top_color = (120,120,120)
+            if pygame.mouse.get_pressed()[0]:
+                self.pressed = True
+            else:
+                if self.pressed == True:
+                    gameplay()
+                    self.pressed = False
+        else:
+            self.top_color = (200,200,200)
+
+def gameplay():
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+            if event.type == ALIENLASER:
+                if game.level <= 10: game.alien_shot()
+            if event.type == BOSSLASER: game.boss_shot()
+            if event.type == CHILDLASER: game.child_shot()
+            if event.type == ALIENSET:
+                if game.level <= 10: game.alien_setup(rows = 7, cols = 7)
+                else: 
+                    game.boss_setup()
+                    pygame.time.set_timer(BOSS, 3000)
+            if event.type == BOSS:
+                game.boss_attack()
+
+        screen.fill((30, 30, 30))
+        game.run()
+        pygame.display.flip()
+        clock.tick(60)
+
+def main_menu():
+    while True:
+        screen.fill((30,30,30))
+
+        title_text = str('Earth Invaders')
+        title_surface = title_font.render(title_text,True,(200,200,200))
+        title_x = int(screen_width/2)
+        title_y = int(200)
+        title_rect = title_surface.get_rect(center = (title_x,title_y))
+        screen.blit(title_surface,title_rect)
+
+        title_text = str('Choose difficulty:')
+        title_surface = game_font.render(title_text,True,(200,200,200))
+        title_x = int(screen_width/2)
+        title_y = int(400)
+        title_rect = title_surface.get_rect(center = (title_x,title_y))
+        screen.blit(title_surface,title_rect)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+        
+        button_1.draw()
+        button_2.draw()
+        button_3.draw()
+
+        pygame.display.update()
+        clock.tick(60)
+
 if __name__ == '__main__':
     pygame.init()
     screen_width = 700
@@ -346,24 +488,11 @@ if __name__ == '__main__':
     CHILDLASER = pygame.USEREVENT + 4
     BOSS = pygame.USEREVENT + 5
 
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == ALIENLASER:
-                if game.level <= 10: game.alien_shot()
-            if event.type == BOSSLASER: game.boss_shot()
-            if event.type == CHILDLASER: game.child_shot()
-            if event.type == ALIENSET:
-                if game.level <= 10: game.alien_setup(rows = 7, cols = 7)
-                else: 
-                    game.boss_setup()
-                    pygame.time.set_timer(BOSS, 3000)
-            if event.type == BOSS:
-                game.boss_attack()
+    game_font = pygame.font.Font('font/pixel.ttf',30)
+    title_font = pygame.font.Font('font/pixel.ttf',50)
 
-        screen.fill((30, 30, 30))
-        game.run()
-        pygame.display.flip()
-        clock.tick(60)
+    button_1 = Button1('NORMAL',screen_width/2,100,(screen_width/4,500))
+    button_2 = Button2('HARD',screen_width/2,100,(screen_width/4,650))
+    button_3 = Button3('IMPOSSIBLE',screen_width/2,100,(screen_width/4,800))
+
+    main_menu()
