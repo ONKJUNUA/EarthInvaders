@@ -52,6 +52,24 @@ class Alien(pygame.sprite.Sprite):
         self.rect.x += direction
         self.destroy()
 
+class FakeAlien(pygame.sprite.Sprite):
+    def __init__(self, number, x, y):
+        super().__init__()
+        file_path = 'graphics/' + number + '.png'
+        self.image = pygame.image.load(file_path).convert_alpha()
+        self.rect = self.image.get_rect(topleft =(x, y))
+
+        if number == '12':
+            self.enemy_lives = 12
+
+    def destroy(self):
+        if self.rect.y >= 950:
+            self.kill()
+
+    def update(self, direction):
+        self.rect.y += direction
+        self.destroy()
+
 class Extra(pygame.sprite.Sprite):
     def __init__(self, side, screen_width):
         super().__init__()
