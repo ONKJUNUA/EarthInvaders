@@ -6,8 +6,8 @@ class Boss(pygame.sprite.Sprite):
         file_path = 'graphics/boss.png'
         self.image = pygame.image.load(file_path).convert_alpha()
         self.rect = self.image.get_rect(center =(x,y))
-        self.value = 1000
-        self.enemy_lives = 100
+        self.value = 10000
+        self.enemy_lives = 500
 
     def update(self, direction):
         self.rect.x += direction

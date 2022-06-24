@@ -1,5 +1,6 @@
 import pygame, sys
 from random import choice, randint
+from boss import Boss
 import obstacles
 from perks import Bullet, Damage, Heart, Speed
 from player import Player
@@ -25,7 +26,7 @@ class Game:
         self.level_font = pygame.font.Font('font/pixel.ttf', 35)
         self.title_font = pygame.font.Font('font/pixel.ttf', 50)
         
-        self.alien_cooldown = 1000
+        self.alien_cooldown = 2000
         self.shape = obstacles.shape
         self.block_size = 3
         self.blocks = pygame.sprite.Group()
@@ -45,6 +46,8 @@ class Game:
         self.laser_speed = pygame.sprite.Group()
         self.bullet = pygame.sprite.Group()
         self.damage = pygame.sprite.Group()
+
+        self.boss = pygame.sprite.Group()
 
     def death(self):
         pygame.quit()
@@ -167,7 +170,7 @@ class Game:
                     for alien in aliens_hit:
                         if self.killable == True:
                             self.score += alien.value
-                    #laser.kill()
+                    laser.kill()
 
                 if pygame.sprite.spritecollide(laser, self.extra, True):
                     self.score += 100
@@ -214,8 +217,8 @@ class Game:
     def display_level(self):
         if self.level <= 11:
             if self.level <= 10: level_surf = self.font.render(f'Level {self.level}', False, 'white')
-            else: level_surf = self.font.render(f'Boss', False, 'white')
-            level_rect = level_surf.get_rect(topleft = (350,25))
+            else: level_surf = self.font.render(f'Boss Fight', False, 'white')
+            level_rect = level_surf.get_rect(topleft = (325,25))
             screen.blit(level_surf, level_rect)
 
     def display_score(self):
@@ -242,7 +245,8 @@ class Game:
         else: pass
 
     def boss_setup(self):
-        pass
+        alien_sprite = Boss(screen_width/2,screen_height/2)
+        self.aliens.add(alien_sprite)
 
     def next_level(self):
         if not self.aliens.sprites():
@@ -254,7 +258,7 @@ class Game:
             elif self.level == 10:
                 self.level += 1
                 self.drop_perks()
-                self.boss_setup
+                self.boss_setup()
 
     def run(self):
         self.player.update()
@@ -280,6 +284,7 @@ class Game:
         self.laser_speed.draw(screen)
         self.bullet.draw(screen)
         self.damage.draw(screen)
+        self.boss.draw(screen)
 
         self.display_lives()
         self.display_level()
