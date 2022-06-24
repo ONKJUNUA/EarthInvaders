@@ -7,7 +7,6 @@ from player import Player
 from alien import Alien, Extra, FakeAlien
 from laser import BossLaser, ChildLaser, Laser
 
-
 class Game:
     def __init__(self):
         player_sprite = Player((screen_width/2, screen_height - 10), screen_width)
@@ -267,13 +266,13 @@ class Game:
         self.aliens.add(boss_sprite)
 
     def boss_attack(self):
-        attack_type = randint(1,10)
+        attack_type = randint(1,8)
         if attack_type == 1:
             pygame.time.set_timer(BOSSLASER, self.boss_cooldown, loops = 5)
         if attack_type == 2:
             self.fake_alien(rows = 2, cols = 8)
         if attack_type == 3:
-            pygame.time.set_timer(CHILDLASER, self.boss_cooldown, loops = 1)
+            pygame.time.set_timer(CHILDLASER, self.boss_cooldown, loops = 3)
         if attack_type == 4:
             self.choice = randint(1,10)
             if self.choice == 1: 
@@ -282,11 +281,10 @@ class Game:
                 self.drop_heart()
             else: pass
         if attack_type == 5:
-            if self.dmg == 4:
-                self.dmg -= 1
-            else: self.dmg += 1
-        if attack_type >= 6:
-            pass
+            pygame.time.set_timer(ALIENLASER, game.alien_cooldown, loops = 10)
+        if attack_type == 6:
+            self.fake_alien(rows = 1, cols = 8)
+        else: pass
 
     def next_level(self):
         if not self.aliens.sprites():
