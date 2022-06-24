@@ -124,7 +124,7 @@ class Game:
     def child_shot(self):
         if self.aliens.sprites():
             random_alien = choice(self.aliens.sprites())
-            laser_sprite = ChildLaser(random_alien.rect.center, self.level - 3, screen_height)
+            laser_sprite = ChildLaser(random_alien.rect.center, self.level +10, screen_height)
             self.alien_lasers.add(laser_sprite)
 
     def extra_alien_timer(self):
@@ -267,7 +267,7 @@ class Game:
         self.aliens.add(boss_sprite)
 
     def boss_attack(self):
-        attack_type = randint(1,5)
+        attack_type = randint(1,10)
         if attack_type == 1:
             pygame.time.set_timer(BOSSLASER, self.boss_cooldown, loops = 5)
         if attack_type == 2:
@@ -275,11 +275,18 @@ class Game:
         if attack_type == 3:
             pygame.time.set_timer(CHILDLASER, self.boss_cooldown, loops = 1)
         if attack_type == 4:
-            pass
+            self.choice = randint(1,10)
+            if self.choice == 1: 
+                self.drop_shield()
+            elif self.choice == 2: 
+                self.drop_heart()
+            else: pass
         if attack_type == 5:
             if self.dmg == 4:
                 self.dmg -= 1
             else: self.dmg += 1
+        if attack_type >= 6:
+            pass
 
     def next_level(self):
         if not self.aliens.sprites():
@@ -350,13 +357,11 @@ if __name__ == '__main__':
                 if game.level <= 10: game.alien_shot()
             if event.type == BOSSLASER: game.boss_shot()
             if event.type == CHILDLASER: game.child_shot()
-
             if event.type == ALIENSET:
                 if game.level <= 10: game.alien_setup(rows = 7, cols = 7)
                 else: 
                     game.boss_setup()
-                    pygame.time.set_timer(BOSS, 2000)
-
+                    pygame.time.set_timer(BOSS, 3000)
             if event.type == BOSS:
                 game.boss_attack()
 
