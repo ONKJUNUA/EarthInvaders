@@ -709,8 +709,7 @@ def gameplay():
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    game.run()
-                    running = False
+                    pause()
             if event.type == ALIENLASER:
                 if game.level <= 10: game.alien_shot()
             if event.type == BOSSLASER: game.boss_shot()
@@ -991,6 +990,30 @@ def rules():
         screen.blit(game_surface,game_rect)
 
         button_0.draw()
+
+        pygame.display.flip()
+        clock.tick(60)
+
+def pause():
+    global rul
+    rul = True
+    while rul:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    subprocess.call(sys.executable + ' "' + os.path.realpath(__file__) + '"')
+
+        screen.fill((30,30,30))
+
+        title_text = str('PAUSE')
+        title_surface = title_font.render(title_text,True,(255,255,255))
+        title_x = int(screen_width/2)
+        title_y = int(screen_height/2)
+        title_rect = title_surface.get_rect(center = (title_x,title_y))
+        screen.blit(title_surface,title_rect)
 
         pygame.display.flip()
         clock.tick(60)
