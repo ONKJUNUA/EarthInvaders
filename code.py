@@ -5,7 +5,7 @@ import obstacles
 from perks import Bullet, Damage, Heart, Speed
 from player import Player
 from alien import Alien, Extra
-from laser import Laser
+from laser import BossLaser, Laser
 
 
 class Game:
@@ -26,7 +26,7 @@ class Game:
         self.level_font = pygame.font.Font('font/pixel.ttf', 35)
         self.title_font = pygame.font.Font('font/pixel.ttf', 50)
         
-        self.alien_cooldown = 2000
+        self.alien_cooldown = 600
         self.shape = obstacles.shape
         self.block_size = 3
         self.blocks = pygame.sprite.Group()
@@ -46,8 +46,6 @@ class Game:
         self.laser_speed = pygame.sprite.Group()
         self.bullet = pygame.sprite.Group()
         self.damage = pygame.sprite.Group()
-
-        self.boss = pygame.sprite.Group()
 
     def death(self):
         pygame.quit()
@@ -72,57 +70,17 @@ class Game:
                 x = col_index * x_distance + x_offset
                 y = row_index * y_distance + y_offset
                 
-                if self.level == 1:
-                    if row_index <= 1: alien_sprite = Alien('3', x, y)
-                    elif 2 <= row_index <= 3: alien_sprite = Alien('2', x, y)
-                    else: alien_sprite = Alien('1', x, y)
+                if self.level != 11:
+                    if row_index <= 1: alien_sprite = Alien(str(2+self.level), x, y)
+                    elif 2 <= row_index <= 3: alien_sprite = Alien(str(1+self.level), x, y)
+                    else: alien_sprite = Alien(str(0+self.level), x, y)
                     self.aliens.add(alien_sprite)
-                if self.level == 2:
-                    if row_index <= 1: alien_sprite = Alien('4', x, y)
-                    elif 2 <= row_index <= 3: alien_sprite = Alien('3', x, y)
-                    else: alien_sprite = Alien('2', x, y)
-                    self.aliens.add(alien_sprite)
-                if self.level == 3:
-                    if row_index <= 1: alien_sprite = Alien('5', x, y)
-                    elif 2 <= row_index <= 3: alien_sprite = Alien('4', x, y)
-                    else: alien_sprite = Alien('3', x, y)
-                    self.aliens.add(alien_sprite)
-                if self.level == 4:
-                    if row_index <= 1: alien_sprite = Alien('6', x, y)
-                    elif 2 <= row_index <= 3: alien_sprite = Alien('5', x, y)
-                    else: alien_sprite = Alien('4', x, y)
-                    self.aliens.add(alien_sprite)
-                if self.level == 5:
-                    if row_index <= 1: alien_sprite = Alien('7', x, y)
-                    elif 2 <= row_index <= 3: alien_sprite = Alien('6', x, y)
-                    else: alien_sprite = Alien('5', x, y)
-                    self.aliens.add(alien_sprite)
-                if self.level == 6:
-                    if row_index <= 1: alien_sprite = Alien('8', x, y)
-                    elif 2 <= row_index <= 3: alien_sprite = Alien('7', x, y)
-                    else: alien_sprite = Alien('6', x, y)
-                    self.aliens.add(alien_sprite)
-                if self.level == 7:
-                    if row_index <= 1: alien_sprite = Alien('9', x, y)
-                    elif 2 <= row_index <= 3: alien_sprite = Alien('8', x, y)
-                    else: alien_sprite = Alien('7', x, y)
-                    self.aliens.add(alien_sprite)
-                if self.level == 8:
-                    if row_index <= 1: alien_sprite = Alien('10', x, y)
-                    elif 2 <= row_index <= 3: alien_sprite = Alien('9', x, y)
-                    else: alien_sprite = Alien('8', x, y)
-                    self.aliens.add(alien_sprite)
-                if self.level == 9:
-                    if row_index <= 1: alien_sprite = Alien('11', x, y)
-                    elif 2 <= row_index <= 3: alien_sprite = Alien('10', x, y)
-                    else: alien_sprite = Alien('9', x, y)
-                    self.aliens.add(alien_sprite)
-                if self.level == 10:
-                    if row_index <= 1: alien_sprite = Alien('12', x, y)
-                    elif 2 <= row_index <= 3: alien_sprite = Alien('11', x, y)
-                    else: alien_sprite = Alien('10', x, y)
-                    self.aliens.add(alien_sprite)
-                    
+
+    def one_alien(self, x = 450, y = 949):
+        if self.level <= 11:
+            alien_sprite = Alien(str(0+self.level), x, y)
+            self.aliens.add(alien_sprite)
+
     def alien_position_checker(self):
         all_aliens = self.aliens.sprites()
         for alien in all_aliens:
@@ -141,7 +99,13 @@ class Game:
     def alien_shot(self):
         if self.aliens.sprites():
             random_alien = choice(self.aliens.sprites())
-            laser_sprite = Laser(random_alien.rect.center, self.level + 2, screen_height)
+            laser_sprite = Laser(random_alien.rect.center, self.level + 5, screen_height)
+            self.alien_lasers.add(laser_sprite)
+        
+    def boss_shot(self):
+        if self.aliens.sprites():
+            random_alien = choice(self.aliens.sprites())
+            laser_sprite = BossLaser(random_alien.rect.center, self.level - 3, screen_height)
             self.alien_lasers.add(laser_sprite)
 
     def extra_alien_timer(self):
@@ -217,8 +181,8 @@ class Game:
     def display_level(self):
         if self.level <= 11:
             if self.level <= 10: level_surf = self.font.render(f'Level {self.level}', False, 'white')
-            else: level_surf = self.font.render(f'Boss Fight', False, 'white')
-            level_rect = level_surf.get_rect(topleft = (325,25))
+            else: level_surf = self.font.render(f'Boss', False, 'white')
+            level_rect = level_surf.get_rect(topleft = (350,25))
             screen.blit(level_surf, level_rect)
 
     def display_score(self):
@@ -245,21 +209,16 @@ class Game:
         else: pass
 
     def boss_setup(self):
-        alien_sprite = Boss(screen_width/2,screen_height/2)
-        self.aliens.add(alien_sprite)
+        boss_sprite = Boss(screen_width/2,screen_height/3)
+        self.aliens.add(boss_sprite)
 
     def next_level(self):
         if not self.aliens.sprites():
-            if self.level <= 9:
-                self.level += 1
-                self.drop_perks()
-                self.alien_setup(rows = 7, cols = 7)
+            self.level += 1
+            self.drop_perks()
+            self.one_alien()
+            pygame.time.set_timer(ALIENSET,1700,loops = 1)
             
-            elif self.level == 10:
-                self.level += 1
-                self.drop_perks()
-                self.boss_setup()
-
     def run(self):
         self.player.update()
         self.alien_lasers.update()
@@ -284,7 +243,6 @@ class Game:
         self.laser_speed.draw(screen)
         self.bullet.draw(screen)
         self.damage.draw(screen)
-        self.boss.draw(screen)
 
         self.display_lives()
         self.display_level()
@@ -305,13 +263,22 @@ if __name__ == '__main__':
     ALIENLASER = pygame.USEREVENT + 1
     pygame.time.set_timer(ALIENLASER, game.alien_cooldown)
 
+    ALIENSET = pygame.USEREVENT + 2
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
             if event.type == ALIENLASER:
-                game.alien_shot()
+                if game.level <= 10:
+                    game.alien_shot()
+                else: game.boss_shot()
+            if event.type == ALIENSET:
+                if game.level <= 10:
+                    game.alien_setup(rows = 7, cols = 7)
+                else:
+                    game.boss_setup()
 
         screen.fill((30, 30, 30))
         game.run()

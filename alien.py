@@ -44,8 +44,13 @@ class Alien(pygame.sprite.Sprite):
             self.value = 120
             self.enemy_lives = 12
 
+    def destroy(self):
+        if self.rect.y >= 950:
+            self.kill()
+
     def update(self, direction):
         self.rect.x += direction
+        self.destroy()
 
 class Extra(pygame.sprite.Sprite):
     def __init__(self, side, screen_width):
@@ -60,7 +65,7 @@ class Extra(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft = (x,100))
 
     def destroy(self):
-        if self.rect.y <= -50 or self.rect.y >= 750:
+        if self.rect.x <= -50 or self.rect.x >= 750:
             self.kill()
 
     def update(self):

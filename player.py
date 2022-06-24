@@ -1,5 +1,5 @@
 import pygame
-from laser import Laser, Laser2, Laser3, Laser4, Laser5, Laser6
+from laser import Laser, Laser2, Laser3
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, constraint):
@@ -10,7 +10,7 @@ class Player(pygame.sprite.Sprite):
         self.max_x_constraint = constraint
         self.ready = True
         self.laser_time = 0
-        self.laser_cooldown = 400
+        self.laser_cooldown = 600
         self.laser_bullet = 1
         self.lasers = pygame.sprite.Group()
 
