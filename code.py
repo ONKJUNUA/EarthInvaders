@@ -336,7 +336,7 @@ class Game:
         self.display_score()
         self.next_level()
 
-class Button1:
+class Button:
     def __init__(self,text,width,height,pos):
         self.pressed = False
 
@@ -351,6 +351,7 @@ class Button1:
         self.check_click()
 
     def check_click(self):
+        global credit, option, start, rul, power
         mouse_pos = pygame.mouse.get_pos()
         if self.top_rect.collidepoint(mouse_pos):
             self.top_color = (120,120,120)
@@ -358,12 +359,17 @@ class Button1:
                 self.pressed = True
             else:
                 if self.pressed == True:
-                    menu()
-                    self.pressed = False
+                    if button_1.pressed:
+                        menu()                 
+                    elif button_2.pressed:
+                        options()                   
+                    elif button_3.pressed:
+                        credits()
+                    self.pressed = False               
         else:
             self.top_color = (255,255,255)
 
-class Button2:
+class ButtonGame:
     def __init__(self,text,width,height,pos):
         self.pressed = False
 
@@ -378,6 +384,7 @@ class Button2:
         self.check_click()
 
     def check_click(self):
+        global credit, option, start, rul, power
         mouse_pos = pygame.mouse.get_pos()
         if self.top_rect.collidepoint(mouse_pos):
             self.top_color = (120,120,120)
@@ -385,12 +392,23 @@ class Button2:
                 self.pressed = True
             else:
                 if self.pressed == True:
-                    options()
+                    if button_10.pressed:
+                        game.level = 0
+                        power = 10
+                        gameplay()
+                    if button_11.pressed:
+                        game.level = 0
+                        power = 5
+                        gameplay()
+                    if button_12.pressed:
+                        game.level = 0
+                        power = 3
+                        gameplay()
                     self.pressed = False
         else:
             self.top_color = (255,255,255)
 
-class Button3:
+class ButtonRul:
     def __init__(self,text,width,height,pos):
         self.pressed = False
 
@@ -405,6 +423,7 @@ class Button3:
         self.check_click()
 
     def check_click(self):
+        global credit, option, start, rul, power
         mouse_pos = pygame.mouse.get_pos()
         if self.top_rect.collidepoint(mouse_pos):
             self.top_color = (120,120,120)
@@ -412,12 +431,12 @@ class Button3:
                 self.pressed = True
             else:
                 if self.pressed == True:
-                    credits()
+                    rules()
                     self.pressed = False
         else:
             self.top_color = (255,255,255)
 
-class Button4:
+class ButtonBack:
     def __init__(self,text,width,height,pos):
         self.pressed = False
 
@@ -432,7 +451,7 @@ class Button4:
         self.check_click()
 
     def check_click(self):
-        global credit, option, start
+        global credit, option, start, rul, power
         mouse_pos = pygame.mouse.get_pos()
         if self.top_rect.collidepoint(mouse_pos):
             self.top_color = (120,120,120)
@@ -447,7 +466,7 @@ class Button4:
         else:
             self.top_color = (255,255,255)
 
-class Button5:
+class ButtonBack2:
     def __init__(self,text,width,height,pos):
         self.pressed = False
 
@@ -462,232 +481,7 @@ class Button5:
         self.check_click()
 
     def check_click(self):
-        mouse_pos = pygame.mouse.get_pos()
-        if self.top_rect.collidepoint(mouse_pos):
-            self.top_color = (120,120,120)
-            if pygame.mouse.get_pressed()[0]:
-                self.pressed = True
-            else:
-                if self.pressed == True:
-                    
-                    self.pressed = False
-        else:
-            self.top_color = (255,255,255)
-
-class Button6:
-    def __init__(self,text,width,height,pos):
-        self.pressed = False
-
-        self.top_rect = pygame.Rect(pos,(width,height))
-        self.top_color = (255,255,255)
-        self.text_surf = game_font.render(text,True,(30,30,30))
-        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
-
-    def draw(self):
-        pygame.draw.rect(screen,self.top_color,self.top_rect)
-        screen.blit(self.text_surf,self.text_rect)
-        self.check_click()
-
-    def check_click(self):
-        mouse_pos = pygame.mouse.get_pos()
-        if self.top_rect.collidepoint(mouse_pos):
-            self.top_color = (120,120,120)
-            if pygame.mouse.get_pressed()[0]:
-                self.pressed = True
-            else:
-                if self.pressed == True:
-                    
-                    self.pressed = False
-        else:
-            self.top_color = (255,255,255)
-
-class Button7:
-    def __init__(self,text,width,height,pos):
-        self.pressed = False
-
-        self.top_rect = pygame.Rect(pos,(width,height))
-        self.top_color = (255,255,255)
-        self.text_surf = game_font.render(text,True,(30,30,30))
-        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
-
-    def draw(self):
-        pygame.draw.rect(screen,self.top_color,self.top_rect)
-        screen.blit(self.text_surf,self.text_rect)
-        self.check_click()
-
-    def check_click(self):
-        mouse_pos = pygame.mouse.get_pos()
-        if self.top_rect.collidepoint(mouse_pos):
-            self.top_color = (120,120,120)
-            if pygame.mouse.get_pressed()[0]:
-                self.pressed = True
-            else:
-                if self.pressed == True:
-                    
-                    self.pressed = False
-        else:
-            self.top_color = (255,255,255)
-
-class Button8:
-    def __init__(self,text,width,height,pos):
-        self.pressed = False
-
-        self.top_rect = pygame.Rect(pos,(width,height))
-        self.top_color = (255,255,255)
-        self.text_surf = game_font.render(text,True,(30,30,30))
-        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
-
-    def draw(self):
-        pygame.draw.rect(screen,self.top_color,self.top_rect)
-        screen.blit(self.text_surf,self.text_rect)
-        self.check_click()
-
-    def check_click(self):
-        mouse_pos = pygame.mouse.get_pos()
-        if self.top_rect.collidepoint(mouse_pos):
-            self.top_color = (120,120,120)
-            if pygame.mouse.get_pressed()[0]:
-                self.pressed = True
-            else:
-                if self.pressed == True:
-                    
-                    self.pressed = False
-        else:
-            self.top_color = (255,255,255)
-
-class Button9:
-    def __init__(self,text,width,height,pos):
-        self.pressed = False
-
-        self.top_rect = pygame.Rect(pos,(width,height))
-        self.top_color = (255,255,255)
-        self.text_surf = game_font.render(text,True,(30,30,30))
-        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
-
-    def draw(self):
-        pygame.draw.rect(screen,self.top_color,self.top_rect)
-        screen.blit(self.text_surf,self.text_rect)
-        self.check_click()
-
-    def check_click(self):
-        mouse_pos = pygame.mouse.get_pos()
-        if self.top_rect.collidepoint(mouse_pos):
-            self.top_color = (120,120,120)
-            if pygame.mouse.get_pressed()[0]:
-                self.pressed = True
-            else:
-                if self.pressed == True:
-                    rules()
-                    self.pressed = False
-        else:
-            self.top_color = (255,255,255)
-
-class Button10:
-    def __init__(self,text,width,height,pos):
-        self.pressed = False
-
-        self.top_rect = pygame.Rect(pos,(width,height))
-        self.top_color = (255,255,255)
-        self.text_surf = game_font.render(text,True,(30,30,30))
-        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
-
-    def draw(self):
-        pygame.draw.rect(screen,self.top_color,self.top_rect)
-        screen.blit(self.text_surf,self.text_rect)
-        self.check_click()
-
-    def check_click(self):
-        global power
-        mouse_pos = pygame.mouse.get_pos()
-        if self.top_rect.collidepoint(mouse_pos):
-            self.top_color = (120,120,120)
-            if pygame.mouse.get_pressed()[0]:
-                self.pressed = True
-            else:
-                if self.pressed == True:
-                    game.level = 0
-                    power = 10
-                    gameplay()
-                    self.pressed = False
-        else:
-            self.top_color = (255,255,255)
-
-class Button11:
-    def __init__(self,text,width,height,pos):
-        self.pressed = False
-
-        self.top_rect = pygame.Rect(pos,(width,height))
-        self.top_color = (255,255,255)
-        self.text_surf = game_font.render(text,True,(30,30,30))
-        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
-
-    def draw(self):
-        pygame.draw.rect(screen,self.top_color,self.top_rect)
-        screen.blit(self.text_surf,self.text_rect)
-        self.check_click()
-
-    def check_click(self):
-        global power
-        mouse_pos = pygame.mouse.get_pos()
-        if self.top_rect.collidepoint(mouse_pos):
-            self.top_color = (120,120,120)
-            if pygame.mouse.get_pressed()[0]:
-                self.pressed = True
-            else:
-                if self.pressed == True:
-                    game.level = 0
-                    power = 5
-                    gameplay()
-                    self.pressed = False
-        else:
-            self.top_color = (255,255,255)
-
-class Button12:
-    def __init__(self,text,width,height,pos):
-        self.pressed = False
-
-        self.top_rect = pygame.Rect(pos,(width,height))
-        self.top_color = (255,255,255)
-        self.text_surf = game_font.render(text,True,(30,30,30))
-        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
-
-    def draw(self):
-        pygame.draw.rect(screen,self.top_color,self.top_rect)
-        screen.blit(self.text_surf,self.text_rect)
-        self.check_click()
-
-    def check_click(self):
-        global power
-        mouse_pos = pygame.mouse.get_pos()
-        if self.top_rect.collidepoint(mouse_pos):
-            self.top_color = (120,120,120)
-            if pygame.mouse.get_pressed()[0]:
-                self.pressed = True
-            else:
-                if self.pressed == True:
-                    game.level = 0
-                    power = 3
-                    gameplay()
-                    self.pressed = False
-        else:
-            self.top_color = (255,255,255)
-
-class Button0:
-    def __init__(self,text,width,height,pos):
-        self.pressed = False
-
-        self.top_rect = pygame.Rect(pos,(width,height))
-        self.top_color = (255,255,255)
-        self.text_surf = game_font.render(text,True,(30,30,30))
-        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
-
-    def draw(self):
-        pygame.draw.rect(screen,self.top_color,self.top_rect)
-        screen.blit(self.text_surf,self.text_rect)
-        self.check_click()
-
-    def check_click(self):
-        global rul
+        global credit, option, start, rul, power
         mouse_pos = pygame.mouse.get_pos()
         if self.top_rect.collidepoint(mouse_pos):
             self.top_color = (120,120,120)
@@ -1004,12 +798,10 @@ def pause():
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    subprocess.call(sys.executable + ' "' + os.path.realpath(__file__) + '"')
-
-        screen.fill((30,30,30))
+                    rul = False
 
         title_text = str('PAUSE')
-        title_surface = title_font.render(title_text,True,(255,255,255))
+        title_surface = title_font.render(title_text,True,(120,120,120))
         title_x = int(screen_width/2)
         title_y = int(screen_height/2)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
@@ -1040,23 +832,22 @@ if __name__ == '__main__':
     game_font = pygame.font.Font('font/pixel.ttf',30)
     title_font = pygame.font.Font('font/pixel.ttf',45)
 
-    button_1 = Button1('Start Game',screen_width/2,100,(screen_width/4,450))
-    button_2 = Button2('Options',screen_width/2,100,(screen_width/4,600))
-    button_3 = Button3('Credits',screen_width/2,100,(screen_width/4,750))
+    button_1 = Button('Start Game',screen_width/2,100,(screen_width/4,450))
+    button_2 = Button('Options',screen_width/2,100,(screen_width/4,600))
+    button_3 = Button('Credits',screen_width/2,100,(screen_width/4,750))
 
-    button_4 = Button4('Back',screen_width/2,100,(screen_width/4,750))
+    button_4 = ButtonBack('Back',screen_width/2,100,(screen_width/4,750))
 
-    button_5 = Button5('Music:ON',screen_width/2,100,(screen_width/4,550))
-    button_6 = Button6('Music:OFF',screen_width/2,100,(screen_width/4,550))
-    button_7 = Button7('Sound:ON',screen_width/2,100,(screen_width/4,400))
-    button_8 = Button8('Sound:OFF',screen_width/2,100,(screen_width/4,400))
-    button_9 = Button9('Rules',screen_width/2,100,(screen_width/4,250))
+    button_5 = ButtonRul('Music:ON',screen_width/2,100,(screen_width/4,550))
+    button_6 = ButtonRul('Music:OFF',screen_width/2,100,(screen_width/4,550))
+    button_7 = ButtonRul('Sound:ON',screen_width/2,100,(screen_width/4,400))
+    button_8 = ButtonRul('Sound:OFF',screen_width/2,100,(screen_width/4,400))
+    button_9 = ButtonRul('Rules',screen_width/2,100,(screen_width/4,250))
 
-    button_0 = Button0('Back',screen_width/2,100,(screen_width/4,750))
+    button_0 = ButtonBack2('Back',screen_width/2,100,(screen_width/4,750))
 
-    button_10 = Button10('Impossible',screen_width/2,100,(screen_width/4,550))
-    button_11 = Button11('Hard',screen_width/2,100,(screen_width/4,400))
-    button_12 = Button12('Normal',screen_width/2,100,(screen_width/4,250))
-
+    button_10 = ButtonGame('Impossible',screen_width/2,100,(screen_width/4,550))
+    button_11 = ButtonGame('Hard',screen_width/2,100,(screen_width/4,400))
+    button_12 = ButtonGame('Normal',screen_width/2,100,(screen_width/4,250))
 
     main_menu()
