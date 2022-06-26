@@ -51,9 +51,7 @@ class Game:
         self.damage = pygame.sprite.Group()
 
     def death(self):
-        pygame.quit()
-        sys.stdout.flush()
-        subprocess.call([sys.executable, os.path.realpath(__file__)] + sys.argv[1:])
+        lose()
 
     def create_obstacle(self, x_start, y_start,offset_x):
         for row_index, row in enumerate(self.shape):
@@ -80,7 +78,7 @@ class Game:
                     else: alien_sprite = Alien(str(0+self.level), x, y)
                     self.aliens.add(alien_sprite)
 
-    def one_alien(self, x = 450, y = 949):
+    def one_alien(self, x = 450, y = 947):
         if self.level <= 11:
             alien_sprite = Alien(str(0+self.level), x, y)
             self.aliens.add(alien_sprite)
@@ -302,6 +300,7 @@ class Game:
                 self.drop_perks()
                 self.one_alien()
                 pygame.time.set_timer(ALIENSET,1700,loops = 1)
+            else: win()
             
     def run(self):
         self.player.update()
@@ -492,6 +491,37 @@ class ButtonBack2:
                 if self.pressed == True:
                     rul = False
                     self.pressed = False
+        else:
+            self.top_color = (255,255,255)
+
+class ButtonRestart:
+    def __init__(self,text,width,height,pos):
+        self.pressed = False
+
+        self.top_rect = pygame.Rect(pos,(width,height))
+        self.top_color = (255,255,255)
+        self.text_surf = game_font.render(text,True,(30,30,30))
+        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
+
+    def draw(self):
+        pygame.draw.rect(screen,self.top_color,self.top_rect)
+        screen.blit(self.text_surf,self.text_rect)
+        self.check_click()
+
+    def check_click(self):
+        global credit, option, start, rul, power
+        mouse_pos = pygame.mouse.get_pos()
+        if self.top_rect.collidepoint(mouse_pos):
+            self.top_color = (120,120,120)
+            if pygame.mouse.get_pressed()[0]:
+                self.pressed = True
+            else:
+                if self.pressed == True:
+                    pygame.quit()
+                    sys.stdout.flush()
+                    subprocess.call([sys.executable, os.path.realpath(__file__)] + sys.argv[1:])
+                    self.pressed = False
+                    sys.exit()
         else:
             self.top_color = (255,255,255)
 
@@ -834,12 +864,78 @@ def pause():
                 if event.key == pygame.K_ESCAPE:
                     rul = False
 
+        pygame.draw.rect(screen, (30,30,30), pygame.Rect(0, 100, 700, 650))
+
         title_text = str('PAUSE')
-        title_surface = title_font.render(title_text,True,(120,120,120))
+        title_surface = title_font.render(title_text,True,(255,255,255))
+        title_x = int(screen_width/2)
+        title_y = int(screen_height/3)
+        title_rect = title_surface.get_rect(center = (title_x,title_y))
+        screen.blit(title_surface,title_rect)
+
+        button_13.draw()
+
+        pygame.display.flip()
+        clock.tick(60)
+
+def win():
+    rul = True
+    while rul:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+
+        title_text = str('You Win!!!')
+        title_surface = title_font.render(title_text,True,(255,255,255))
+        title_x = int(screen_width/2)
+        title_y = int(screen_height/3)
+        title_rect = title_surface.get_rect(center = (title_x,title_y))
+        screen.blit(title_surface,title_rect)
+
+        title_text = str(f'Your Score: {game.score}')
+        title_surface = game_font.render(title_text,True,(255,255,255))
         title_x = int(screen_width/2)
         title_y = int(screen_height/2)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
+
+        button_13.draw()
+
+        pygame.display.flip()
+        clock.tick(60)
+
+def lose():
+    rul = True
+    while rul:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+
+        title_text = str('You Lose...')
+        title_surface = title_font.render(title_text,True,(255,255,255))
+        title_x = int(screen_width/2)
+        title_y = int(screen_height/3)
+        title_rect = title_surface.get_rect(center = (title_x,title_y))
+        screen.blit(title_surface,title_rect)
+
+        title_text = str(f'Your Score: {game.score}')
+        title_surface = game_font.render(title_text,True,(255,255,255))
+        title_x = int(screen_width/2)
+        title_y = int(screen_height/2)
+        title_rect = title_surface.get_rect(center = (title_x,title_y))
+        screen.blit(title_surface,title_rect)
+
+        button_13.draw()
 
         pygame.display.flip()
         clock.tick(60)
@@ -883,5 +979,8 @@ if __name__ == '__main__':
     button_10 = ButtonGame('Impossible',screen_width/2,100,(screen_width/4,550))
     button_11 = ButtonGame('Hard',screen_width/2,100,(screen_width/4,400))
     button_12 = ButtonGame('Normal',screen_width/2,100,(screen_width/4,250))
+
+    button_13 = ButtonRestart('Restart',screen_width/2,100,(screen_width/4,550))
+
 
     main_menu()
