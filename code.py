@@ -1,4 +1,4 @@
-import pygame, sys
+import pygame, sys, os, subprocess
 from random import choice, randint
 from boss import Boss
 import obstacles
@@ -52,7 +52,8 @@ class Game:
 
     def death(self):
         pygame.quit()
-        sys.exit()
+        sys.stdout.flush()
+        subprocess.call([sys.executable, os.path.realpath(__file__)] + sys.argv[1:])
 
     def create_obstacle(self, x_start, y_start,offset_x):
         for row_index, row in enumerate(self.shape):
