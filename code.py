@@ -13,12 +13,12 @@ class Game:
         self.player = pygame.sprite.GroupSingle(player_sprite)
 
         self.killable = False
-        self.level = 1
-        self.lives = 4
-        self.dmg = 1
-        self.speed_charge = 3
-        self.bullet_charge = 3
-        self.damage_charge = 3
+        self.level = 0
+        self.lives = 0
+        self.dmg = 0
+        self.speed_charge = 5
+        self.bullet_charge = 5
+        self.damage_charge = 5
         self.live_icon = pygame.image.load('graphics/player.png').convert_alpha()
         self.score = 0
         self.font = pygame.font.Font('font/pixel.ttf', 25)
@@ -26,7 +26,7 @@ class Game:
         self.title_font = pygame.font.Font('font/pixel.ttf', 50)
         
         self.alien_cooldown = 800
-        self.boss_cooldown = 1000
+        self.boss_cooldown = 600
         self.shape = obstacles.shape
         self.block_size = 3
         self.blocks = pygame.sprite.Group()
@@ -166,13 +166,13 @@ class Game:
                 if fake_aliens_hit:
                     for fake_alien in aliens_hit:
                         if self.killable == True:
-                            self.score += 100
+                            pass
                     laser.kill()
 
                 if pygame.sprite.spritecollide(laser, self.extra, True):
                     self.score += 100
-                    if self.level >= 9:
-                        self.choice = randint(1,10)
+                    if self.level >= 6:
+                        self.choice = randint(1,4)
                         if self.choice == 1:
                             self.drop_shield()
                         else: self.drop_heart()
@@ -265,25 +265,15 @@ class Game:
         self.aliens.add(boss_sprite)
 
     def boss_attack(self):
-        attack_type = randint(1,8)
+        attack_type = randint(1,4)
         if attack_type == 1:
-            pygame.time.set_timer(BOSSLASER, self.boss_cooldown, loops = 5)
+            pygame.time.set_timer(BOSSLASER, self.boss_cooldown, loops = 10)
         if attack_type == 2:
             self.fake_alien(rows = 2, cols = 8)
         if attack_type == 3:
-            pygame.time.set_timer(CHILDLASER, self.boss_cooldown, loops = 3)
+            pygame.time.set_timer(CHILDLASER, self.boss_cooldown, loops = 5)
         if attack_type == 4:
-            self.choice = randint(1,10)
-            if self.choice == 1: 
-                self.drop_shield()
-            elif self.choice == 2: 
-                self.drop_heart()
-            else: pass
-        if attack_type == 5:
-            pygame.time.set_timer(ALIENLASER, game.alien_cooldown, loops = 10)
-        if attack_type == 6:
             self.fake_alien(rows = 1, cols = 8)
-        else: pass
 
     def next_level(self):
         if self.aliens.sprites():
@@ -394,14 +384,20 @@ class ButtonGame:
                 if self.pressed == True:
                     if button_10.pressed:
                         game.level = 0
+                        game.lives = 2
+                        game.dmg = 1
                         power = 10
                         gameplay()
                     if button_11.pressed:
                         game.level = 0
+                        game.lives = 4
+                        game.dmg = 2
                         power = 5
                         gameplay()
                     if button_12.pressed:
                         game.level = 0
+                        game.lives = 6
+                        game.dmg = 3
                         power = 3
                         gameplay()
                     self.pressed = False
@@ -694,16 +690,16 @@ def options():
         screen.blit(title_surface,title_rect)
 
         a = pygame.image.load('graphics/earth.png').convert_alpha()
-        a_rect = a.get_rect(center = (700,350))
-        screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/earth.png').convert_alpha()
-        a_rect = a.get_rect(center = (0,700))
-        screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/boss.png').convert_alpha()
         a_rect = a.get_rect(center = (700,700))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/boss.png').convert_alpha()
+        a = pygame.image.load('graphics/earth.png').convert_alpha()
         a_rect = a.get_rect(center = (0,350))
+        screen.blit(a,a_rect)
+        a = pygame.image.load('graphics/boss.png').convert_alpha()
+        a_rect = a.get_rect(center = (700,350))
+        screen.blit(a,a_rect)
+        a = pygame.image.load('graphics/boss.png').convert_alpha()
+        a_rect = a.get_rect(center = (0,700))
         screen.blit(a,a_rect)
 
         button_9.draw()
@@ -736,16 +732,16 @@ def menu():
         screen.blit(title_surface,title_rect)
 
         a = pygame.image.load('graphics/earth.png').convert_alpha()
-        a_rect = a.get_rect(center = (700,350))
-        screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/earth.png').convert_alpha()
-        a_rect = a.get_rect(center = (0,700))
-        screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/boss.png').convert_alpha()
         a_rect = a.get_rect(center = (700,700))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/boss.png').convert_alpha()
+        a = pygame.image.load('graphics/earth.png').convert_alpha()
         a_rect = a.get_rect(center = (0,350))
+        screen.blit(a,a_rect)
+        a = pygame.image.load('graphics/boss.png').convert_alpha()
+        a_rect = a.get_rect(center = (700,350))
+        screen.blit(a,a_rect)
+        a = pygame.image.load('graphics/boss.png').convert_alpha()
+        a_rect = a.get_rect(center = (0,700))
         screen.blit(a,a_rect)
 
         button_12.draw()
@@ -869,7 +865,7 @@ def pause():
         title_text = str('PAUSE')
         title_surface = title_font.render(title_text,True,(255,255,255))
         title_x = int(screen_width/2)
-        title_y = int(screen_height/3)
+        title_y = int(screen_height/2)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
@@ -889,6 +885,8 @@ def win():
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     sys.exit()
+        
+        screen.fill((30, 30, 30))
 
         title_text = str('You Win!!!')
         title_surface = title_font.render(title_text,True,(255,255,255))
@@ -920,6 +918,8 @@ def lose():
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     sys.exit()
+
+        screen.fill((30, 30, 30))
 
         title_text = str('You Lose...')
         title_surface = title_font.render(title_text,True,(255,255,255))
@@ -968,8 +968,7 @@ if __name__ == '__main__':
 
     button_4 = ButtonBack('Back',screen_width/2,100,(screen_width/4,750))
 
-    button_5 = ButtonRul('Music:ON',screen_width/2,100,(screen_width/4,550))
-    button_6 = ButtonRul('Music:OFF',screen_width/2,100,(screen_width/4,550))
+    button_5 = ButtonRul('Colors',screen_width/2,100,(screen_width/4,550))
     button_7 = ButtonRul('Sound:ON',screen_width/2,100,(screen_width/4,400))
     button_8 = ButtonRul('Sound:OFF',screen_width/2,100,(screen_width/4,400))
     button_9 = ButtonRul('Rules',screen_width/2,100,(screen_width/4,250))
@@ -981,6 +980,5 @@ if __name__ == '__main__':
     button_12 = ButtonGame('Normal',screen_width/2,100,(screen_width/4,250))
 
     button_13 = ButtonRestart('Restart',screen_width/2,100,(screen_width/4,550))
-
 
     main_menu()

@@ -6,11 +6,11 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.image.load('graphics/player.png').convert_alpha()
         self.rect = self.image.get_rect(midbottom = pos)
-        self.speed = 3
+        self.speed = 2
         self.max_x_constraint = constraint
         self.ready = True
         self.laser_time = 0
-        self.laser_cooldown = 600
+        self.laser_cooldown = 700
         self.laser_bullet = 1
         self.lasers = pygame.sprite.Group()
 
@@ -42,18 +42,33 @@ class Player(pygame.sprite.Sprite):
     def shoot_laser(self):
         if self.laser_bullet == 1:
             self.bullet_speed = -6
-            self.lasers.add(Laser(self.rect.center ,self.bullet_speed,self.rect.bottom))
+            self.lasers.add(Laser(self.rect.midtop,self.bullet_speed,self.rect.bottom))
         elif self.laser_bullet == 2:
             self.bullet_speed = -8
-            self.lasers.add(Laser2(self.rect.bottomleft,self.bullet_speed,self.rect.bottom))
-            self.lasers.add(Laser3(self.rect.bottomright,self.bullet_speed,self.rect.bottom))
+            self.lasers.add(Laser2(self.rect.midleft,self.bullet_speed,self.rect.bottom))
+            self.lasers.add(Laser3(self.rect.midright,self.bullet_speed,self.rect.bottom))
         elif self.laser_bullet == 3:
-            self.lasers.add(Laser(self.rect.center, self.bullet_speed, self.rect.bottom))
+            self.lasers.add(Laser(self.rect.midtop, self.bullet_speed, self.rect.bottom))
+            self.lasers.add(Laser2(self.rect.midleft, self.bullet_speed, self.rect.bottom))
+            self.lasers.add(Laser3(self.rect.midright, self.bullet_speed, self.rect.bottom))
+        elif self.laser_bullet == 4:
+            self.bullet_speed = -10
+            self.lasers.add(Laser2(self.rect.midleft, self.bullet_speed, self.rect.bottom))
+            self.lasers.add(Laser3(self.rect.midright, self.bullet_speed, self.rect.bottom))
+            self.lasers.add(Laser2(self.rect.bottomleft, self.bullet_speed, self.rect.bottom))
+            self.lasers.add(Laser3(self.rect.bottomright, self.bullet_speed, self.rect.bottom))
+        elif self.laser_bullet == 5:
+            self.lasers.add(Laser(self.rect.midtop, self.bullet_speed, self.rect.bottom))
+            self.lasers.add(Laser2(self.rect.midleft, self.bullet_speed, self.rect.bottom))
+            self.lasers.add(Laser3(self.rect.midright, self.bullet_speed, self.rect.bottom))
             self.lasers.add(Laser2(self.rect.bottomleft, self.bullet_speed, self.rect.bottom))
             self.lasers.add(Laser3(self.rect.bottomright, self.bullet_speed, self.rect.bottom))
         else:
-            self.bullet_speed = -10
+            self.bullet_speed = -12
+            self.lasers.add(Laser(self.rect.midtop, self.bullet_speed, self.rect.bottom))
             self.lasers.add(Laser(self.rect.center, self.bullet_speed, self.rect.bottom))
+            self.lasers.add(Laser2(self.rect.midleft, self.bullet_speed, self.rect.bottom))
+            self.lasers.add(Laser3(self.rect.midright, self.bullet_speed, self.rect.bottom))
             self.lasers.add(Laser2(self.rect.bottomleft, self.bullet_speed, self.rect.bottom))
             self.lasers.add(Laser3(self.rect.bottomright, self.bullet_speed, self.rect.bottom))
 

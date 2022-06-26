@@ -5,7 +5,7 @@ class Laser(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.Surface((4,20))
         self.image.fill('white')
-        self.rect = self.image.get_rect(center = pos)
+        self.rect = self.image.get_rect(midtop = pos)
         self.speed = speed
         self.height_y_constraint = screen_height
 
@@ -22,7 +22,7 @@ class Laser2(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.Surface((4,20))
         self.image.fill('white')
-        self.rect = self.image.get_rect(bottomleft = pos)
+        self.rect = self.image.get_rect(midleft = pos)
         self.speed = speed
         self.height_y_constraint = screen_height
 
@@ -39,7 +39,7 @@ class Laser3(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.Surface((4,20))
         self.image.fill('white')
-        self.rect = self.image.get_rect(bottomright = pos)
+        self.rect = self.image.get_rect(midright = pos)
         self.speed = speed
         self.height_y_constraint = screen_height
 

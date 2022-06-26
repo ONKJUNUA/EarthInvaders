@@ -9,40 +9,40 @@ class Alien(pygame.sprite.Sprite):
 
         if number == '1': 
             self.value = 10
-            self.enemy_lives = 1
+            self.enemy_lives = 2
         elif number == '2': 
             self.value = 20
-            self.enemy_lives = 2
+            self.enemy_lives = 4
         elif number == '3': 
             self.value = 30
-            self.enemy_lives = 3
+            self.enemy_lives = 6
         elif number == '4': 
             self.value = 40
-            self.enemy_lives = 4
+            self.enemy_lives = 8
         elif number == '5': 
             self.value = 50
-            self.enemy_lives = 5
+            self.enemy_lives = 10
         elif number == '6': 
             self.value = 60
-            self.enemy_lives = 6
+            self.enemy_lives = 12
         elif number == '7': 
             self.value = 70
-            self.enemy_lives = 7
+            self.enemy_lives = 14
         elif number == '8': 
             self.value = 80
-            self.enemy_lives = 8
+            self.enemy_lives = 16
         elif number == '9': 
             self.value = 90
-            self.enemy_lives = 9
+            self.enemy_lives = 18
         elif number == '10': 
             self.value = 100
-            self.enemy_lives = 10
+            self.enemy_lives = 20
         elif number == '11': 
             self.value = 110
-            self.enemy_lives = 11
+            self.enemy_lives = 22
         elif number == '12': 
             self.value = 120
-            self.enemy_lives = 12
+            self.enemy_lives = 24
 
     def destroy(self):
         if self.rect.y >= 950:
