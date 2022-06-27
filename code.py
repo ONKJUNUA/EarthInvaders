@@ -93,7 +93,7 @@ class Game:
             for col_index, col in enumerate(range(cols)):
                 x = col_index * x_distance + x_offset
                 y = row_index * y_distance + y_offset
-                alien_sprite = FakeAlien('12', x, y)
+                alien_sprite = FakeAlien(str(11), x, y)
                 self.fake_aliens.add(alien_sprite)
 
     def alien_position_checker(self):

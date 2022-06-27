@@ -59,8 +59,8 @@ class FakeAlien(pygame.sprite.Sprite):
         self.image = pygame.image.load(file_path).convert_alpha()
         self.rect = self.image.get_rect(topleft =(x, y))
 
-        if number == '12':
-            self.enemy_lives = 12
+        if number == '11': 
+            self.enemy_lives = 20
         if number == 'earth':
             self.enemy_lives = 100000
 
