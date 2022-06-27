@@ -61,6 +61,8 @@ class FakeAlien(pygame.sprite.Sprite):
 
         if number == '12':
             self.enemy_lives = 12
+        if number == 'earth':
+            self.enemy_lives = 100000
 
     def destroy(self):
         if self.rect.y >= 950:

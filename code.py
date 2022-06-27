@@ -83,6 +83,10 @@ class Game:
             alien_sprite = Alien(str(0+self.level), x, y)
             self.aliens.add(alien_sprite)
 
+    def earth(self, x = 450, y = -200):
+        alien_sprite = FakeAlien('earth', x, y)
+        self.aliens.add(alien_sprite)
+
     def fake_alien(self, rows, cols, x_distance = 85, y_distance = 80, x_offset = 27, y_offset = 500):
         for row_index, row in enumerate(range(rows)):
             for col_index, col in enumerate(range(cols)):
@@ -806,9 +810,10 @@ def gameplay():
             if event.type == CHILDLASER: game.child_shot()
             if event.type == ALIENSET:
                 if game.level <= 10: game.alien_setup(rows = 7, cols = 7)
-                else: 
+                elif game.level == 11: 
                     game.boss_setup()
                     pygame.time.set_timer(BOSS, 3000)
+                else: pass
             if event.type == BOSS:
                 game.boss_attack()
 
@@ -1177,17 +1182,25 @@ def win():
         
         screen.fill((30, 30, 30))
 
+        e = pygame.image.load('graphics/player.png').convert_alpha()
+        e_rect = e.get_rect(center = (screen_width/2,screen_height - 50))
+        screen.blit(e,e_rect)
+
+        e = pygame.image.load('graphics/earth.png').convert_alpha()
+        e_rect = e.get_rect(center = (screen_width/2,screen_height/3))
+        screen.blit(e,e_rect)
+
         title_text = str('You Win!!!')
         title_surface = title_font.render(title_text,True,(255,255,255))
         title_x = int(screen_width/2)
-        title_y = int(screen_height/3)
+        title_y = int(screen_height/10)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
         title_text = str(f'Your Score: {game.score}')
         title_surface = game_font.render(title_text,True,(255,255,255))
         title_x = int(screen_width/2)
-        title_y = int(screen_height/2)
+        title_y = int(screen_height/2 + screen_height/20)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
@@ -1243,7 +1256,7 @@ def lose2():
 
         screen.fill((30, 30, 30))
 
-        title_text = str('You Lose...')
+        title_text = str('You Die...')
         title_surface = title_font.render(title_text,True,(255,255,255))
         title_x = int(screen_width/2)
         title_y = int(screen_height/3)
