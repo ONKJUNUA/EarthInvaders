@@ -67,6 +67,8 @@ class FakeAlien(pygame.sprite.Sprite):
     def destroy(self):
         if self.rect.y >= 950:
             self.kill()
+        if self.rect.y == 172:
+            self.kill()
 
     def update(self, direction):
         self.rect.y += direction

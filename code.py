@@ -83,9 +83,10 @@ class Game:
             alien_sprite = Alien(str(0+self.level), x, y)
             self.aliens.add(alien_sprite)
 
-    def earth(self, x = 450, y = -200):
-        alien_sprite = FakeAlien('earth', x, y)
-        self.aliens.add(alien_sprite)
+    def earth(self, x = 222, y = -300):
+        if self.level == 12:
+            fake_alien_sprite = FakeAlien('earth', x, y)
+            self.fake_aliens.add(fake_alien_sprite)
 
     def fake_alien(self, rows, cols, x_distance = 85, y_distance = 80, x_offset = 27, y_offset = 500):
         for row_index, row in enumerate(range(rows)):
@@ -294,7 +295,11 @@ class Game:
                 self.drop_perks()
                 self.one_alien()
                 pygame.time.set_timer(ALIENSET,1700,loops = 1)
-            else: win()
+            else:
+                self.level += 1
+                self.one_alien()
+                self.earth()
+                if not self.fake_aliens.sprites(): win()
             
     def run(self):
         self.player.update()
@@ -942,7 +947,7 @@ def credits():
         game_rect = game_surface.get_rect(center = (game_x,game_y))
         screen.blit(game_surface,game_rect)
 
-        game_text = str('My Own Bit LOL')
+        game_text = str('ONKJUNUA - NOSTRADAMUS')
         game_surface = game_font.render(game_text,True,(255,255,255))
         game_x = int(screen_width/2)
         game_y = int(500)
