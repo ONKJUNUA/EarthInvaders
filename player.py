@@ -25,7 +25,7 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_SPACE] and self.ready:
             self.shoot_laser()
             laser_sound = pygame.mixer.Sound('sound/laser.wav')
-            laser_sound.set_volume(0.1)
+            laser_sound.set_volume(1.0)
             laser_sound.play(loops = 0)
             self.ready = False
             self.laser_time = pygame.time.get_ticks()

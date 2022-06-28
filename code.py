@@ -1,4 +1,4 @@
-import pygame, sys, os, subprocess
+import pygame, sys, os, subprocess, shelve
 from random import choice, randint
 from boss import Boss
 import obstacles
@@ -12,6 +12,12 @@ class Game:
         player_sprite = Player((screen_width/2, screen_height - 10), screen_width)
         self.player = pygame.sprite.GroupSingle(player_sprite)
 
+        self.hs = shelve.open('score.txt')
+        #self.hs['score'] = 0
+        self.hscore = self.hs['score']
+        self.hs.close()
+
+        self.multiple = 1
         self.killable = False
         self.level = 0
         self.lives = 0
@@ -156,7 +162,7 @@ class Game:
                     for alien in aliens_hit:
                         if self.killable == True:
                             destroy_sound()
-                            self.score += alien.value
+                            self.score += alien.value * self.multiple
                     laser.kill()
 
                 fake_aliens_hit_check = pygame.sprite.spritecollide(laser, self.fake_aliens, False)
@@ -172,11 +178,12 @@ class Game:
                 if fake_aliens_hit:
                     for fake_alien in aliens_hit:
                         if self.killable == True:
-                            pass
+                            destroy_sound()
                     laser.kill()
 
                 if pygame.sprite.spritecollide(laser, self.extra, True):
-                    self.score += 100
+                    destroy_sound()
+                    self.score += 100 * self.multiple
                     if self.level >= 6:
                         self.choice = randint(1,4)
                         if self.choice == 1:
@@ -235,7 +242,7 @@ class Game:
     def display_level(self):
         if self.level <= 11:
             if self.level <= 10: level_surf = self.font.render(f'Level {self.level}', False, 'white')
-            else: level_surf = self.font.render(f'Boss', False, 'white')
+            else: level_surf = self.font.render(f'Master', False, 'white')
             level_rect = level_surf.get_rect(topleft = (350,25))
             screen.blit(level_surf, level_rect)
 
@@ -282,21 +289,25 @@ class Game:
             self.fake_alien(rows = 1, cols = 8)
 
     def next_level(self):
+        global permit
         if self.aliens.sprites():
             if self.level == 0:
                 pass
 
         if not self.aliens.sprites():
             if self.level == 0:
+                permit = False
                 self.level += 1
                 self.one_alien()
                 pygame.time.set_timer(ALIENSET,1700,loops = 1)
             elif self.level <= 10:
+                permit = False
                 self.level += 1
                 self.drop_perks()
                 self.one_alien()
                 pygame.time.set_timer(ALIENSET,1700,loops = 1)
             else:
+                permit = False
                 self.level += 1
                 self.one_alien()
                 self.earth()
@@ -340,6 +351,11 @@ class Game2:
     def __init__(self):
         player_sprite = Player((screen_width/2, screen_height - 10), screen_width)
         self.player = pygame.sprite.GroupSingle(player_sprite)
+
+        self.hs = shelve.open('score2.txt')
+        #self.hs['score2'] = 0
+        self.hscore = self.hs['score2']
+        self.hs.close()
 
         self.killable = False
         self.level = 0
@@ -478,6 +494,7 @@ class Game2:
                     laser.kill()
 
                 if pygame.sprite.spritecollide(laser, self.extra, True):
+                    destroy_sound()
                     self.score += 100
                     if self.level >= 6:
                         self.choice = randint(1,4)
@@ -556,13 +573,15 @@ class Game2:
         self.damage.add(damage_sprite)
 
     def next_level(self):
-
+        global permit
         if not self.aliens.sprites():
             if self.level == 0:
+                permit = False
                 self.level += 1
                 self.one_alien()
                 pygame.time.set_timer(ALIENSET,1700,loops = 1)
             else:
+                permit = False
                 self.level += 1
                 self.drop_perks()
                 self.one_alien()
@@ -663,12 +682,14 @@ class ButtonGame:
                         power = 3
                         gameplay2()
                     if button_10.pressed:
+                        game.multiple = 3
                         game.level = 0
                         game.lives = 2
                         game.dmg = 1
                         power = 10
                         gameplay()
                     if button_11.pressed:
+                        game.multiple = 2
                         game.level = 0
                         game.lives = 4
                         game.dmg = 2
@@ -708,6 +729,64 @@ class ButtonRul:
             else:
                 if self.pressed == True:
                     rules()
+                    self.pressed = False
+        else:
+            self.top_color = (255,255,255)
+
+class ButtonSound:
+    def __init__(self,text,width,height,pos):
+        self.pressed = False
+
+        self.top_rect = pygame.Rect(pos,(width,height))
+        self.top_color = (255,255,255)
+        self.text_surf = game_font.render(text,True,(30,30,30))
+        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
+
+    def draw(self):
+        pygame.draw.rect(screen,self.top_color,self.top_rect)
+        screen.blit(self.text_surf,self.text_rect)
+        self.check_click()
+
+    def check_click(self):
+        global credit, option, start, rul, power, sound_on
+        mouse_pos = pygame.mouse.get_pos()
+        if self.top_rect.collidepoint(mouse_pos):
+            self.top_color = (120,120,120)
+            if pygame.mouse.get_pressed()[0]:
+                self.pressed = True
+            else:
+                if self.pressed == True:
+                    sound_on = True
+                    pygame.mixer.music.pause()
+                    self.pressed = False
+        else:
+            self.top_color = (255,255,255)
+
+class ButtonSound2:
+    def __init__(self,text,width,height,pos):
+        self.pressed = False
+
+        self.top_rect = pygame.Rect(pos,(width,height))
+        self.top_color = (255,255,255)
+        self.text_surf = game_font.render(text,True,(30,30,30))
+        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
+
+    def draw(self):
+        pygame.draw.rect(screen,self.top_color,self.top_rect)
+        screen.blit(self.text_surf,self.text_rect)
+        self.check_click()
+
+    def check_click(self):
+        global credit, option, start, rul, power, sound_on
+        mouse_pos = pygame.mouse.get_pos()
+        if self.top_rect.collidepoint(mouse_pos):
+            self.top_color = (120,120,120)
+            if pygame.mouse.get_pressed()[0]:
+                self.pressed = True
+            else:
+                if self.pressed == True:
+                    sound_on = False
+                    pygame.mixer.music.unpause()
                     self.pressed = False
         else:
             self.top_color = (255,255,255)
@@ -802,6 +881,7 @@ class ButtonRestart:
             self.top_color = (255,255,255)
 
 def gameplay():
+    global permit
     running = True
     while running:
         for event in pygame.event.get():
@@ -810,7 +890,8 @@ def gameplay():
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    pause()
+                    if permit == True:
+                        pause()
             if event.type == ALIENLASER:
                 if game.level <= 10:
                     laser_sound()
@@ -818,13 +899,16 @@ def gameplay():
             if event.type == BOSSLASER: game.boss_shot()
             if event.type == CHILDLASER: game.child_shot()
             if event.type == ALIENSET:
-                if game.level <= 10: game.alien_setup(rows = 7, cols = 7)
+                if game.level <= 10: 
+                    game.alien_setup(rows = 7, cols = 7)
+                    permit = True
                 elif game.level == 11: 
                     game.boss_setup()
                     pygame.time.set_timer(BOSS, 3000)
                 else: pass
             if event.type == BOSS:
-                game.boss_attack()
+                if game.level == 11:
+                    game.boss_attack()
 
         screen.fill((30, 30, 30))
         game.run()
@@ -832,6 +916,7 @@ def gameplay():
         clock.tick(60)
 
 def gameplay2():
+    global permit
     running = True
     while running:
         for event in pygame.event.get():
@@ -840,11 +925,14 @@ def gameplay2():
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    pause()
+                    if permit == True:
+                        pause()
             if event.type == ALIENLASER:
+                laser_sound()
                 game2.alien_shot()
             if event.type == ALIENSET:
                 game2.alien_setup(rows = 7, cols = 7)
+                permit = True
         screen.fill((30, 30, 30))
         game2.run()
         pygame.display.flip()
@@ -1005,13 +1093,15 @@ def options():
         screen.blit(a,a_rect)
 
         button_9.draw()
-        button_7.draw()
+        if sound_on == True:
+            button_8.draw()
+        else: button_7.draw()
         button_5.draw()
         button_4.draw()
 
         pygame.display.flip()
         clock.tick(60)
-
+        
 def menu():
     global start
     start = True
@@ -1033,8 +1123,22 @@ def menu():
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
+        title_text = str(f'Best Score:{game.hscore}')
+        title_surface = game_font.render(title_text,True,(255,255,255))
+        title_x = int(screen_width/2)
+        title_y = int(175)
+        title_rect = title_surface.get_rect(center = (title_x,title_y))
+        screen.blit(title_surface,title_rect)
+
+        title_text = str(f'Best Score:{game2.hscore}')
+        title_surface = game_font.render(title_text,True,(255,255,255))
+        title_x = int(screen_width/2)
+        title_y = int(550)
+        title_rect = title_surface.get_rect(center = (title_x,title_y))
+        screen.blit(title_surface,title_rect)
+
         a = pygame.image.load('graphics/earth.png').convert_alpha()
-        a_rect = a.get_rect(center = (700,700))
+        a_rect = a.get_rect(center = (700,750))
         screen.blit(a,a_rect)
         a = pygame.image.load('graphics/earth.png').convert_alpha()
         a_rect = a.get_rect(center = (0,350))
@@ -1043,7 +1147,7 @@ def menu():
         a_rect = a.get_rect(center = (700,350))
         screen.blit(a,a_rect)
         a = pygame.image.load('graphics/boss.png').convert_alpha()
-        a_rect = a.get_rect(center = (0,700))
+        a_rect = a.get_rect(center = (0,750))
         screen.blit(a,a_rect)
 
         button_12.draw()
@@ -1168,9 +1272,13 @@ def pause():
         title_text = str('PAUSE')
         title_surface = title_font.render(title_text,True,(255,255,255))
         title_x = int(screen_width/2)
-        title_y = int(screen_height/2)
+        title_y = int(screen_height/3)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
+
+        if sound_on == True:
+            button_8.draw()
+        else: button_7.draw()
 
         button_13.draw()
 
@@ -1188,6 +1296,14 @@ def win():
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     sys.exit()
+        if game.hscore <= game.score:
+            game.hs = shelve.open('score.txt')
+            game.hs['score'] = game.score
+            game.hs.close()
+        if game2.hscore <= game2.score:
+            game2.hs = shelve.open('score2.txt')
+            game2.hs['score2'] = game2.score
+            game2.hs.close()
         
         screen.fill((30, 30, 30))
 
@@ -1230,6 +1346,15 @@ def lose():
                     pygame.quit()
                     sys.exit()
 
+        if game.hscore <= game.score:
+            game.hs = shelve.open('score.txt')
+            game.hs['score'] = game.score
+            game.hs.close()
+        if game2.hscore <= game2.score:
+            game2.hs = shelve.open('score2.txt')
+            game2.hs['score2'] = game2.score
+            game2.hs.close()
+
         screen.fill((30, 30, 30))
 
         title_text = str('You Lose...')
@@ -1263,6 +1388,15 @@ def lose2():
                     pygame.quit()
                     sys.exit()
 
+        if game.hscore <= game.score:
+            game.hs = shelve.open('score.txt')
+            game.hs['score'] = game.score
+            game.hs.close()
+        if game2.hscore <= game2.score:
+            game2.hs = shelve.open('score2.txt')
+            game2.hs['score2'] = game2.score
+            game2.hs.close()
+
         screen.fill((30, 30, 30))
 
         title_text = str('You Die...')
@@ -1284,20 +1418,20 @@ def lose2():
         pygame.display.flip()
         clock.tick(60)
 
-def music():
-    music = pygame.mixer.Sound('sound/laser.wav')
-    music.set_volume(0.0)
-    music.play(loops = -1)
+def music_sound():
+    pygame.mixer.music.load('sound/music.wav')
+    pygame.mixer.music.set_volume(0.3)
+    pygame.mixer.music.play(loops = -1)
+    pygame.mixer.music.pause()
 
 def laser_sound():
-    global laser_s
     laser_s = pygame.mixer.Sound('sound/laser.wav')
-    laser_s.set_volume(0.0)
+    laser_s.set_volume(0.3)
     laser_s.play(loops = 0)
 
 def destroy_sound():
     destroy_s = pygame.mixer.Sound('sound/destroy.wav')
-    destroy_s.set_volume(0.1)
+    destroy_s.set_volume(1.0)
     destroy_s.play(loops = 0)
 
 if __name__ == '__main__':
@@ -1309,7 +1443,9 @@ if __name__ == '__main__':
     icon = pygame.image.load('graphics/icon.png').convert_alpha()
     pygame.display.set_caption('Earth Invaders')
     pygame.display.set_icon(icon)
-    music()
+    sound_on = True
+    permit = False
+    music_sound()
     game = Game()
     game2 = Game2()
 
@@ -1331,16 +1467,16 @@ if __name__ == '__main__':
     button_4 = ButtonBack('Back',screen_width/2,100,(screen_width/4,750))
 
     button_5 = ButtonRul('Colors',screen_width/2,100,(screen_width/4,550))
-    button_7 = ButtonRul('Sound:ON',screen_width/2,100,(screen_width/4,400))
-    button_8 = ButtonRul('Sound:OFF',screen_width/2,100,(screen_width/4,400))
+    button_7 = ButtonSound('Music:ON',screen_width/2,100,(screen_width/4,400))
+    button_8 = ButtonSound2('Music:OFF',screen_width/2,100,(screen_width/4,400))
     button_9 = ButtonRul('Rules',screen_width/2,100,(screen_width/4,250))
 
     button_0 = ButtonBack2('Back',screen_width/2,100,(screen_width/4,750))
 
-    button_6 = ButtonGame('Endless',screen_width/2,100,(screen_width/4,575))
-    button_10 = ButtonGame('Impossible',screen_width/2,100,(screen_width/4,450))
-    button_11 = ButtonGame('Hard',screen_width/2,100,(screen_width/4,325))
-    button_12 = ButtonGame('Normal',screen_width/2,100,(screen_width/4,200))
+    button_6 = ButtonGame('Endless',screen_width/2,100,(screen_width/4,600))
+    button_10 = ButtonGame('Impossible',screen_width/2,75,(screen_width/4,425))
+    button_11 = ButtonGame('Hard',screen_width/2,75,(screen_width/4,325))
+    button_12 = ButtonGame('Normal',screen_width/2,75,(screen_width/4,225))
 
     button_13 = ButtonRestart('Restart',screen_width/2,100,(screen_width/4,550))
 
