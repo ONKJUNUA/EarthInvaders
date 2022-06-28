@@ -24,6 +24,9 @@ class Player(pygame.sprite.Sprite):
 
         if keys[pygame.K_SPACE] and self.ready:
             self.shoot_laser()
+            laser_sound = pygame.mixer.Sound('sound/laser.wav')
+            laser_sound.set_volume(0.1)
+            laser_sound.play(loops = 0)
             self.ready = False
             self.laser_time = pygame.time.get_ticks()
 
@@ -43,26 +46,31 @@ class Player(pygame.sprite.Sprite):
         if self.laser_bullet == 1:
             self.bullet_speed = -6
             self.lasers.add(Laser(self.rect.midtop,self.bullet_speed,self.rect.bottom))
+        
         elif self.laser_bullet == 2:
             self.bullet_speed = -8
             self.lasers.add(Laser2(self.rect.midleft,self.bullet_speed,self.rect.bottom))
             self.lasers.add(Laser3(self.rect.midright,self.bullet_speed,self.rect.bottom))
+        
         elif self.laser_bullet == 3:
             self.lasers.add(Laser(self.rect.midtop, self.bullet_speed, self.rect.bottom))
             self.lasers.add(Laser2(self.rect.midleft, self.bullet_speed, self.rect.bottom))
             self.lasers.add(Laser3(self.rect.midright, self.bullet_speed, self.rect.bottom))
+        
         elif self.laser_bullet == 4:
             self.bullet_speed = -10
             self.lasers.add(Laser2(self.rect.midleft, self.bullet_speed, self.rect.bottom))
             self.lasers.add(Laser3(self.rect.midright, self.bullet_speed, self.rect.bottom))
             self.lasers.add(Laser2(self.rect.bottomleft, self.bullet_speed, self.rect.bottom))
             self.lasers.add(Laser3(self.rect.bottomright, self.bullet_speed, self.rect.bottom))
+        
         elif self.laser_bullet == 5:
             self.lasers.add(Laser(self.rect.midtop, self.bullet_speed, self.rect.bottom))
             self.lasers.add(Laser2(self.rect.midleft, self.bullet_speed, self.rect.bottom))
             self.lasers.add(Laser3(self.rect.midright, self.bullet_speed, self.rect.bottom))
             self.lasers.add(Laser2(self.rect.bottomleft, self.bullet_speed, self.rect.bottom))
             self.lasers.add(Laser3(self.rect.bottomright, self.bullet_speed, self.rect.bottom))
+        
         else:
             self.bullet_speed = -12
             self.lasers.add(Laser(self.rect.midtop, self.bullet_speed, self.rect.bottom))

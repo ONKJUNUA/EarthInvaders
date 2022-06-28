@@ -155,6 +155,7 @@ class Game:
                 if aliens_hit:
                     for alien in aliens_hit:
                         if self.killable == True:
+                            destroy_sound()
                             self.score += alien.value
                     laser.kill()
 
@@ -472,6 +473,7 @@ class Game2:
                 if aliens_hit:
                     for alien in aliens_hit:
                         if self.killable == True:
+                            destroy_sound()
                             self.score += alien.value
                     laser.kill()
 
@@ -810,7 +812,9 @@ def gameplay():
                 if event.key == pygame.K_ESCAPE:
                     pause()
             if event.type == ALIENLASER:
-                if game.level <= 10: game.alien_shot()
+                if game.level <= 10:
+                    laser_sound()
+                    game.alien_shot()
             if event.type == BOSSLASER: game.boss_shot()
             if event.type == CHILDLASER: game.child_shot()
             if event.type == ALIENSET:
@@ -1280,6 +1284,22 @@ def lose2():
         pygame.display.flip()
         clock.tick(60)
 
+def music():
+    music = pygame.mixer.Sound('sound/laser.wav')
+    music.set_volume(0.0)
+    music.play(loops = -1)
+
+def laser_sound():
+    global laser_s
+    laser_s = pygame.mixer.Sound('sound/laser.wav')
+    laser_s.set_volume(0.0)
+    laser_s.play(loops = 0)
+
+def destroy_sound():
+    destroy_s = pygame.mixer.Sound('sound/destroy.wav')
+    destroy_s.set_volume(0.1)
+    destroy_s.play(loops = 0)
+
 if __name__ == '__main__':
     pygame.init()
     screen_width = 700
@@ -1289,6 +1309,7 @@ if __name__ == '__main__':
     icon = pygame.image.load('graphics/icon.png').convert_alpha()
     pygame.display.set_caption('Earth Invaders')
     pygame.display.set_icon(icon)
+    music()
     game = Game()
     game2 = Game2()
 
