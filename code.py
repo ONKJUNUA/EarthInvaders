@@ -1,3 +1,4 @@
+from cv2 import ROTATE_180
 import pygame, sys, os, subprocess, shelve
 from random import choice, randint
 from boss import Boss
@@ -13,7 +14,7 @@ class Game:
         self.player = pygame.sprite.GroupSingle(player_sprite)
 
         self.hs = shelve.open('score.txt')
-        self.hs['score'] = 0
+        #self.hs['score'] = 0
         self.hscore = self.hs['score']
         self.hs.close()
 
@@ -65,7 +66,7 @@ class Game:
                 if col == 'x':
                     x = x_start + col_index * self.block_size + offset_x
                     y = y_start + row_index * self.block_size
-                    block = obstacles.Block(self.block_size,(120,120,120),x,y)
+                    block = obstacles.Block(self.block_size,(r1,g1,b1),x,y)
                     self.blocks.add(block)
 
     def create_multiple_obstacles(self, *offset, x_start, y_start):
@@ -235,19 +236,19 @@ class Game:
                         self.death()
 
     def display_lives(self):
-            lives_surf = self.font.render(f'{self.lives - 1}x', False, 'white')
+            lives_surf = self.font.render(f'{self.lives - 1}x', False, (r,g,b))
             screen.blit(lives_surf,(565,25))
             screen.blit(self.live_icon,(625,10))
 
     def display_level(self):
         if self.level <= 11:
-            if self.level <= 10: level_surf = self.font.render(f'Level {self.level}', False, 'white')
-            else: level_surf = self.font.render(f'Master', False, 'white')
+            if self.level <= 10: level_surf = self.font.render(f'Level {self.level}', False, (r,g,b))
+            else: level_surf = self.font.render(f'Master', False, (r,g,b))
             level_rect = level_surf.get_rect(topleft = (350,25))
             screen.blit(level_surf, level_rect)
 
     def display_score(self):
-        score_surf = self.font.render(f'Score:{self.score}', False, 'white')
+        score_surf = self.font.render(f'Score:{self.score}', False, (r,g,b))
         score_rect = score_surf.get_rect(topleft = (25,25))
         screen.blit(score_surf, score_rect)
 
@@ -399,7 +400,7 @@ class Game2:
                 if col == 'x':
                     x = x_start + col_index * self.block_size + offset_x
                     y = y_start + row_index * self.block_size
-                    block = obstacles.Block(self.block_size,(120,120,120),x,y)
+                    block = obstacles.Block(self.block_size,(r1,g1,b1),x,y)
                     self.blocks.add(block)
 
     def create_multiple_obstacles(self, *offset, x_start, y_start):
@@ -538,17 +539,17 @@ class Game2:
                     self.dmg += 1
 
     def display_lives(self):
-            lives_surf = self.font.render(f'{self.lives - 1}x', False, 'white')
+            lives_surf = self.font.render(f'{self.lives - 1}x', False, (r,g,b))
             screen.blit(lives_surf,(565,25))
             screen.blit(self.live_icon,(625,10))
 
     def display_level(self):
-        level_surf = self.font.render('Endless', False, 'white')
+        level_surf = self.font.render('Endless', False, (r,g,b))
         level_rect = level_surf.get_rect(topleft = (350,25))
         screen.blit(level_surf, level_rect)
 
     def display_score(self):
-        score_surf = self.font.render(f'Score:{self.score}', False, 'white')
+        score_surf = self.font.render(f'Score:{self.score}', False, (r,g,b))
         score_rect = score_surf.get_rect(topleft = (25,25))
         screen.blit(score_surf, score_rect)
 
@@ -624,7 +625,7 @@ class Button:
         self.pressed = False
 
         self.top_rect = pygame.Rect(pos,(width,height))
-        self.top_color = (255,255,255)
+        self.top_color = (r,g,b)
         self.text_surf = game_font.render(text,True,(30,30,30))
         self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
 
@@ -637,7 +638,7 @@ class Button:
         global credit, option, start, rul, power
         mouse_pos = pygame.mouse.get_pos()
         if self.top_rect.collidepoint(mouse_pos):
-            self.top_color = (120,120,120)
+            self.top_color = (r1,g1,b1)
             if pygame.mouse.get_pressed()[0]:
                 self.pressed = True
             else:
@@ -650,14 +651,14 @@ class Button:
                         credits()
                     self.pressed = False               
         else:
-            self.top_color = (255,255,255)
+            self.top_color = (r,g,b)
 
 class ButtonGame:
     def __init__(self,text,width,height,pos):
         self.pressed = False
 
         self.top_rect = pygame.Rect(pos,(width,height))
-        self.top_color = (255,255,255)
+        self.top_color = (r,g,b)
         self.text_surf = game_font.render(text,True,(30,30,30))
         self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
 
@@ -670,7 +671,7 @@ class ButtonGame:
         global credit, option, start, rul, power
         mouse_pos = pygame.mouse.get_pos()
         if self.top_rect.collidepoint(mouse_pos):
-            self.top_color = (120,120,120)
+            self.top_color = (r1,g1,b1)
             if pygame.mouse.get_pressed()[0]:
                 self.pressed = True
             else:
@@ -703,14 +704,14 @@ class ButtonGame:
                         gameplay()
                     self.pressed = False
         else:
-            self.top_color = (255,255,255)
+            self.top_color = (r,g,b)
 
 class ButtonRul:
     def __init__(self,text,width,height,pos):
         self.pressed = False
 
         self.top_rect = pygame.Rect(pos,(width,height))
-        self.top_color = (255,255,255)
+        self.top_color = (r,g,b)
         self.text_surf = game_font.render(text,True,(30,30,30))
         self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
 
@@ -723,7 +724,7 @@ class ButtonRul:
         global credit, option, start, rul, power
         mouse_pos = pygame.mouse.get_pos()
         if self.top_rect.collidepoint(mouse_pos):
-            self.top_color = (120,120,120)
+            self.top_color = (r1,g1,b1)
             if pygame.mouse.get_pressed()[0]:
                 self.pressed = True
             else:
@@ -731,14 +732,14 @@ class ButtonRul:
                     rules()
                     self.pressed = False
         else:
-            self.top_color = (255,255,255)
+            self.top_color = (r,g,b)
 
 class ButtonSound:
     def __init__(self,text,width,height,pos):
         self.pressed = False
 
         self.top_rect = pygame.Rect(pos,(width,height))
-        self.top_color = (255,255,255)
+        self.top_color = (r,g,b)
         self.text_surf = game_font.render(text,True,(30,30,30))
         self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
 
@@ -751,7 +752,7 @@ class ButtonSound:
         global credit, option, start, rul, power, sound_on
         mouse_pos = pygame.mouse.get_pos()
         if self.top_rect.collidepoint(mouse_pos):
-            self.top_color = (120,120,120)
+            self.top_color = (r1,g1,b1)
             if pygame.mouse.get_pressed()[0]:
                 self.pressed = True
             else:
@@ -760,14 +761,101 @@ class ButtonSound:
                     pygame.mixer.music.pause()
                     self.pressed = False
         else:
-            self.top_color = (255,255,255)
+            self.top_color = (r,g,b)
+
+class ButtonColor:
+    def __init__(self,text,width,height,pos):
+        self.pressed = False
+
+        self.top_rect = pygame.Rect(pos,(width,height))
+        self.top_color = (r,g,b)
+        self.text_surf = game_font.render(text,True,(30,30,30))
+        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
+
+    def draw(self):
+        pygame.draw.rect(screen,self.top_color,self.top_rect)
+        screen.blit(self.text_surf,self.text_rect)
+        self.check_click()
+
+    def check_click(self):
+        global p, r, g, b, r1, g1, b1
+        mouse_pos = pygame.mouse.get_pos()
+        if self.top_rect.collidepoint(mouse_pos):
+            self.top_color = (r1,g1,b1)
+            if pygame.mouse.get_pressed()[0]:
+                self.pressed = True
+            else:
+                if self.pressed == True:
+                    if p <= 6:
+                        p += 1
+                    else: p = 1
+
+                    if p == 1:
+                        r = 255
+                        g = 255
+                        b = 255
+                        r1 = 120
+                        g1 = 120
+                        b1 = 120
+
+                    elif p == 2:
+                        r = 189 
+                        g = 52
+                        b = 45
+                        r1 = 163  
+                        g1 = 34
+                        b1 = 28
+
+                    elif p == 3:
+                        r = 88
+                        g = 199
+                        b = 171
+                        r1 = 57
+                        g1 = 143
+                        b1 = 121
+
+                    elif p == 4:
+                        r = 174
+                        g = 110
+                        b = 230
+                        r1 = 123
+                        g1 = 75
+                        b1 = 166
+
+                    elif p == 5:
+                        r = 75
+                        g = 140
+                        b = 219
+                        r1 = 57
+                        g1 = 110
+                        b1 = 173
+
+                    elif p == 6:
+                        r = 227 
+                        g = 136
+                        b = 218
+                        r1 = 191
+                        g1 = 103
+                        b1 = 183
+
+                    elif p == 7:
+                        r = 127
+                        g = 219
+                        b = 125
+                        r1 = 102
+                        g1 = 189
+                        b1 = 100
+
+                    self.pressed = False
+        else:
+            self.top_color = (r,g,b)
 
 class ButtonSound2:
     def __init__(self,text,width,height,pos):
         self.pressed = False
 
         self.top_rect = pygame.Rect(pos,(width,height))
-        self.top_color = (255,255,255)
+        self.top_color = (r,g,b)
         self.text_surf = game_font.render(text,True,(30,30,30))
         self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
 
@@ -780,7 +868,7 @@ class ButtonSound2:
         global credit, option, start, rul, power, sound_on
         mouse_pos = pygame.mouse.get_pos()
         if self.top_rect.collidepoint(mouse_pos):
-            self.top_color = (120,120,120)
+            self.top_color = (r1,g1,b1)
             if pygame.mouse.get_pressed()[0]:
                 self.pressed = True
             else:
@@ -789,14 +877,14 @@ class ButtonSound2:
                     pygame.mixer.music.unpause()
                     self.pressed = False
         else:
-            self.top_color = (255,255,255)
+            self.top_color = (r,g,b)
 
 class ButtonBack:
     def __init__(self,text,width,height,pos):
         self.pressed = False
 
         self.top_rect = pygame.Rect(pos,(width,height))
-        self.top_color = (255,255,255)
+        self.top_color = (r,g,b)
         self.text_surf = game_font.render(text,True,(30,30,30))
         self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
 
@@ -809,7 +897,7 @@ class ButtonBack:
         global credit, option, start, rul, power
         mouse_pos = pygame.mouse.get_pos()
         if self.top_rect.collidepoint(mouse_pos):
-            self.top_color = (120,120,120)
+            self.top_color = (r1,g1,b1)
             if pygame.mouse.get_pressed()[0]:
                 self.pressed = True
             else:
@@ -819,14 +907,14 @@ class ButtonBack:
                     start = False
                     self.pressed = False
         else:
-            self.top_color = (255,255,255)
+            self.top_color = (r,g,b)
 
 class ButtonBack2:
     def __init__(self,text,width,height,pos):
         self.pressed = False
 
         self.top_rect = pygame.Rect(pos,(width,height))
-        self.top_color = (255,255,255)
+        self.top_color = (r,g,b)
         self.text_surf = game_font.render(text,True,(30,30,30))
         self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
 
@@ -839,7 +927,7 @@ class ButtonBack2:
         global credit, option, start, rul, power
         mouse_pos = pygame.mouse.get_pos()
         if self.top_rect.collidepoint(mouse_pos):
-            self.top_color = (120,120,120)
+            self.top_color = (r1,g1,b1)
             if pygame.mouse.get_pressed()[0]:
                 self.pressed = True
             else:
@@ -847,14 +935,14 @@ class ButtonBack2:
                     rul = False
                     self.pressed = False
         else:
-            self.top_color = (255,255,255)
+            self.top_color = (r,g,b)
 
 class ButtonRestart:
     def __init__(self,text,width,height,pos):
         self.pressed = False
 
         self.top_rect = pygame.Rect(pos,(width,height))
-        self.top_color = (255,255,255)
+        self.top_color = (r,g,b)
         self.text_surf = game_font.render(text,True,(30,30,30))
         self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
 
@@ -867,7 +955,7 @@ class ButtonRestart:
         global credit, option, start, rul, power
         mouse_pos = pygame.mouse.get_pos()
         if self.top_rect.collidepoint(mouse_pos):
-            self.top_color = (120,120,120)
+            self.top_color = (r1,g1,b1)
             if pygame.mouse.get_pressed()[0]:
                 self.pressed = True
             else:
@@ -878,7 +966,7 @@ class ButtonRestart:
                     self.pressed = False
                     sys.exit()
         else:
-            self.top_color = (255,255,255)
+            self.top_color = (r,g,b)
 
 def gameplay():
     global permit
@@ -943,7 +1031,7 @@ def main_menu():
         screen.fill((30,30,30))
 
         title_text = str('Earth Invaders')
-        title_surface = title_font.render(title_text,True,(255,255,255))
+        title_surface = title_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
         title_y = int(100)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
@@ -1019,35 +1107,35 @@ def credits():
         screen.fill((30,30,30))
 
         title_text = str('Earth Invaders')
-        title_surface = title_font.render(title_text,True,(255,255,255))
+        title_surface = title_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
         title_y = int(100)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
         game_text = str('Made by XiR000')
-        game_surface = game_font.render(game_text,True,(255,255,255))
+        game_surface = game_font.render(game_text,True,(r,g,b))
         game_x = int(screen_width/2)
         game_y = int(300)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
         screen.blit(game_surface,game_rect)
 
         game_text = str('Music:')
-        game_surface = game_font.render(game_text,True,(255,255,255))
+        game_surface = game_font.render(game_text,True,(r,g,b))
         game_x = int(screen_width/2)
         game_y = int(450)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
         screen.blit(game_surface,game_rect)
 
         game_text = str('ONKJUNUA - NOSTRADAMUS')
-        game_surface = game_font.render(game_text,True,(255,255,255))
+        game_surface = game_font.render(game_text,True,(r,g,b))
         game_x = int(screen_width/2)
         game_y = int(500)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
         screen.blit(game_surface,game_rect)
 
         game_text = str('Thanks for playing!')
-        game_surface = game_font.render(game_text,True,(255,255,255))
+        game_surface = game_font.render(game_text,True,(r,g,b))
         game_x = int(screen_width/2)
         game_y = int(650)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
@@ -1073,7 +1161,7 @@ def options():
         screen.fill((30,30,30))
 
         title_text = str('Earth Invaders')
-        title_surface = title_font.render(title_text,True,(255,255,255))
+        title_surface = title_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
         title_y = int(100)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
@@ -1117,21 +1205,21 @@ def menu():
         screen.fill((30,30,30))
 
         title_text = str('Earth Invaders')
-        title_surface = title_font.render(title_text,True,(255,255,255))
+        title_surface = title_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
         title_y = int(100)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
         title_text = str(f'Best Score:{game.hscore}')
-        title_surface = game_font.render(title_text,True,(255,255,255))
+        title_surface = game_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
         title_y = int(175)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
         title_text = str(f'Best Score:{game2.hscore}')
-        title_surface = game_font.render(title_text,True,(255,255,255))
+        title_surface = game_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
         title_y = int(550)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
@@ -1174,14 +1262,14 @@ def rules():
         screen.fill((30,30,30))
 
         title_text = str('Earth Invaders')
-        title_surface = title_font.render(title_text,True,(255,255,255))
+        title_surface = title_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
         title_y = int(100)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
         game_text = str('Move with arrows')
-        game_surface = game_font.render(game_text,True,(255,255,255))
+        game_surface = game_font.render(game_text,True,(r,g,b))
         game_x = int(screen_width/2 - 100)
         game_y = int(200)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
@@ -1195,7 +1283,7 @@ def rules():
         screen.blit(a,a_rect)
 
         game_text = str('Shot with spacebar')
-        game_surface = game_font.render(game_text,True,(255,255,255))
+        game_surface = game_font.render(game_text,True,(r,g,b))
         game_x = int(screen_width/2 + 75)
         game_y = int(295)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
@@ -1206,7 +1294,7 @@ def rules():
         screen.blit(a,a_rect)
 
         game_text = str('Kill aliens')
-        game_surface = game_font.render(game_text,True,(255,255,255))
+        game_surface = game_font.render(game_text,True,(r,g,b))
         game_x = int(screen_width/2 - 170)
         game_y = int(390)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
@@ -1223,7 +1311,7 @@ def rules():
         screen.blit(a,a_rect)
 
         game_text = str('Collect perks')
-        game_surface = game_font.render(game_text,True,(255,255,255))
+        game_surface = game_font.render(game_text,True,(r,g,b))
         game_x = int(screen_width/2 + 145)
         game_y = int(485)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
@@ -1240,7 +1328,7 @@ def rules():
         screen.blit(a,a_rect)
 
         game_text = str('Defeat Master')
-        game_surface = game_font.render(game_text,True,(255,255,255))
+        game_surface = game_font.render(game_text,True,(r,g,b))
         game_x = int(screen_width/2 - 140)
         game_y = int(580)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
@@ -1257,7 +1345,7 @@ def rules():
         screen.blit(a,a_rect)
 
         game_text = str('Earn best score')
-        game_surface = game_font.render(game_text,True,(255,255,255))
+        game_surface = game_font.render(game_text,True,(r,g,b))
         game_x = int(screen_width/2 + 125)
         game_y = int(675)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
@@ -1293,7 +1381,7 @@ def pause():
         pygame.draw.rect(screen, (30,30,30), pygame.Rect(0, 100, 700, 650))
 
         title_text = str('PAUSE')
-        title_surface = title_font.render(title_text,True,(255,255,255))
+        title_surface = title_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
         title_y = int(screen_height/3)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
@@ -1339,14 +1427,14 @@ def win():
         screen.blit(e,e_rect)
 
         title_text = str('You Win!!!')
-        title_surface = title_font.render(title_text,True,(255,255,255))
+        title_surface = title_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
         title_y = int(screen_height/10)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
         title_text = str(f'Your Score: {game.score}')
-        title_surface = game_font.render(title_text,True,(255,255,255))
+        title_surface = game_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
         title_y = int(screen_height/2 + screen_height/20)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
@@ -1381,14 +1469,14 @@ def lose():
         screen.fill((30, 30, 30))
 
         title_text = str('You Lose...')
-        title_surface = title_font.render(title_text,True,(255,255,255))
+        title_surface = title_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
         title_y = int(screen_height/3)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
         title_text = str(f'Your Score: {game.score}')
-        title_surface = game_font.render(title_text,True,(255,255,255))
+        title_surface = game_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
         title_y = int(screen_height/2)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
@@ -1423,14 +1511,14 @@ def lose2():
         screen.fill((30, 30, 30))
 
         title_text = str('You Die...')
-        title_surface = title_font.render(title_text,True,(255,255,255))
+        title_surface = title_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
         title_y = int(screen_height/3)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
         title_text = str(f'Your Score: {game2.score}')
-        title_surface = game_font.render(title_text,True,(255,255,255))
+        title_surface = game_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
         title_y = int(screen_height/2)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
@@ -1468,6 +1556,14 @@ if __name__ == '__main__':
     pygame.display.set_icon(icon)
     sound_on = True
     permit = False
+    p = 1
+    r = 255
+    g = 255
+    b = 255
+    r1 = 120
+    g1 = 120
+    b1 = 120
+
     music_sound()
     game = Game()
     game2 = Game2()
@@ -1489,7 +1585,7 @@ if __name__ == '__main__':
 
     button_4 = ButtonBack('Back',screen_width/2,100,(screen_width/4,750))
 
-    button_5 = ButtonRul('Colors',screen_width/2,100,(screen_width/4,550))
+    button_5 = ButtonColor('Colors',screen_width/2,100,(screen_width/4,550))
     button_7 = ButtonSound('Music:ON',screen_width/2,100,(screen_width/4,400))
     button_8 = ButtonSound2('Music:OFF',screen_width/2,100,(screen_width/4,400))
     button_9 = ButtonRul('Rules',screen_width/2,100,(screen_width/4,250))
