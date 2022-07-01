@@ -749,7 +749,7 @@ class ButtonSound:
         self.check_click()
 
     def check_click(self):
-        global credit, option, start, rul, power, sound_on
+        global credit, option, start, rul, power, music_on
         mouse_pos = pygame.mouse.get_pos()
         if self.top_rect.collidepoint(mouse_pos):
             self.top_color = (r1,g1,b1)
@@ -757,95 +757,8 @@ class ButtonSound:
                 self.pressed = True
             else:
                 if self.pressed == True:
-                    sound_on = True
+                    music_on = True
                     pygame.mixer.music.pause()
-                    self.pressed = False
-        else:
-            self.top_color = (r,g,b)
-
-class ButtonColor:
-    def __init__(self,text,width,height,pos):
-        self.pressed = False
-
-        self.top_rect = pygame.Rect(pos,(width,height))
-        self.top_color = (r,g,b)
-        self.text_surf = game_font.render(text,True,(30,30,30))
-        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
-
-    def draw(self):
-        pygame.draw.rect(screen,self.top_color,self.top_rect)
-        screen.blit(self.text_surf,self.text_rect)
-        self.check_click()
-
-    def check_click(self):
-        global p, r, g, b, r1, g1, b1
-        mouse_pos = pygame.mouse.get_pos()
-        if self.top_rect.collidepoint(mouse_pos):
-            self.top_color = (r1,g1,b1)
-            if pygame.mouse.get_pressed()[0]:
-                self.pressed = True
-            else:
-                if self.pressed == True:
-                    if p <= 6:
-                        p += 1
-                    else: p = 1
-
-                    if p == 1:
-                        r = 255
-                        g = 255
-                        b = 255
-                        r1 = 120
-                        g1 = 120
-                        b1 = 120
-
-                    elif p == 2:
-                        r = 189 
-                        g = 52
-                        b = 45
-                        r1 = 163  
-                        g1 = 34
-                        b1 = 28
-
-                    elif p == 3:
-                        r = 88
-                        g = 199
-                        b = 171
-                        r1 = 57
-                        g1 = 143
-                        b1 = 121
-
-                    elif p == 4:
-                        r = 174
-                        g = 110
-                        b = 230
-                        r1 = 123
-                        g1 = 75
-                        b1 = 166
-
-                    elif p == 5:
-                        r = 75
-                        g = 140
-                        b = 219
-                        r1 = 57
-                        g1 = 110
-                        b1 = 173
-
-                    elif p == 6:
-                        r = 227 
-                        g = 136
-                        b = 218
-                        r1 = 191
-                        g1 = 103
-                        b1 = 183
-
-                    elif p == 7:
-                        r = 127
-                        g = 219
-                        b = 125
-                        r1 = 102
-                        g1 = 189
-                        b1 = 100
-
                     self.pressed = False
         else:
             self.top_color = (r,g,b)
@@ -865,7 +778,7 @@ class ButtonSound2:
         self.check_click()
 
     def check_click(self):
-        global credit, option, start, rul, power, sound_on
+        global credit, option, start, rul, power, music_on
         mouse_pos = pygame.mouse.get_pos()
         if self.top_rect.collidepoint(mouse_pos):
             self.top_color = (r1,g1,b1)
@@ -873,7 +786,7 @@ class ButtonSound2:
                 self.pressed = True
             else:
                 if self.pressed == True:
-                    sound_on = False
+                    music_on = False
                     pygame.mixer.music.unpause()
                     self.pressed = False
         else:
@@ -1181,7 +1094,7 @@ def options():
         screen.blit(a,a_rect)
 
         button_9.draw()
-        if sound_on == True:
+        if music_on == True:
             button_8.draw()
         else: button_7.draw()
         button_5.draw()
@@ -1387,7 +1300,7 @@ def pause():
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
-        if sound_on == True:
+        if music_on == True:
             button_8.draw()
         else: button_7.draw()
 
@@ -1530,7 +1443,7 @@ def lose2():
         clock.tick(60)
 
 def music_sound():
-    pygame.mixer.music.load('sound/music.wav')
+    pygame.mixer.music.load('sound/music.mp3')
     pygame.mixer.music.set_volume(0.3)
     pygame.mixer.music.play(loops = -1)
     pygame.mixer.music.pause()
@@ -1554,7 +1467,7 @@ if __name__ == '__main__':
     icon = pygame.image.load('graphics/icon.png').convert_alpha()
     pygame.display.set_caption('Earth Invaders')
     pygame.display.set_icon(icon)
-    sound_on = True
+    music_on = True
     permit = False
     p = 1
     r = 255
@@ -1585,7 +1498,7 @@ if __name__ == '__main__':
 
     button_4 = ButtonBack('Back',screen_width/2,100,(screen_width/4,750))
 
-    button_5 = ButtonColor('Colors',screen_width/2,100,(screen_width/4,550))
+    button_5 = ButtonRul('Colors',screen_width/2,100,(screen_width/4,550))
     button_7 = ButtonSound('Music:ON',screen_width/2,100,(screen_width/4,400))
     button_8 = ButtonSound2('Music:OFF',screen_width/2,100,(screen_width/4,400))
     button_9 = ButtonRul('Rules',screen_width/2,100,(screen_width/4,250))
