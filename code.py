@@ -26,7 +26,6 @@ class Styling:
 
 class Game:
     def __init__(self):
-        global music_on
         player_sprite = Player((screen_width/2, screen_height - 10), screen_width)
         self.player = pygame.sprite.GroupSingle(player_sprite)
 
@@ -838,6 +837,9 @@ class ButtonStyle1:
             else:
                 if self.pressed == True:
                     style_on = True
+                    style_o = shelve.open('style.txt')
+                    style_o['style'] = style_on
+                    style_o.close()
                     self.pressed = False
         else:
             self.top_color = (r,g,b)
@@ -866,6 +868,9 @@ class ButtonStyle2:
             else:
                 if self.pressed == True:
                     style_on = False
+                    style_o = shelve.open('style.txt')
+                    style_o['style'] = style_on
+                    style_o.close()
                     self.pressed = False
         else:
             self.top_color = (r,g,b)
@@ -1588,7 +1593,6 @@ if __name__ == '__main__':
     icon = pygame.image.load('graphics/icon.png').convert_alpha()
     pygame.display.set_caption('Earth Invaders')
     pygame.display.set_icon(icon)
-    style_on = False
     permit = False
     p = 1
     r = 255
@@ -1601,6 +1605,10 @@ if __name__ == '__main__':
     music_o = shelve.open('music.txt')
     music_on = music_o['music']
     music_o.close()
+
+    style_o = shelve.open('style.txt')
+    style_on = style_o['style']
+    style_o.close()
 
     music_sound()
     game = Game()
