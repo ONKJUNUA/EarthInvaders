@@ -1,4 +1,3 @@
-from cv2 import ROTATE_180
 import pygame, sys, os, subprocess, shelve
 from random import choice, randint
 from boss import Boss
@@ -7,6 +6,23 @@ from perks import Bullet, Damage, Heart, Shield, Speed
 from player import Player
 from alien import Alien, Extra, FakeAlien
 from laser import BossLaser, ChildLaser, Laser
+
+class Styling:
+    def __init__(self):
+        self.tv = pygame.image.load('graphics/tv.png').convert_alpha()
+        self.tv = pygame.transform.scale(self.tv,(screen_width,screen_height))
+
+    def create_styling(self):
+        line_height = 3
+        line_amount = int(screen_height / line_height)
+        for line in range(line_amount):
+            y_pos = line * line_height
+            pygame.draw.line(self.tv,'black',(0,y_pos),(screen_width,y_pos),1)
+
+    def draw(self):
+        self.tv.set_alpha(randint(75,90))
+        self.create_styling()
+        screen.blit(self.tv,(0,0))
 
 class Game:
     def __init__(self):
@@ -120,7 +136,6 @@ class Game:
 
     def alien_shot(self):
         if self.aliens.sprites():
-            global power
             random_alien = choice(self.aliens.sprites())
             laser_sprite = Laser(random_alien.rect.center, self.level + power, screen_height)
             self.alien_lasers.add(laser_sprite)
@@ -128,13 +143,13 @@ class Game:
     def boss_shot(self):
         if self.aliens.sprites():
             random_alien = choice(self.aliens.sprites())
-            laser_sprite = BossLaser(random_alien.rect.center, self.level - 3, screen_height)
+            laser_sprite = BossLaser(random_alien.rect.center, self.level - 5 + power, screen_height)
             self.alien_lasers.add(laser_sprite)
 
     def child_shot(self):
         if self.aliens.sprites():
             random_alien = choice(self.aliens.sprites())
-            laser_sprite = ChildLaser(random_alien.rect.center, self.level +10, screen_height)
+            laser_sprite = ChildLaser(random_alien.rect.center, self.level + power + 10, screen_height)
             self.alien_lasers.add(laser_sprite)
 
     def extra_alien_timer(self):
@@ -792,6 +807,62 @@ class ButtonSound2:
         else:
             self.top_color = (r,g,b)
 
+class ButtonStyle1:
+    def __init__(self,text,width,height,pos):
+        self.pressed = False
+
+        self.top_rect = pygame.Rect(pos,(width,height))
+        self.top_color = (r,g,b)
+        self.text_surf = game_font.render(text,True,(30,30,30))
+        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
+
+    def draw(self):
+        pygame.draw.rect(screen,self.top_color,self.top_rect)
+        screen.blit(self.text_surf,self.text_rect)
+        self.check_click()
+
+    def check_click(self):
+        global credit, option, start, rul, power, style_on
+        mouse_pos = pygame.mouse.get_pos()
+        if self.top_rect.collidepoint(mouse_pos):
+            self.top_color = (r1,g1,b1)
+            if pygame.mouse.get_pressed()[0]:
+                self.pressed = True
+            else:
+                if self.pressed == True:
+                    style_on = True
+                    self.pressed = False
+        else:
+            self.top_color = (r,g,b)
+
+class ButtonStyle2:
+    def __init__(self,text,width,height,pos):
+        self.pressed = False
+
+        self.top_rect = pygame.Rect(pos,(width,height))
+        self.top_color = (r,g,b)
+        self.text_surf = game_font.render(text,True,(30,30,30))
+        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
+
+    def draw(self):
+        pygame.draw.rect(screen,self.top_color,self.top_rect)
+        screen.blit(self.text_surf,self.text_rect)
+        self.check_click()
+
+    def check_click(self):
+        global credit, option, start, rul, power, style_on
+        mouse_pos = pygame.mouse.get_pos()
+        if self.top_rect.collidepoint(mouse_pos):
+            self.top_color = (r1,g1,b1)
+            if pygame.mouse.get_pressed()[0]:
+                self.pressed = True
+            else:
+                if self.pressed == True:
+                    style_on = False
+                    self.pressed = False
+        else:
+            self.top_color = (r,g,b)
+
 class ButtonBack:
     def __init__(self,text,width,height,pos):
         self.pressed = False
@@ -913,6 +984,8 @@ def gameplay():
 
         screen.fill((30, 30, 30))
         game.run()
+        if style_on == True:
+            styling.draw()
         pygame.display.flip()
         clock.tick(60)
 
@@ -936,6 +1009,8 @@ def gameplay2():
                 permit = True
         screen.fill((30, 30, 30))
         game2.run()
+        if style_on == True:
+            styling.draw()
         pygame.display.flip()
         clock.tick(60)
 
@@ -1002,6 +1077,9 @@ def main_menu():
         button_2.draw()
         button_3.draw()
 
+        if style_on == True:
+            styling.draw()
+
         pygame.display.update()
         clock.tick(60)
 
@@ -1056,6 +1134,9 @@ def credits():
 
         button_4.draw()
 
+        if style_on == True:
+            styling.draw()
+
         pygame.display.flip()
         clock.tick(60)
 
@@ -1097,8 +1178,14 @@ def options():
         if music_on == True:
             button_8.draw()
         else: button_7.draw()
-        button_5.draw()
+
+        if style_on == True:
+            button_14.draw()
+        else: button_5.draw()
         button_4.draw()
+
+        if style_on == True:
+            styling.draw()
 
         pygame.display.flip()
         clock.tick(60)
@@ -1157,6 +1244,9 @@ def menu():
         button_6.draw()
         button_4.draw()
 
+        if style_on == True:
+            styling.draw()
+
         pygame.display.flip()
         clock.tick(60)
 
@@ -1196,7 +1286,7 @@ def rules():
         screen.blit(a,a_rect)
 
         game_text = str('Shot with spacebar')
-        game_surface = game_font.render(game_text,True,(r,g,b))
+        game_surface = game_font.render(game_text,True,(120,120,120))
         game_x = int(screen_width/2 + 75)
         game_y = int(295)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
@@ -1224,7 +1314,7 @@ def rules():
         screen.blit(a,a_rect)
 
         game_text = str('Collect perks')
-        game_surface = game_font.render(game_text,True,(r,g,b))
+        game_surface = game_font.render(game_text,True,(120,120,120))
         game_x = int(screen_width/2 + 145)
         game_y = int(485)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
@@ -1258,7 +1348,7 @@ def rules():
         screen.blit(a,a_rect)
 
         game_text = str('Earn best score')
-        game_surface = game_font.render(game_text,True,(r,g,b))
+        game_surface = game_font.render(game_text,True,(120,120,120))
         game_x = int(screen_width/2 + 125)
         game_y = int(675)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
@@ -1276,6 +1366,9 @@ def rules():
 
         button_0.draw()
 
+        if style_on == True:
+            styling.draw()
+
         pygame.display.flip()
         clock.tick(60)
 
@@ -1291,7 +1384,14 @@ def pause():
                 if event.key == pygame.K_ESCAPE:
                     rul = False
 
-        pygame.draw.rect(screen, (30,30,30), pygame.Rect(0, 100, 700, 650))
+        screen.fill((30,30,30))
+
+        title_text = str('Earth Invaders')
+        title_surface = title_font.render(title_text,True,(r,g,b))
+        title_x = int(screen_width/2)
+        title_y = int(100)
+        title_rect = title_surface.get_rect(center = (title_x,title_y))
+        screen.blit(title_surface,title_rect)
 
         title_text = str('PAUSE')
         title_surface = title_font.render(title_text,True,(r,g,b))
@@ -1305,6 +1405,9 @@ def pause():
         else: button_7.draw()
 
         button_13.draw()
+    
+        if style_on == True:
+            styling.draw()
 
         pygame.display.flip()
         clock.tick(60)
@@ -1355,6 +1458,9 @@ def win():
 
         button_13.draw()
 
+        if style_on == True:
+            styling.draw()
+
         pygame.display.flip()
         clock.tick(60)
 
@@ -1396,6 +1502,9 @@ def lose():
         screen.blit(title_surface,title_rect)
 
         button_13.draw()
+
+        if style_on == True:
+            styling.draw()
 
         pygame.display.flip()
         clock.tick(60)
@@ -1439,6 +1548,9 @@ def lose2():
 
         button_13.draw()
 
+        if style_on == True:
+            styling.draw()
+
         pygame.display.flip()
         clock.tick(60)
 
@@ -1468,6 +1580,7 @@ if __name__ == '__main__':
     pygame.display.set_caption('Earth Invaders')
     pygame.display.set_icon(icon)
     music_on = True
+    style_on = False
     permit = False
     p = 1
     r = 255
@@ -1480,6 +1593,7 @@ if __name__ == '__main__':
     music_sound()
     game = Game()
     game2 = Game2()
+    styling = Styling()
 
     ALIENLASER = pygame.USEREVENT + 1
     pygame.time.set_timer(ALIENLASER, game.alien_cooldown)
@@ -1498,7 +1612,8 @@ if __name__ == '__main__':
 
     button_4 = ButtonBack('Back',screen_width/2,100,(screen_width/4,750))
 
-    button_5 = ButtonRul('Colors',screen_width/2,100,(screen_width/4,550))
+    button_5 = ButtonStyle1('Styling:OFF',screen_width/2,100,(screen_width/4,550))
+    button_14 = ButtonStyle2('Styling:ON',screen_width/2,100,(screen_width/4,550))
     button_7 = ButtonSound('Music:ON',screen_width/2,100,(screen_width/4,400))
     button_8 = ButtonSound2('Music:OFF',screen_width/2,100,(screen_width/4,400))
     button_9 = ButtonRul('Rules',screen_width/2,100,(screen_width/4,250))
