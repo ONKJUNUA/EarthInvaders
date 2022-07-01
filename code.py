@@ -26,6 +26,7 @@ class Styling:
 
 class Game:
     def __init__(self):
+        global music_on
         player_sprite = Player((screen_width/2, screen_height - 10), screen_width)
         self.player = pygame.sprite.GroupSingle(player_sprite)
 
@@ -773,6 +774,9 @@ class ButtonSound:
             else:
                 if self.pressed == True:
                     music_on = True
+                    self.music_o = shelve.open('music.txt')
+                    self.music_o['music'] = music_on
+                    self.music_o.close()
                     pygame.mixer.music.pause()
                     self.pressed = False
         else:
@@ -802,6 +806,9 @@ class ButtonSound2:
             else:
                 if self.pressed == True:
                     music_on = False
+                    self.music_o = shelve.open('music.txt')
+                    self.music_o['music'] = music_on
+                    self.music_o.close()
                     pygame.mixer.music.unpause()
                     self.pressed = False
         else:
@@ -1555,10 +1562,12 @@ def lose2():
         clock.tick(60)
 
 def music_sound():
+    global music_on
     pygame.mixer.music.load('sound/music.mp3')
     pygame.mixer.music.set_volume(0.3)
     pygame.mixer.music.play(loops = -1)
-    pygame.mixer.music.pause()
+    if music_on == True:
+        pygame.mixer.music.pause()
 
 def laser_sound():
     laser_s = pygame.mixer.Sound('sound/laser.wav')
@@ -1579,7 +1588,6 @@ if __name__ == '__main__':
     icon = pygame.image.load('graphics/icon.png').convert_alpha()
     pygame.display.set_caption('Earth Invaders')
     pygame.display.set_icon(icon)
-    music_on = True
     style_on = False
     permit = False
     p = 1
@@ -1589,6 +1597,10 @@ if __name__ == '__main__':
     r1 = 120
     g1 = 120
     b1 = 120
+
+    music_o = shelve.open('music.txt')
+    music_on = music_o['music']
+    music_o.close()
 
     music_sound()
     game = Game()
