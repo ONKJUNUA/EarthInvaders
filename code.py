@@ -30,7 +30,7 @@ class Game:
         self.player = pygame.sprite.GroupSingle(player_sprite)
 
         self.hs = shelve.open('score.txt')
-        #self.hs['score'] = 0
+        self.hs['score'] = 0
         self.hscore = self.hs['score']
         self.hs.close()
 
@@ -267,6 +267,11 @@ class Game:
         score_rect = score_surf.get_rect(topleft = (25,25))
         screen.blit(score_surf, score_rect)
 
+    def display_score_lives(self):
+        score_surf = self.font.render(f'          X{(self.lives - 1) * 1000}', False, (r,g,b))
+        score_rect = score_surf.get_rect(topleft = (25,60))
+        screen.blit(score_surf, score_rect)
+
     def drop_heart(self):
         heart_sprite = Heart((screen_width/2, 100), 4, screen_height)
         self.heart.add(heart_sprite)
@@ -323,6 +328,7 @@ class Game:
                 self.one_alien()
                 pygame.time.set_timer(ALIENSET,1700,loops = 1)
             else:
+                self.display_score_lives()
                 permit = False
                 self.level += 1
                 self.one_alien()
@@ -1109,6 +1115,19 @@ def credits():
 
         screen.fill((30,30,30))
 
+        a = pygame.image.load('graphics/earth.png').convert_alpha()
+        a_rect = a.get_rect(center = (725,300))
+        screen.blit(a,a_rect)
+        a = pygame.image.load('graphics/earth.png').convert_alpha()
+        a_rect = a.get_rect(center = (-25,700))
+        screen.blit(a,a_rect)
+        a = pygame.image.load('graphics/boss.png').convert_alpha()
+        a_rect = a.get_rect(center = (725,700))
+        screen.blit(a,a_rect)
+        a = pygame.image.load('graphics/boss.png').convert_alpha()
+        a_rect = a.get_rect(center = (-25,300))
+        screen.blit(a,a_rect)
+
         title_text = str('Earth Invaders')
         title_surface = title_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
@@ -1137,7 +1156,7 @@ def credits():
         game_rect = game_surface.get_rect(center = (game_x,game_y))
         screen.blit(game_surface,game_rect)
 
-        game_text = str('Thanks for playing!')
+        game_text = str('Thx for playing!')
         game_surface = game_font.render(game_text,True,(r,g,b))
         game_x = int(screen_width/2)
         game_y = int(650)
@@ -1187,6 +1206,7 @@ def options():
         screen.blit(a,a_rect)
 
         button_9.draw()
+        button_15.draw()
         if music_on == True:
             button_8.draw()
         else: button_7.draw()
@@ -1426,6 +1446,7 @@ def pause():
 
 def win():
     rul = True
+    game.score += 1000 * (game.lives - 1)
     while rul:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -1632,11 +1653,12 @@ if __name__ == '__main__':
 
     button_4 = ButtonBack('Back',screen_width/2,100,(screen_width/4,750))
 
-    button_5 = ButtonStyle1('Styling:OFF',screen_width/2,100,(screen_width/4,550))
-    button_14 = ButtonStyle2('Styling:ON',screen_width/2,100,(screen_width/4,550))
-    button_7 = ButtonSound('Music:ON',screen_width/2,100,(screen_width/4,400))
-    button_8 = ButtonSound2('Music:OFF',screen_width/2,100,(screen_width/4,400))
-    button_9 = ButtonRul('Rules',screen_width/2,100,(screen_width/4,250))
+    button_5 = ButtonStyle1('Style:OFF',screen_width/2,100,(screen_width/4,600))
+    button_14 = ButtonStyle2('Style:ON',screen_width/2,100,(screen_width/4,600))
+    button_7 = ButtonSound('Music:ON',screen_width/2,100,(screen_width/4,475))
+    button_8 = ButtonSound2('Music:OFF',screen_width/2,100,(screen_width/4,475))
+    button_9 = ButtonRul('Rules',screen_width/2,100,(screen_width/4,225))
+    button_15 = ButtonRul('Color',screen_width/2,100,(screen_width/4,350))
 
     button_0 = ButtonBack2('Back',screen_width/2,100,(screen_width/4,750))
 
@@ -1645,6 +1667,6 @@ if __name__ == '__main__':
     button_11 = ButtonGame('Hard',screen_width/2,75,(screen_width/4,325))
     button_12 = ButtonGame('Normal',screen_width/2,75,(screen_width/4,225))
 
-    button_13 = ButtonRestart('Restart',screen_width/2,100,(screen_width/4,550))
+    button_13 = ButtonRestart('Restart',screen_width/2,100,(screen_width/4,625))
 
     main_menu()
