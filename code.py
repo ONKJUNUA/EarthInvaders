@@ -391,7 +391,14 @@ class Game2:
         self.dmg = 2
         self.speed_charge = 5
         self.bullet_charge = 5
-        self.live_icon = pygame.image.load('graphics/player.png').convert_alpha()
+        if p == 1:
+            self.live_icon = pygame.image.load('graphics/player.png').convert_alpha()
+        elif p == 2:
+            self.live_icon = pygame.image.load('graphics/player_m.png').convert_alpha()
+        elif p == 3:
+            self.live_icon = pygame.image.load('graphics/player_v.png').convert_alpha()
+        elif p == 4:
+            self.live_icon = pygame.image.load('graphics/player_o.png').convert_alpha()
         self.score = 0
         self.font = pygame.font.Font('font/pixel.ttf', 25)
         self.level_font = pygame.font.Font('font/pixel.ttf', 35)
