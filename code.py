@@ -29,7 +29,7 @@ class Game:
         player_sprite = Player((screen_width/2, screen_height - 10), screen_width)
         self.player = pygame.sprite.GroupSingle(player_sprite)
 
-        self.hs = shelve.open('score.txt')
+        self.hs = shelve.open('doc/score.txt')
         self.hs['score'] = 0
         self.hscore = self.hs['score']
         self.hs.close()
@@ -374,7 +374,7 @@ class Game2:
         player_sprite = Player((screen_width/2, screen_height - 10), screen_width)
         self.player = pygame.sprite.GroupSingle(player_sprite)
 
-        self.hs = shelve.open('score2.txt')
+        self.hs = shelve.open('doc/score2.txt')
         #self.hs['score2'] = 0
         self.hscore = self.hs['score2']
         self.hs.close()
@@ -755,6 +755,69 @@ class ButtonRul:
         else:
             self.top_color = (r,g,b)
 
+class ButtonColor:
+    def __init__(self,text,width,height,pos):
+        self.pressed = False
+
+        self.top_rect = pygame.Rect(pos,(width,height))
+        self.top_color = (r,g,b)
+        self.text_surf = game_font.render(text,True,(30,30,30))
+        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
+
+    def draw(self):
+        pygame.draw.rect(screen,self.top_color,self.top_rect)
+        screen.blit(self.text_surf,self.text_rect)
+        self.check_click()
+
+    def check_click(self):
+        global p, r, g, b, r1, g1, b1
+        mouse_pos = pygame.mouse.get_pos()
+        if self.top_rect.collidepoint(mouse_pos):
+            self.top_color = (r1,g1,b1)
+            if pygame.mouse.get_pressed()[0]:
+                self.pressed = True
+            else:
+                if self.pressed == True:
+                    if p <= 3:
+                        p += 1
+                    else: p = 1
+
+                    if p == 1:
+                        r = 255
+                        g = 255
+                        b = 255
+                        r1 = 120
+                        g1 = 120
+                        b1 = 120
+
+                    elif p == 2:
+                        r = 88
+                        g = 199
+                        b = 171
+                        r1 = 57
+                        g1 = 143
+                        b1 = 121
+
+                    elif p == 3:
+                        r = 174
+                        g = 110
+                        b = 230
+                        r1 = 123
+                        g1 = 75
+                        b1 = 166
+
+                    elif p == 4:
+                        r = 224
+                        g = 152
+                        b = 63
+                        r1 = 171
+                        g1 = 112
+                        b1 = 39
+
+                    self.pressed = False
+        else:
+            self.top_color = (r,g,b)
+
 class ButtonSound:
     def __init__(self,text,width,height,pos):
         self.pressed = False
@@ -779,7 +842,7 @@ class ButtonSound:
             else:
                 if self.pressed == True:
                     music_on = True
-                    self.music_o = shelve.open('music.txt')
+                    self.music_o = shelve.open('doc/music.txt')
                     self.music_o['music'] = music_on
                     self.music_o.close()
                     pygame.mixer.music.pause()
@@ -811,7 +874,7 @@ class ButtonSound2:
             else:
                 if self.pressed == True:
                     music_on = False
-                    self.music_o = shelve.open('music.txt')
+                    self.music_o = shelve.open('doc/music.txt')
                     self.music_o['music'] = music_on
                     self.music_o.close()
                     pygame.mixer.music.unpause()
@@ -843,7 +906,7 @@ class ButtonStyle1:
             else:
                 if self.pressed == True:
                     style_on = True
-                    style_o = shelve.open('style.txt')
+                    style_o = shelve.open('doc/style.txt')
                     style_o['style'] = style_on
                     style_o.close()
                     self.pressed = False
@@ -874,7 +937,7 @@ class ButtonStyle2:
             else:
                 if self.pressed == True:
                     style_on = False
-                    style_o = shelve.open('style.txt')
+                    style_o = shelve.open('doc/style.txt')
                     style_o['style'] = style_on
                     style_o.close()
                     self.pressed = False
@@ -1457,11 +1520,11 @@ def win():
                     pygame.quit()
                     sys.exit()
         if game.hscore <= game.score:
-            game.hs = shelve.open('score.txt')
+            game.hs = shelve.open('doc/score.txt')
             game.hs['score'] = game.score
             game.hs.close()
         if game2.hscore <= game2.score:
-            game2.hs = shelve.open('score2.txt')
+            game2.hs = shelve.open('doc/score2.txt')
             game2.hs['score2'] = game2.score
             game2.hs.close()
         
@@ -1510,11 +1573,11 @@ def lose():
                     sys.exit()
 
         if game.hscore <= game.score:
-            game.hs = shelve.open('score.txt')
+            game.hs = shelve.open('doc/score.txt')
             game.hs['score'] = game.score
             game.hs.close()
         if game2.hscore <= game2.score:
-            game2.hs = shelve.open('score2.txt')
+            game2.hs = shelve.open('doc/score2.txt')
             game2.hs['score2'] = game2.score
             game2.hs.close()
 
@@ -1555,11 +1618,11 @@ def lose2():
                     sys.exit()
 
         if game.hscore <= game.score:
-            game.hs = shelve.open('score.txt')
+            game.hs = shelve.open('doc/score.txt')
             game.hs['score'] = game.score
             game.hs.close()
         if game2.hscore <= game2.score:
-            game2.hs = shelve.open('score2.txt')
+            game2.hs = shelve.open('doc/score2.txt')
             game2.hs['score2'] = game2.score
             game2.hs.close()
 
@@ -1623,11 +1686,11 @@ if __name__ == '__main__':
     g1 = 120
     b1 = 120
 
-    music_o = shelve.open('music.txt')
+    music_o = shelve.open('doc/music.txt')
     music_on = music_o['music']
     music_o.close()
 
-    style_o = shelve.open('style.txt')
+    style_o = shelve.open('doc/style.txt')
     style_on = style_o['style']
     style_o.close()
 
@@ -1658,7 +1721,7 @@ if __name__ == '__main__':
     button_7 = ButtonSound('Music:ON',screen_width/2,100,(screen_width/4,475))
     button_8 = ButtonSound2('Music:OFF',screen_width/2,100,(screen_width/4,475))
     button_9 = ButtonRul('Rules',screen_width/2,100,(screen_width/4,225))
-    button_15 = ButtonRul('Color',screen_width/2,100,(screen_width/4,350))
+    button_15 = ButtonColor('Color',screen_width/2,100,(screen_width/4,350))
 
     button_0 = ButtonBack2('Back',screen_width/2,100,(screen_width/4,750))
 
