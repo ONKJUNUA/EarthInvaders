@@ -30,7 +30,7 @@ class Game:
         self.player = pygame.sprite.GroupSingle(player_sprite)
         
         self.hs = shelve.open('doc/score.txt')
-        self.hs['score'] = 0
+        #self.hs['score'] = 0
         self.hscore = self.hs['score']
         self.hs.close()
 
@@ -1770,88 +1770,6 @@ def pause():
 
         screen.fill((30,30,30))
 
-        n = -20
-        if p == 1:
-            a = pygame.image.load('graphics/10.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/10_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/10_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/10_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (150,250+n))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/8.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/8_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/8_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/8_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (250,250+n))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/11.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/11_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/11_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/11_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (350,250+n))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/4.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/4_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/4_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/4_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (450,250+n))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/9.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/9_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/9_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/9_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (550,250+n))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/5.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/5_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/5_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/5_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (250,350+n))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/3.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/3_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/3_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/3_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (350,350+n))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/6.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/6_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/6_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/6_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (450,350+n))
-        screen.blit(a,a_rect)
-
         if p == 1:
             a = pygame.image.load('graphics/earth.png').convert_alpha()
         elif p == 2:
@@ -1896,14 +1814,17 @@ def pause():
         title_text = str('PAUSE')
         title_surface = title_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
-        title_y = int(100)
+        title_y = int(175)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
+
+        if style_on == True:
+            button_14.draw()
+        else: button_5.draw()
 
         if music_on == True:
             button_8.draw()
         else: button_7.draw()
-        button_0.draw()
         button_13.draw()
     
         if style_on == True:
