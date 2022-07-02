@@ -9,7 +9,7 @@ from laser import BossLaser, ChildLaser, Laser
 
 class Styling:
     def __init__(self):
-        self.tv = pygame.image.load('graphics/tv.png').convert_alpha()
+        self.tv = pygame.image.load('graphics/ztv.png').convert_alpha()
         self.tv = pygame.transform.scale(self.tv,(screen_width,screen_height))
 
     def create_styling(self):
@@ -28,7 +28,7 @@ class Game:
     def __init__(self):
         player_sprite = Player((screen_width/2, screen_height - 10), screen_width)
         self.player = pygame.sprite.GroupSingle(player_sprite)
-
+        
         self.hs = shelve.open('doc/score.txt')
         self.hs['score'] = 0
         self.hscore = self.hs['score']
@@ -42,7 +42,14 @@ class Game:
         self.speed_charge = 5
         self.bullet_charge = 5
         self.damage_charge = 5
-        self.live_icon = pygame.image.load('graphics/player.png').convert_alpha()
+        if p == 1:
+            self.live_icon = pygame.image.load('graphics/player.png').convert_alpha()
+        elif p == 2:
+            self.live_icon = pygame.image.load('graphics/player_m.png').convert_alpha()
+        elif p == 3:
+            self.live_icon = pygame.image.load('graphics/player_v.png').convert_alpha()
+        elif p == 4:
+            self.live_icon = pygame.image.load('graphics/player_o.png').convert_alpha()
         self.score = 0
         self.font = pygame.font.Font('font/pixel.ttf', 25)
         self.level_font = pygame.font.Font('font/pixel.ttf', 35)
@@ -352,7 +359,6 @@ class Game:
         self.collision_checks()
 
         self.player.sprite.lasers.draw(screen)
-        self.player.draw(screen)
         self.blocks.draw(screen)
         self.aliens.draw(screen)
         self.fake_aliens.draw(screen)
@@ -782,6 +788,10 @@ class ButtonColor:
                         p += 1
                     else: p = 1
 
+                    self.color_o = shelve.open('doc/color.txt')
+                    self.color_o['color'] = p
+                    self.color_o.close()
+
                     if p == 1:
                         r = 255
                         g = 255
@@ -814,7 +824,12 @@ class ButtonColor:
                         g1 = 112
                         b1 = 39
 
+                    pygame.quit()
+                    sys.stdout.flush()
+                    subprocess.call([sys.executable, os.path.realpath(__file__)] + sys.argv[1:])
                     self.pressed = False
+                    sys.exit()
+
         else:
             self.top_color = (r,g,b)
 
@@ -1064,6 +1079,7 @@ def gameplay():
                     game.boss_attack()
 
         screen.fill((30, 30, 30))
+        game.player.draw(screen)
         game.run()
         if style_on == True:
             styling.draw()
@@ -1107,41 +1123,125 @@ def main_menu():
         screen.blit(title_surface,title_rect)
         
         n = -20
-        a = pygame.image.load('graphics/10.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/10.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/10_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/10_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/10_o.png').convert_alpha()
         a_rect = a.get_rect(center = (150,250+n))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/8.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/8.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/8_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/8_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/8_o.png').convert_alpha()
         a_rect = a.get_rect(center = (250,250+n))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/11.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/11.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/11_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/11_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/11_o.png').convert_alpha()
         a_rect = a.get_rect(center = (350,250+n))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/4.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/4.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/4_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/4_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/4_o.png').convert_alpha()
         a_rect = a.get_rect(center = (450,250+n))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/9.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/9.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/9_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/9_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/9_o.png').convert_alpha()
         a_rect = a.get_rect(center = (550,250+n))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/5.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/5.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/5_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/5_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/5_o.png').convert_alpha()
         a_rect = a.get_rect(center = (250,350+n))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/3.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/3.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/3_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/3_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/3_o.png').convert_alpha()
         a_rect = a.get_rect(center = (350,350+n))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/6.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/6.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/6_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/6_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/6_o.png').convert_alpha()
         a_rect = a.get_rect(center = (450,350+n))
         screen.blit(a,a_rect)
 
-        a = pygame.image.load('graphics/earth.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/earth.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/earth_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/earth_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/earth_o.png').convert_alpha()
         a_rect = a.get_rect(center = (700,450))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/earth.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/earth.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/earth_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/earth_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/earth_o.png').convert_alpha()
         a_rect = a.get_rect(center = (0,750))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/boss.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/boss.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/boss_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/boss_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/boss_o.png').convert_alpha()
         a_rect = a.get_rect(center = (700,750))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/boss.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/boss.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/boss_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/boss_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/boss_o.png').convert_alpha()
         a_rect = a.get_rect(center = (0,450))
         screen.blit(a,a_rect)
 
@@ -1178,16 +1278,44 @@ def credits():
 
         screen.fill((30,30,30))
 
-        a = pygame.image.load('graphics/earth.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/earth.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/earth_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/earth_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/earth_o.png').convert_alpha()
         a_rect = a.get_rect(center = (725,300))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/earth.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/earth.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/earth_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/earth_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/earth_o.png').convert_alpha()
         a_rect = a.get_rect(center = (-25,700))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/boss.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/boss.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/boss_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/boss_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/boss_o.png').convert_alpha()
         a_rect = a.get_rect(center = (725,700))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/boss.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/boss.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/boss_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/boss_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/boss_o.png').convert_alpha()
         a_rect = a.get_rect(center = (-25,300))
         screen.blit(a,a_rect)
 
@@ -1255,16 +1383,44 @@ def options():
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
-        a = pygame.image.load('graphics/earth.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/earth.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/earth_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/earth_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/earth_o.png').convert_alpha()
         a_rect = a.get_rect(center = (700,700))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/earth.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/earth.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/earth_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/earth_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/earth_o.png').convert_alpha()
         a_rect = a.get_rect(center = (0,350))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/boss.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/boss.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/boss_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/boss_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/boss_o.png').convert_alpha()
         a_rect = a.get_rect(center = (700,350))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/boss.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/boss.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/boss_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/boss_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/boss_o.png').convert_alpha()
         a_rect = a.get_rect(center = (0,700))
         screen.blit(a,a_rect)
 
@@ -1320,16 +1476,44 @@ def menu():
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
-        a = pygame.image.load('graphics/earth.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/earth.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/earth_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/earth_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/earth_o.png').convert_alpha()
         a_rect = a.get_rect(center = (700,750))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/earth.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/earth.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/earth_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/earth_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/earth_o.png').convert_alpha()
         a_rect = a.get_rect(center = (0,350))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/boss.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/boss.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/boss_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/boss_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/boss_o.png').convert_alpha()
         a_rect = a.get_rect(center = (700,350))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/boss.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/boss.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/boss_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/boss_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/boss_o.png').convert_alpha()
         a_rect = a.get_rect(center = (0,750))
         screen.blit(a,a_rect)
 
@@ -1373,21 +1557,42 @@ def rules():
         game_rect = game_surface.get_rect(center = (game_x,game_y))
         screen.blit(game_surface,game_rect)
 
-        a = pygame.image.load('graphics/player.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/player.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/player_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/player_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/player_o.png').convert_alpha()
         a_rect = a.get_rect(center = (530,200))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/player.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/player.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/player_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/player_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/player_o.png').convert_alpha()
         a_rect = a.get_rect(center = (625,200))
         screen.blit(a,a_rect)
 
         game_text = str('Shot with spacebar')
-        game_surface = game_font.render(game_text,True,(120,120,120))
+        game_surface = game_font.render(game_text,True,(r1,g1,b1))
         game_x = int(screen_width/2 + 75)
         game_y = int(295)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
         screen.blit(game_surface,game_rect)
 
-        a = pygame.image.load('graphics/p_aim.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/p_aim.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/p_aim_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/p_aim_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/p_aim_o.png').convert_alpha()
         a_rect = a.get_rect(center = (85,295))
         screen.blit(a,a_rect)
 
@@ -1398,30 +1603,72 @@ def rules():
         game_rect = game_surface.get_rect(center = (game_x,game_y))
         screen.blit(game_surface,game_rect)
 
-        a = pygame.image.load('graphics/7.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/7.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/7_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/7_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/7_o.png').convert_alpha()
         a_rect = a.get_rect(center = (512,390))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/1.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/1.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/1_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/1_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/1_o.png').convert_alpha()
         a_rect = a.get_rect(center = (615,390))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/2.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/2.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/2_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/2_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/2_o.png').convert_alpha()
         a_rect = a.get_rect(center = (410,390))
         screen.blit(a,a_rect)
 
         game_text = str('Collect perks')
-        game_surface = game_font.render(game_text,True,(120,120,120))
+        game_surface = game_font.render(game_text,True,(r1,g1,b1))
         game_x = int(screen_width/2 + 145)
         game_y = int(485)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
         screen.blit(game_surface,game_rect)
 
-        a = pygame.image.load('graphics/p_shield.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/p_shield.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/p_shield_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/p_shield_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/p_shield_o.png').convert_alpha()
         a_rect = a.get_rect(center = (60,485))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/p_bullet.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/p_bullet.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/p_bullet_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/p_bullet_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/p_bullet_o.png').convert_alpha()
         a_rect = a.get_rect(center = (150,485))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/p_heart.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/p_heart.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/p_heart_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/p_heart_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/p_heart_o.png').convert_alpha()
         a_rect = a.get_rect(center = (240,485))
         screen.blit(a,a_rect)
 
@@ -1432,30 +1679,72 @@ def rules():
         game_rect = game_surface.get_rect(center = (game_x,game_y))
         screen.blit(game_surface,game_rect)
 
-        a = pygame.image.load('graphics/childboss.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/childboss.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/childboss_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/childboss_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/childboss_o.png').convert_alpha()
         a_rect = a.get_rect(center = (537,580))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/11.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/11.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/11_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/11_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/11_o.png').convert_alpha()
         a_rect = a.get_rect(center = (625,580))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/11.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/11.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/11_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/11_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/11_o.png').convert_alpha()
         a_rect = a.get_rect(center = (450,580))
         screen.blit(a,a_rect)
 
         game_text = str('Earn best score')
-        game_surface = game_font.render(game_text,True,(120,120,120))
+        game_surface = game_font.render(game_text,True,(r1,g1,b1))
         game_x = int(screen_width/2 + 125)
         game_y = int(675)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
         screen.blit(game_surface,game_rect)
 
-        a = pygame.image.load('graphics/extra.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/extra.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/extra_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/extra_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/extra_o.png').convert_alpha()
         a_rect = a.get_rect(center = (50,675))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/p_time.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/p_time.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/p_time_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/p_time_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/p_time_o.png').convert_alpha()
         a_rect = a.get_rect(center = (130,675))
         screen.blit(a,a_rect)
-        a = pygame.image.load('graphics/extra.png').convert_alpha()
+        if p == 1:
+            a = pygame.image.load('graphics/extra.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/extra_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/extra_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/extra_o.png').convert_alpha()
         a_rect = a.get_rect(center = (210,675))
         screen.blit(a,a_rect)
 
@@ -1481,24 +1770,140 @@ def pause():
 
         screen.fill((30,30,30))
 
-        title_text = str('Earth Invaders')
+        n = -20
+        if p == 1:
+            a = pygame.image.load('graphics/10.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/10_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/10_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/10_o.png').convert_alpha()
+        a_rect = a.get_rect(center = (150,250+n))
+        screen.blit(a,a_rect)
+        if p == 1:
+            a = pygame.image.load('graphics/8.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/8_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/8_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/8_o.png').convert_alpha()
+        a_rect = a.get_rect(center = (250,250+n))
+        screen.blit(a,a_rect)
+        if p == 1:
+            a = pygame.image.load('graphics/11.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/11_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/11_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/11_o.png').convert_alpha()
+        a_rect = a.get_rect(center = (350,250+n))
+        screen.blit(a,a_rect)
+        if p == 1:
+            a = pygame.image.load('graphics/4.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/4_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/4_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/4_o.png').convert_alpha()
+        a_rect = a.get_rect(center = (450,250+n))
+        screen.blit(a,a_rect)
+        if p == 1:
+            a = pygame.image.load('graphics/9.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/9_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/9_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/9_o.png').convert_alpha()
+        a_rect = a.get_rect(center = (550,250+n))
+        screen.blit(a,a_rect)
+        if p == 1:
+            a = pygame.image.load('graphics/5.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/5_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/5_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/5_o.png').convert_alpha()
+        a_rect = a.get_rect(center = (250,350+n))
+        screen.blit(a,a_rect)
+        if p == 1:
+            a = pygame.image.load('graphics/3.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/3_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/3_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/3_o.png').convert_alpha()
+        a_rect = a.get_rect(center = (350,350+n))
+        screen.blit(a,a_rect)
+        if p == 1:
+            a = pygame.image.load('graphics/6.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/6_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/6_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/6_o.png').convert_alpha()
+        a_rect = a.get_rect(center = (450,350+n))
+        screen.blit(a,a_rect)
+
+        if p == 1:
+            a = pygame.image.load('graphics/earth.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/earth_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/earth_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/earth_o.png').convert_alpha()
+        a_rect = a.get_rect(center = (700,450))
+        screen.blit(a,a_rect)
+        if p == 1:
+            a = pygame.image.load('graphics/earth.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/earth_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/earth_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/earth_o.png').convert_alpha()
+        a_rect = a.get_rect(center = (0,750))
+        screen.blit(a,a_rect)
+        if p == 1:
+            a = pygame.image.load('graphics/boss.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/boss_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/boss_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/boss_o.png').convert_alpha()
+        a_rect = a.get_rect(center = (700,750))
+        screen.blit(a,a_rect)
+        if p == 1:
+            a = pygame.image.load('graphics/boss.png').convert_alpha()
+        elif p == 2:
+            a = pygame.image.load('graphics/boss_m.png').convert_alpha()
+        elif p == 3:
+            a = pygame.image.load('graphics/boss_v.png').convert_alpha()
+        elif p == 4:
+            a = pygame.image.load('graphics/boss_o.png').convert_alpha()
+        a_rect = a.get_rect(center = (0,450))
+        screen.blit(a,a_rect)
+
+        title_text = str('PAUSE')
         title_surface = title_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
         title_y = int(100)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
-        title_text = str('PAUSE')
-        title_surface = title_font.render(title_text,True,(r,g,b))
-        title_x = int(screen_width/2)
-        title_y = int(screen_height/3)
-        title_rect = title_surface.get_rect(center = (title_x,title_y))
-        screen.blit(title_surface,title_rect)
-
         if music_on == True:
             button_8.draw()
         else: button_7.draw()
-
+        button_0.draw()
         button_13.draw()
     
         if style_on == True:
@@ -1530,11 +1935,25 @@ def win():
         
         screen.fill((30, 30, 30))
 
-        e = pygame.image.load('graphics/player.png').convert_alpha()
+        if p == 1:
+            e = pygame.image.load('graphics/player.png').convert_alpha()
+        elif p == 2:
+            e = pygame.image.load('graphics/player_m.png').convert_alpha()
+        elif p == 3:
+            e = pygame.image.load('graphics/player_v.png').convert_alpha()
+        elif p == 4:
+            e = pygame.image.load('graphics/player_o.png').convert_alpha()
         e_rect = e.get_rect(center = (screen_width/2,screen_height - 50))
         screen.blit(e,e_rect)
 
-        e = pygame.image.load('graphics/earth.png').convert_alpha()
+        if p == 1:
+            e = pygame.image.load('graphics/earth.png').convert_alpha()
+        elif p == 2:
+            e = pygame.image.load('graphics/earth_m.png').convert_alpha()
+        elif p == 3:
+            e = pygame.image.load('graphics/earth_v.png').convert_alpha()
+        elif p == 4:
+            e = pygame.image.load('graphics/earth_o.png').convert_alpha()
         e_rect = e.get_rect(center = (screen_width/2,screen_height/3))
         screen.blit(e,e_rect)
 
@@ -1674,17 +2093,43 @@ if __name__ == '__main__':
     screen_height = 900
     screen = pygame.display.set_mode((screen_width, screen_height))
     clock = pygame.time.Clock()
-    icon = pygame.image.load('graphics/icon.png').convert_alpha()
+    icon = pygame.image.load('graphics/zicon.png').convert_alpha()
     pygame.display.set_caption('Earth Invaders')
     pygame.display.set_icon(icon)
     permit = False
-    p = 1
-    r = 255
-    g = 255
-    b = 255
-    r1 = 120
-    g1 = 120
-    b1 = 120
+
+    color_o = shelve.open('doc/color.txt')
+    p = color_o['color']
+    color_o.close()
+
+    if p == 1:
+        r = 255
+        g = 255
+        b = 255
+        r1 = 120
+        g1 = 120
+        b1 = 120
+    elif p == 2:
+        r = 88
+        g = 199
+        b = 171
+        r1 = 57
+        g1 = 143
+        b1 = 121
+    elif p == 3:
+        r = 174
+        g = 110
+        b = 230
+        r1 = 123
+        g1 = 75
+        b1 = 166
+    elif p == 4:
+        r = 224
+        g = 152
+        b = 63
+        r1 = 171
+        g1 = 112
+        b1 = 39
 
     music_o = shelve.open('doc/music.txt')
     music_on = music_o['music']
@@ -1716,12 +2161,12 @@ if __name__ == '__main__':
 
     button_4 = ButtonBack('Back',screen_width/2,100,(screen_width/4,750))
 
-    button_5 = ButtonStyle1('Style:OFF',screen_width/2,100,(screen_width/4,600))
-    button_14 = ButtonStyle2('Style:ON',screen_width/2,100,(screen_width/4,600))
+    button_5 = ButtonStyle1('Style:OFF',screen_width/2,100,(screen_width/4,350))
+    button_14 = ButtonStyle2('Style:ON',screen_width/2,100,(screen_width/4,350))
     button_7 = ButtonSound('Music:ON',screen_width/2,100,(screen_width/4,475))
     button_8 = ButtonSound2('Music:OFF',screen_width/2,100,(screen_width/4,475))
     button_9 = ButtonRul('Rules',screen_width/2,100,(screen_width/4,225))
-    button_15 = ButtonColor('Color',screen_width/2,100,(screen_width/4,350))
+    button_15 = ButtonColor('Color',screen_width/2,100,(screen_width/4,600))
 
     button_0 = ButtonBack2('Back',screen_width/2,100,(screen_width/4,750))
 

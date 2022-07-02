@@ -1,10 +1,16 @@
-import pygame
+import pygame, shelve
 from laser import Laser, Laser2, Laser3
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, constraint):
         super().__init__()
-        self.image = pygame.image.load('graphics/player.png').convert_alpha()
+        color_o = shelve.open('doc/color.txt')
+        p = color_o['color']
+        color_o.close()
+        if p == 1: self.image = pygame.image.load('graphics/player.png').convert_alpha()
+        elif p == 2: self.image = pygame.image.load('graphics/player_m.png').convert_alpha()
+        elif p == 3: self.image = pygame.image.load('graphics/player_v.png').convert_alpha()
+        elif p == 4: self.image = pygame.image.load('graphics/player_o.png').convert_alpha()
         self.rect = self.image.get_rect(midbottom = pos)
         self.speed = 2
         self.max_x_constraint = constraint
