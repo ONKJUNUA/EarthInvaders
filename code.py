@@ -42,14 +42,7 @@ class Game:
         self.speed_charge = 5
         self.bullet_charge = 5
         self.damage_charge = 5
-        if p == 1:
-            self.live_icon = pygame.image.load('graphics/player.png').convert_alpha()
-        elif p == 2:
-            self.live_icon = pygame.image.load('graphics/player_m.png').convert_alpha()
-        elif p == 3:
-            self.live_icon = pygame.image.load('graphics/player_v.png').convert_alpha()
-        elif p == 4:
-            self.live_icon = pygame.image.load('graphics/player_o.png').convert_alpha()
+        self.live_icon = pygame.image.load('graphics/player_m.png').convert_alpha()
         self.score = 0
         self.font = pygame.font.Font('font/pixel.ttf', 25)
         self.level_font = pygame.font.Font('font/pixel.ttf', 35)
@@ -60,9 +53,9 @@ class Game:
         self.shape = obstacles.shape
         self.block_size = 3
         self.blocks = pygame.sprite.Group()
-        self.obstacle_amount = 4
+        self.obstacle_amount = 3
         self.obstacle_x_positions = [num *(screen_width / self.obstacle_amount) for num in range(self.obstacle_amount)]
-        self.create_multiple_obstacles(*self.obstacle_x_positions, x_start = screen_width / 12, y_start = 770)
+        self.create_multiple_obstacles(*self.obstacle_x_positions, x_start = screen_width / 10, y_start = 850)
 
         self.aliens = pygame.sprite.Group()
         self.alien_direction = 1
@@ -104,11 +97,11 @@ class Game:
                 
                 if self.level != 11:
                     if row_index <= 1: alien_sprite = Alien(str(2+self.level), x, y)
-                    elif 2 <= row_index <= 3: alien_sprite = Alien(str(1+self.level), x, y)
+                    elif 2 <= row_index <= 4: alien_sprite = Alien(str(1+self.level), x, y)
                     else: alien_sprite = Alien(str(0+self.level), x, y)
                     self.aliens.add(alien_sprite)
 
-    def one_alien(self, x = 450, y = 947):
+    def one_alien(self, x = 450, y = 997):
         if self.level <= 11:
             alien_sprite = Alien(str(0+self.level), x, y)
             self.aliens.add(alien_sprite)
@@ -241,7 +234,7 @@ class Game:
                 if pygame.sprite.spritecollide(player, self.heart, True):
                     self.lives += 1
                 if pygame.sprite.spritecollide(player, self.shield, True):
-                    self.create_multiple_obstacles(*self.obstacle_x_positions, x_start = screen_width / 12, y_start = 770)
+                    self.create_multiple_obstacles(*self.obstacle_x_positions, x_start = screen_width / 10, y_start = 850)
                 if pygame.sprite.spritecollide(player, self.laser_speed, True):
                     player.laser_cooldown -= 100
                     player.speed += 1
@@ -259,15 +252,8 @@ class Game:
 
     def display_lives(self):
             lives_surf = self.font.render(f'{self.lives - 1}x', False, (r,g,b))
-            screen.blit(lives_surf,(565,25))
-            screen.blit(self.live_icon,(625,10))
-
-    def display_level(self):
-        if self.level <= 11:
-            if self.level <= 10: level_surf = self.font.render(f'Level {self.level}', False, (r,g,b))
-            else: level_surf = self.font.render(f'Master', False, (r,g,b))
-            level_rect = level_surf.get_rect(topleft = (350,25))
-            screen.blit(level_surf, level_rect)
+            screen.blit(lives_surf,(400,25))
+            screen.blit(self.live_icon,(460,10))
 
     def display_score(self):
         score_surf = self.font.render(f'Score:{self.score}', False, (r,g,b))
@@ -280,24 +266,24 @@ class Game:
         screen.blit(score_surf, score_rect)
 
     def drop_heart(self):
-        heart_sprite = Heart((screen_width/2, 100), 4, screen_height)
+        heart_sprite = Heart((screen_width/2, 200), 4, screen_height)
         self.heart.add(heart_sprite)
 
     def drop_shield(self):
-        shield_sprite = Shield((screen_width/2, 100), 4, screen_height)
+        shield_sprite = Shield((screen_width/2, 200), 4, screen_height)
         self.shield.add(shield_sprite)
 
     def drop_perks(self):
         if self.speed_charge >= 1:
-            speed_sprite = Speed((screen_width/2 + screen_width/4 ,200), 6, screen_height)
+            speed_sprite = Speed((screen_width - screen_width/6, 300), 6, screen_height)
             self.laser_speed.add(speed_sprite)
         else: pass
         if self.bullet_charge >= 1:
-            bullet_sprite = Bullet((screen_width/4, 200), 6, screen_height)
+            bullet_sprite = Bullet((screen_width/6, 300), 6, screen_height)
             self.bullet.add(bullet_sprite)
         else: pass
         if self.damage_charge >= 1:
-            damage_sprite = Damage((screen_width/2, 200), 6, screen_height)
+            damage_sprite = Damage((screen_width/2, 300), 6, screen_height)
             self.damage.add(damage_sprite)
         else: pass
 
@@ -310,11 +296,11 @@ class Game:
         if attack_type == 1:
             pygame.time.set_timer(BOSSLASER, self.boss_cooldown, loops = 10)
         if attack_type == 2:
-            self.fake_alien(rows = 2, cols = 8)
+            self.fake_alien(rows = 2, cols = 6)
         if attack_type == 3:
             pygame.time.set_timer(CHILDLASER, self.boss_cooldown, loops = 5)
         if attack_type == 4:
-            self.fake_alien(rows = 1, cols = 8)
+            self.fake_alien(rows = 1, cols = 6)
 
     def next_level(self):
         global permit
@@ -371,7 +357,6 @@ class Game:
         self.damage.draw(screen)
 
         self.display_lives()
-        self.display_level()
         self.display_score()
         self.next_level()
 
@@ -391,14 +376,7 @@ class Game2:
         self.dmg = 2
         self.speed_charge = 5
         self.bullet_charge = 5
-        if p == 1:
-            self.live_icon = pygame.image.load('graphics/player.png').convert_alpha()
-        elif p == 2:
-            self.live_icon = pygame.image.load('graphics/player_m.png').convert_alpha()
-        elif p == 3:
-            self.live_icon = pygame.image.load('graphics/player_v.png').convert_alpha()
-        elif p == 4:
-            self.live_icon = pygame.image.load('graphics/player_o.png').convert_alpha()
+        self.live_icon = pygame.image.load('graphics/player_m.png').convert_alpha()
         self.score = 0
         self.font = pygame.font.Font('font/pixel.ttf', 25)
         self.level_font = pygame.font.Font('font/pixel.ttf', 35)
@@ -408,9 +386,9 @@ class Game2:
         self.shape = obstacles.shape
         self.block_size = 3
         self.blocks = pygame.sprite.Group()
-        self.obstacle_amount = 4
+        self.obstacle_amount = 3
         self.obstacle_x_positions = [num *(screen_width / self.obstacle_amount) for num in range(self.obstacle_amount)]
-        self.create_multiple_obstacles(*self.obstacle_x_positions, x_start = screen_width / 12, y_start = 770)
+        self.create_multiple_obstacles(*self.obstacle_x_positions, x_start = screen_width / 10, y_start = 850)
 
         self.aliens = pygame.sprite.Group()
         self.alien_direction = 1
@@ -449,31 +427,31 @@ class Game2:
 
                 if self.level <= 4:                
                     if row_index <= 1: alien_sprite = Alien(str(randint(5,6)), x, y)
-                    elif 2 <= row_index <= 3: alien_sprite = Alien(str(randint(3,4)), x, y)
+                    elif 2 <= row_index <= 4: alien_sprite = Alien(str(randint(3,4)), x, y)
                     else: alien_sprite = Alien(str(randint(1,2)), x, y)
                     self.aliens.add(alien_sprite)
                 elif 5 <= self.level <= 8:                
                     if row_index <= 1: alien_sprite = Alien(str(randint(7,9)), x, y)
-                    elif 2 <= row_index <= 3: alien_sprite = Alien(str(randint(4,6)), x, y)
+                    elif 2 <= row_index <= 4: alien_sprite = Alien(str(randint(4,6)), x, y)
                     else: alien_sprite = Alien(str(randint(1,3)), x, y)
                     self.aliens.add(alien_sprite)
                 elif 9 <= self.level <= 10:                
                     if row_index <= 1: alien_sprite = Alien(str(randint(7,12)), x, y)
-                    elif 2 <= row_index <= 3: alien_sprite = Alien(str(randint(4,8)), x, y)
+                    elif 2 <= row_index <= 4: alien_sprite = Alien(str(randint(4,8)), x, y)
                     else: alien_sprite = Alien(str(randint(1,5)), x, y)
                     self.aliens.add(alien_sprite)
                 elif 11 <= self.level <= 12:                
                     if row_index <= 1: alien_sprite = Alien(str(randint(7,12)), x, y)
-                    elif 2 <= row_index <= 3: alien_sprite = Alien(str(randint(4,10)), x, y)
+                    elif 2 <= row_index <= 4: alien_sprite = Alien(str(randint(4,10)), x, y)
                     else: alien_sprite = Alien(str(randint(1,8)), x, y)
                     self.aliens.add(alien_sprite)
                 else:
                     if row_index <= 1: alien_sprite = Alien(str(randint(10,12)), x, y)
-                    elif 2 <= row_index <= 3: alien_sprite = Alien(str(randint(6,12)), x, y)
+                    elif 2 <= row_index <= 4: alien_sprite = Alien(str(randint(6,12)), x, y)
                     else: alien_sprite = Alien(str(randint(1,12)), x, y)
                     self.aliens.add(alien_sprite)
 
-    def one_alien(self, x = 450, y = 947):
+    def one_alien(self, x = 450, y = 997):
         alien_sprite = Alien(str(1), x, y)
         self.aliens.add(alien_sprite)
 
@@ -561,7 +539,7 @@ class Game2:
                 if pygame.sprite.spritecollide(player, self.heart, True):
                     self.lives += 1
                 if pygame.sprite.spritecollide(player, self.shield, True):
-                    self.create_multiple_obstacles(*self.obstacle_x_positions, x_start = screen_width / 12, y_start = 770)
+                    self.create_multiple_obstacles(*self.obstacle_x_positions, x_start = screen_width / 10, y_start = 850)
                 if pygame.sprite.spritecollide(player, self.laser_speed, True):
                     player.laser_cooldown -= 100
                     player.speed += 1
@@ -574,13 +552,8 @@ class Game2:
 
     def display_lives(self):
             lives_surf = self.font.render(f'{self.lives - 1}x', False, (r,g,b))
-            screen.blit(lives_surf,(565,25))
-            screen.blit(self.live_icon,(625,10))
-
-    def display_level(self):
-        level_surf = self.font.render('Endless', False, (r,g,b))
-        level_rect = level_surf.get_rect(topleft = (350,25))
-        screen.blit(level_surf, level_rect)
+            screen.blit(lives_surf,(400,25))
+            screen.blit(self.live_icon,(460,10))
 
     def display_score(self):
         score_surf = self.font.render(f'Score:{self.score}', False, (r,g,b))
@@ -588,23 +561,23 @@ class Game2:
         screen.blit(score_surf, score_rect)
 
     def drop_heart(self):
-        heart_sprite = Heart((screen_width/2, 100), 4, screen_height)
+        heart_sprite = Heart((screen_width/2, 200), 4, screen_height)
         self.heart.add(heart_sprite)
 
     def drop_shield(self):
-        shield_sprite = Shield((screen_width/2, 100), 4, screen_height)
+        shield_sprite = Shield((screen_width/2, 200), 4, screen_height)
         self.shield.add(shield_sprite)
 
     def drop_perks(self):
         if self.speed_charge >= 1:
-            speed_sprite = Speed((screen_width/2 + screen_width/4 ,200), 6, screen_height)
+            speed_sprite = Speed((screen_width - screen_width/6 ,300), 6, screen_height)
             self.laser_speed.add(speed_sprite)
         else: pass
         if self.bullet_charge >= 1:
-            bullet_sprite = Bullet((screen_width/4, 200), 6, screen_height)
+            bullet_sprite = Bullet((screen_width/6, 300), 6, screen_height)
             self.bullet.add(bullet_sprite)
         else: pass
-        damage_sprite = Damage((screen_width/2, 200), 6, screen_height)
+        damage_sprite = Damage((screen_width/2, 300), 6, screen_height)
         self.damage.add(damage_sprite)
 
     def next_level(self):
@@ -650,7 +623,6 @@ class Game2:
         self.damage.draw(screen)
 
         self.display_lives()
-        self.display_level()
         self.display_score()
         self.next_level()
 
@@ -765,78 +737,6 @@ class ButtonRul:
                 if self.pressed == True:
                     rules()
                     self.pressed = False
-        else:
-            self.top_color = (r,g,b)
-
-class ButtonColor:
-    def __init__(self,text,width,height,pos):
-        self.pressed = False
-
-        self.top_rect = pygame.Rect(pos,(width,height))
-        self.top_color = (r,g,b)
-        self.text_surf = game_font.render(text,True,(30,30,30))
-        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
-
-    def draw(self):
-        pygame.draw.rect(screen,self.top_color,self.top_rect)
-        screen.blit(self.text_surf,self.text_rect)
-        self.check_click()
-
-    def check_click(self):
-        global p, r, g, b, r1, g1, b1
-        mouse_pos = pygame.mouse.get_pos()
-        if self.top_rect.collidepoint(mouse_pos):
-            self.top_color = (r1,g1,b1)
-            if pygame.mouse.get_pressed()[0]:
-                self.pressed = True
-            else:
-                if self.pressed == True:
-                    if p <= 3:
-                        p += 1
-                    else: p = 1
-
-                    self.color_o = shelve.open('doc/color.txt')
-                    self.color_o['color'] = p
-                    self.color_o.close()
-
-                    if p == 1:
-                        r = 255
-                        g = 255
-                        b = 255
-                        r1 = 120
-                        g1 = 120
-                        b1 = 120
-
-                    elif p == 2:
-                        r = 88
-                        g = 199
-                        b = 171
-                        r1 = 57
-                        g1 = 143
-                        b1 = 121
-
-                    elif p == 3:
-                        r = 174
-                        g = 110
-                        b = 230
-                        r1 = 123
-                        g1 = 75
-                        b1 = 166
-
-                    elif p == 4:
-                        r = 224
-                        g = 152
-                        b = 63
-                        r1 = 171
-                        g1 = 112
-                        b1 = 39
-
-                    pygame.quit()
-                    sys.stdout.flush()
-                    subprocess.call([sys.executable, os.path.realpath(__file__)] + sys.argv[1:])
-                    self.pressed = False
-                    sys.exit()
-
         else:
             self.top_color = (r,g,b)
 
@@ -1056,7 +956,7 @@ class ButtonRestart:
             self.top_color = (r,g,b)
 
 def gameplay():
-    global permit
+    global permit, running
     running = True
     while running:
         for event in pygame.event.get():
@@ -1075,7 +975,7 @@ def gameplay():
             if event.type == CHILDLASER: game.child_shot()
             if event.type == ALIENSET:
                 if game.level <= 10: 
-                    game.alien_setup(rows = 7, cols = 7)
+                    game.alien_setup(rows = 8, cols = 5)
                     permit = True
                 elif game.level == 11: 
                     game.boss_setup()
@@ -1094,7 +994,7 @@ def gameplay():
         clock.tick(60)
 
 def gameplay2():
-    global permit
+    global permit, running
     running = True
     while running:
         for event in pygame.event.get():
@@ -1109,7 +1009,7 @@ def gameplay2():
                 laser_sound()
                 game2.alien_shot()
             if event.type == ALIENSET:
-                game2.alien_setup(rows = 7, cols = 7)
+                game2.alien_setup(rows = 8, cols = 5)
                 permit = True
         screen.fill((30, 30, 30))
         game2.run()
@@ -1125,131 +1025,34 @@ def main_menu():
         title_text = str('Earth Invaders')
         title_surface = title_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
-        title_y = int(100)
+        title_y = int(75)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
         
         n = -20
-        if p == 1:
-            a = pygame.image.load('graphics/10.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/10_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/10_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/10_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (150,250+n))
+        a = pygame.image.load('graphics/10_m.png').convert_alpha()
+        a_rect = a.get_rect(center = (125,250+n))
         screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/8.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/8_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/8_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/8_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (250,250+n))
+        a = pygame.image.load('graphics/8_m.png').convert_alpha()
+        a_rect = a.get_rect(center = (225,250+n))
         screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/11.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/11_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/11_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/11_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (350,250+n))
+        a = pygame.image.load('graphics/11_m.png').convert_alpha()
+        a_rect = a.get_rect(center = (325,250+n))
         screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/4.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/4_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/4_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/4_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (450,250+n))
+        a = pygame.image.load('graphics/4_m.png').convert_alpha()
+        a_rect = a.get_rect(center = (425,250+n))
         screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/9.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/9_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/9_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/9_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (550,250+n))
+        a = pygame.image.load('graphics/9_m.png').convert_alpha()
+        a_rect = a.get_rect(center = (125,350+n))
         screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/5.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/5_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/5_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/5_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (250,350+n))
+        a = pygame.image.load('graphics/5_m.png').convert_alpha()
+        a_rect = a.get_rect(center = (225,350+n))
         screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/3.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/3_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/3_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/3_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (350,350+n))
+        a = pygame.image.load('graphics/3_m.png').convert_alpha()
+        a_rect = a.get_rect(center = (325,350+n))
         screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/6.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/6_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/6_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/6_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (450,350+n))
-        screen.blit(a,a_rect)
-
-        if p == 1:
-            a = pygame.image.load('graphics/earth.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/earth_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/earth_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/earth_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (700,450))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/earth.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/earth_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/earth_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/earth_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (0,750))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/boss.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/boss_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/boss_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/boss_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (700,750))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/boss.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/boss_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/boss_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/boss_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (0,450))
+        a = pygame.image.load('graphics/6_m.png').convert_alpha()
+        a_rect = a.get_rect(center = (425,350+n))
         screen.blit(a,a_rect)
 
         for event in pygame.event.get():
@@ -1285,72 +1088,38 @@ def credits():
 
         screen.fill((30,30,30))
 
-        if p == 1:
-            a = pygame.image.load('graphics/earth.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/earth_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/earth_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/earth_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (725,300))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/earth.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/earth_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/earth_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/earth_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (-25,700))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/boss.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/boss_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/boss_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/boss_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (725,700))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/boss.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/boss_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/boss_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/boss_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (-25,300))
-        screen.blit(a,a_rect)
-
         title_text = str('Earth Invaders')
         title_surface = title_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
-        title_y = int(100)
+        title_y = int(75)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
         game_text = str('Made by XiR000')
         game_surface = game_font.render(game_text,True,(r,g,b))
         game_x = int(screen_width/2)
-        game_y = int(300)
+        game_y = int(250)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
         screen.blit(game_surface,game_rect)
 
         game_text = str('Music:')
         game_surface = game_font.render(game_text,True,(r,g,b))
         game_x = int(screen_width/2)
-        game_y = int(450)
+        game_y = int(375)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
         screen.blit(game_surface,game_rect)
 
-        game_text = str('ONKJUNUA - NOSTRADAMUS')
+        game_text = str('ONKJUNUA')
         game_surface = game_font.render(game_text,True,(r,g,b))
         game_x = int(screen_width/2)
-        game_y = int(500)
+        game_y = int(475)
+        game_rect = game_surface.get_rect(center = (game_x,game_y))
+        screen.blit(game_surface,game_rect)
+
+        game_text = str('NOSTRADAMUS')
+        game_surface = game_font.render(game_text,True,(r,g,b))
+        game_x = int(screen_width/2)
+        game_y = int(525)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
         screen.blit(game_surface,game_rect)
 
@@ -1386,53 +1155,11 @@ def options():
         title_text = str('Earth Invaders')
         title_surface = title_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
-        title_y = int(100)
+        title_y = int(75)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
-        if p == 1:
-            a = pygame.image.load('graphics/earth.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/earth_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/earth_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/earth_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (700,700))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/earth.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/earth_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/earth_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/earth_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (0,350))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/boss.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/boss_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/boss_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/boss_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (700,350))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/boss.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/boss_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/boss_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/boss_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (0,700))
-        screen.blit(a,a_rect)
-
         button_9.draw()
-        button_15.draw()
         if music_on == True:
             button_8.draw()
         else: button_7.draw()
@@ -1465,7 +1192,7 @@ def menu():
         title_text = str('Earth Invaders')
         title_surface = title_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
-        title_y = int(100)
+        title_y = int(75)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
@@ -1482,47 +1209,6 @@ def menu():
         title_y = int(550)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
-
-        if p == 1:
-            a = pygame.image.load('graphics/earth.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/earth_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/earth_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/earth_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (700,750))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/earth.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/earth_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/earth_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/earth_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (0,350))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/boss.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/boss_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/boss_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/boss_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (700,350))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/boss.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/boss_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/boss_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/boss_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (0,750))
-        screen.blit(a,a_rect)
 
         button_12.draw()
         button_11.draw()
@@ -1553,7 +1239,7 @@ def rules():
         title_text = str('Earth Invaders')
         title_surface = title_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
-        title_y = int(100)
+        title_y = int(75)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
@@ -1564,44 +1250,12 @@ def rules():
         game_rect = game_surface.get_rect(center = (game_x,game_y))
         screen.blit(game_surface,game_rect)
 
-        if p == 1:
-            a = pygame.image.load('graphics/player.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/player_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/player_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/player_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (530,200))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/player.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/player_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/player_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/player_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (625,200))
-        screen.blit(a,a_rect)
-
         game_text = str('Shot with spacebar')
         game_surface = game_font.render(game_text,True,(r1,g1,b1))
         game_x = int(screen_width/2 + 75)
         game_y = int(295)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
         screen.blit(game_surface,game_rect)
-
-        if p == 1:
-            a = pygame.image.load('graphics/p_aim.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/p_aim_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/p_aim_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/p_aim_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (85,295))
-        screen.blit(a,a_rect)
 
         game_text = str('Kill aliens')
         game_surface = game_font.render(game_text,True,(r,g,b))
@@ -1610,74 +1264,12 @@ def rules():
         game_rect = game_surface.get_rect(center = (game_x,game_y))
         screen.blit(game_surface,game_rect)
 
-        if p == 1:
-            a = pygame.image.load('graphics/7.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/7_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/7_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/7_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (512,390))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/1.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/1_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/1_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/1_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (615,390))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/2.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/2_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/2_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/2_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (410,390))
-        screen.blit(a,a_rect)
-
         game_text = str('Collect perks')
         game_surface = game_font.render(game_text,True,(r1,g1,b1))
         game_x = int(screen_width/2 + 145)
         game_y = int(485)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
         screen.blit(game_surface,game_rect)
-
-        if p == 1:
-            a = pygame.image.load('graphics/p_shield.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/p_shield_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/p_shield_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/p_shield_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (60,485))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/p_bullet.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/p_bullet_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/p_bullet_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/p_bullet_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (150,485))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/p_heart.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/p_heart_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/p_heart_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/p_heart_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (240,485))
-        screen.blit(a,a_rect)
 
         game_text = str('Defeat Master')
         game_surface = game_font.render(game_text,True,(r,g,b))
@@ -1686,74 +1278,12 @@ def rules():
         game_rect = game_surface.get_rect(center = (game_x,game_y))
         screen.blit(game_surface,game_rect)
 
-        if p == 1:
-            a = pygame.image.load('graphics/childboss.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/childboss_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/childboss_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/childboss_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (537,580))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/11.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/11_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/11_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/11_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (625,580))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/11.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/11_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/11_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/11_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (450,580))
-        screen.blit(a,a_rect)
-
         game_text = str('Earn best score')
         game_surface = game_font.render(game_text,True,(r1,g1,b1))
         game_x = int(screen_width/2 + 125)
         game_y = int(675)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
         screen.blit(game_surface,game_rect)
-
-        if p == 1:
-            a = pygame.image.load('graphics/extra.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/extra_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/extra_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/extra_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (50,675))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/p_time.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/p_time_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/p_time_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/p_time_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (130,675))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/extra.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/extra_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/extra_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/extra_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (210,675))
-        screen.blit(a,a_rect)
 
         button_0.draw()
 
@@ -1777,51 +1307,10 @@ def pause():
 
         screen.fill((30,30,30))
 
-        if p == 1:
-            a = pygame.image.load('graphics/earth.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/earth_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/earth_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/earth_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (700,450))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/earth.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/earth_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/earth_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/earth_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (0,750))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/boss.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/boss_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/boss_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/boss_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (700,750))
-        screen.blit(a,a_rect)
-        if p == 1:
-            a = pygame.image.load('graphics/boss.png').convert_alpha()
-        elif p == 2:
-            a = pygame.image.load('graphics/boss_m.png').convert_alpha()
-        elif p == 3:
-            a = pygame.image.load('graphics/boss_v.png').convert_alpha()
-        elif p == 4:
-            a = pygame.image.load('graphics/boss_o.png').convert_alpha()
-        a_rect = a.get_rect(center = (0,450))
-        screen.blit(a,a_rect)
-
         title_text = str('PAUSE')
         title_surface = title_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
-        title_y = int(175)
+        title_y = int(225)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
@@ -1863,25 +1352,11 @@ def win():
         
         screen.fill((30, 30, 30))
 
-        if p == 1:
-            e = pygame.image.load('graphics/player.png').convert_alpha()
-        elif p == 2:
-            e = pygame.image.load('graphics/player_m.png').convert_alpha()
-        elif p == 3:
-            e = pygame.image.load('graphics/player_v.png').convert_alpha()
-        elif p == 4:
-            e = pygame.image.load('graphics/player_o.png').convert_alpha()
+        e = pygame.image.load('graphics/player_m.png').convert_alpha()
         e_rect = e.get_rect(center = (screen_width/2,screen_height - 50))
         screen.blit(e,e_rect)
 
-        if p == 1:
-            e = pygame.image.load('graphics/earth.png').convert_alpha()
-        elif p == 2:
-            e = pygame.image.load('graphics/earth_m.png').convert_alpha()
-        elif p == 3:
-            e = pygame.image.load('graphics/earth_v.png').convert_alpha()
-        elif p == 4:
-            e = pygame.image.load('graphics/earth_o.png').convert_alpha()
+        e = pygame.image.load('graphics/earth_m.png').convert_alpha()
         e_rect = e.get_rect(center = (screen_width/2,screen_height/3))
         screen.blit(e,e_rect)
 
@@ -2017,8 +1492,8 @@ def destroy_sound():
 
 if __name__ == '__main__':
     pygame.init()
-    screen_width = 700
-    screen_height = 900
+    screen_width = 540
+    screen_height = 980
     screen = pygame.display.set_mode((screen_width, screen_height))
     clock = pygame.time.Clock()
     icon = pygame.image.load('graphics/zicon.png').convert_alpha()
@@ -2026,39 +1501,13 @@ if __name__ == '__main__':
     pygame.display.set_icon(icon)
     permit = False
 
-    color_o = shelve.open('doc/color.txt')
-    p = color_o['color']
-    color_o.close()
-
-    if p == 1:
-        r = 255
-        g = 255
-        b = 255
-        r1 = 120
-        g1 = 120
-        b1 = 120
-    elif p == 2:
-        r = 88
-        g = 199
-        b = 171
-        r1 = 57
-        g1 = 143
-        b1 = 121
-    elif p == 3:
-        r = 174
-        g = 110
-        b = 230
-        r1 = 123
-        g1 = 75
-        b1 = 166
-    elif p == 4:
-        r = 224
-        g = 152
-        b = 63
-        r1 = 171
-        g1 = 112
-        b1 = 39
-
+    r = 88
+    g = 199
+    b = 171
+    r1 = 57
+    g1 = 143
+    b1 = 121
+    
     music_o = shelve.open('doc/music.txt')
     music_on = music_o['music']
     music_o.close()
@@ -2081,28 +1530,27 @@ if __name__ == '__main__':
 
     game_font2 = pygame.font.Font('font/pixel.ttf',20)
     game_font = pygame.font.Font('font/pixel.ttf',30)
-    title_font = pygame.font.Font('font/pixel.ttf',45)
+    title_font = pygame.font.Font('font/pixel.ttf',35)
 
-    button_1 = Button('Start Game',screen_width/2,100,(screen_width/4,450))
-    button_2 = Button('Options',screen_width/2,100,(screen_width/4,600))
-    button_3 = Button('Credits',screen_width/2,100,(screen_width/4,750))
+    button_1 = Button('Start Game',screen_width/2 + screen_width/4,100,(screen_width/8,450))
+    button_2 = Button('Options',screen_width/2 + screen_width/4,100,(screen_width/8,600))
+    button_3 = Button('Credits',screen_width/2 + screen_width/4,100,(screen_width/8,750))
 
-    button_4 = ButtonBack('Back',screen_width/2,100,(screen_width/4,750))
+    button_4 = ButtonBack('Back',screen_width/2 + screen_width/4,100,(screen_width/8,750))
 
-    button_5 = ButtonStyle1('Style:OFF',screen_width/2,100,(screen_width/4,350))
-    button_14 = ButtonStyle2('Style:ON',screen_width/2,100,(screen_width/4,350))
-    button_7 = ButtonSound('Music:ON',screen_width/2,100,(screen_width/4,475))
-    button_8 = ButtonSound2('Music:OFF',screen_width/2,100,(screen_width/4,475))
-    button_9 = ButtonRul('Rules',screen_width/2,100,(screen_width/4,225))
-    button_15 = ButtonColor('Color',screen_width/2,100,(screen_width/4,600))
+    button_5 = ButtonStyle1('Style:OFF',screen_width/2 + screen_width/4,100,(screen_width/8,550))
+    button_14 = ButtonStyle2('Style:ON',screen_width/2 + screen_width/4,100,(screen_width/8,550))
+    button_7 = ButtonSound('Music:ON',screen_width/2 + screen_width/4,100,(screen_width/8,400))
+    button_8 = ButtonSound2('Music:OFF',screen_width/2 + screen_width/4,100,(screen_width/8,400))
+    button_9 = ButtonRul('Rules',screen_width/2 + screen_width/4,100,(screen_width/8,250))
 
-    button_0 = ButtonBack2('Back',screen_width/2,100,(screen_width/4,750))
+    button_0 = ButtonBack2('Back',screen_width/2 + screen_width/4,100,(screen_width/8,750))
 
-    button_6 = ButtonGame('Endless',screen_width/2,100,(screen_width/4,600))
-    button_10 = ButtonGame('Impossible',screen_width/2,75,(screen_width/4,425))
-    button_11 = ButtonGame('Hard',screen_width/2,75,(screen_width/4,325))
-    button_12 = ButtonGame('Normal',screen_width/2,75,(screen_width/4,225))
+    button_6 = ButtonGame('Endless',screen_width/2 + screen_width/4,100,(screen_width/8,600))
+    button_10 = ButtonGame('Impossible',screen_width/2 + screen_width/4,75,(screen_width/8,425))
+    button_11 = ButtonGame('Hard',screen_width/2 + screen_width/4,75,(screen_width/8,325))
+    button_12 = ButtonGame('Normal',screen_width/2 + screen_width/4,75,(screen_width/8,225))
 
-    button_13 = ButtonRestart('Restart',screen_width/2,100,(screen_width/4,625))
+    button_13 = ButtonRestart('Restart',screen_width/2 + screen_width/4,100,(screen_width/8,750))
 
     main_menu()

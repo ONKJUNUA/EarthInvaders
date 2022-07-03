@@ -1,15 +1,9 @@
-import pygame, shelve
+import pygame
 
 class Alien(pygame.sprite.Sprite):
     def __init__(self, number, x, y):
         super().__init__()
-        color_o = shelve.open('doc/color.txt')
-        p = color_o['color']
-        color_o.close()
-        if p == 1: file_path = 'graphics/' + number + '.png'
-        elif p == 2: file_path = 'graphics/' + number + '_m.png'
-        elif p == 3: file_path = 'graphics/' + number + '_v.png'
-        elif p == 4: file_path = 'graphics/' + number + '_o.png'
+        file_path = 'graphics/' + number + '_m.png'
         self.image = pygame.image.load(file_path).convert_alpha()
         self.rect = self.image.get_rect(topleft =(x, y))
 
@@ -51,7 +45,7 @@ class Alien(pygame.sprite.Sprite):
             self.enemy_lives = 24
 
     def destroy(self):
-        if self.rect.y >= 950:
+        if self.rect.y >= 1000:
             self.kill()
 
     def update(self, direction):
@@ -61,13 +55,7 @@ class Alien(pygame.sprite.Sprite):
 class FakeAlien(pygame.sprite.Sprite):
     def __init__(self, number, x, y):
         super().__init__()
-        color_o = shelve.open('doc/color.txt')
-        p = color_o['color']
-        color_o.close()
-        if p == 1: file_path = 'graphics/' + number + '.png'
-        elif p == 2: file_path = 'graphics/' + number + '_m.png'
-        elif p == 3: file_path = 'graphics/' + number + '_v.png'
-        elif p == 4: file_path = 'graphics/' + number + '_o.png'
+        file_path = 'graphics/' + number + '_m.png'
         self.image = pygame.image.load(file_path).convert_alpha()
         self.rect = self.image.get_rect(topleft =(x, y))
 
@@ -77,7 +65,7 @@ class FakeAlien(pygame.sprite.Sprite):
             self.enemy_lives = 100000
 
     def destroy(self):
-        if self.rect.y >= 950:
+        if self.rect.y >= 1000:
             self.kill()
         if self.rect.y == 172:
             self.kill()
@@ -89,13 +77,7 @@ class FakeAlien(pygame.sprite.Sprite):
 class Extra(pygame.sprite.Sprite):
     def __init__(self, side, screen_width):
         super().__init__()
-        color_o = shelve.open('doc/color.txt')
-        p = color_o['color']
-        color_o.close()
-        if p == 1: self.image = pygame.image.load('graphics/extra.png').convert_alpha()
-        elif p == 2: self.image = pygame.image.load('graphics/extra_m.png').convert_alpha()
-        elif p == 3: self.image = pygame.image.load('graphics/extra_v.png').convert_alpha()
-        elif p == 4: self.image = pygame.image.load('graphics/extra_o.png').convert_alpha()
+        self.image = pygame.image.load('graphics/extra_m.png').convert_alpha()
         if side == 'right':
             x = screen_width + 50
             self.speed = - 3
