@@ -26,7 +26,7 @@ class Styling:
 
 class Game:
     def __init__(self):
-        player_sprite = Player((screen_width/2, screen_height - 10), screen_width)
+        player_sprite = Player((screen_width/2, screen_height - 60), screen_width)
         self.player = pygame.sprite.GroupSingle(player_sprite)
         
         self.hs = shelve.open('doc/score.txt')
@@ -55,7 +55,7 @@ class Game:
         self.blocks = pygame.sprite.Group()
         self.obstacle_amount = 3
         self.obstacle_x_positions = [num *(screen_width / self.obstacle_amount) for num in range(self.obstacle_amount)]
-        self.create_multiple_obstacles(*self.obstacle_x_positions, x_start = screen_width / 10, y_start = 850)
+        self.create_multiple_obstacles(*self.obstacle_x_positions, x_start = screen_width / 10, y_start = 800)
 
         self.aliens = pygame.sprite.Group()
         self.alien_direction = 1
@@ -234,7 +234,7 @@ class Game:
                 if pygame.sprite.spritecollide(player, self.heart, True):
                     self.lives += 1
                 if pygame.sprite.spritecollide(player, self.shield, True):
-                    self.create_multiple_obstacles(*self.obstacle_x_positions, x_start = screen_width / 10, y_start = 850)
+                    self.create_multiple_obstacles(*self.obstacle_x_positions, x_start = screen_width / 10, y_start = 800)
                 if pygame.sprite.spritecollide(player, self.laser_speed, True):
                     player.laser_cooldown -= 100
                     player.speed += 1
@@ -258,11 +258,6 @@ class Game:
     def display_score(self):
         score_surf = self.font.render(f'Score:{self.score}', False, (r,g,b))
         score_rect = score_surf.get_rect(topleft = (25,25))
-        screen.blit(score_surf, score_rect)
-
-    def display_score_lives(self):
-        score_surf = self.font.render(f'          X{(self.lives - 1) * 1000}', False, (r,g,b))
-        score_rect = score_surf.get_rect(topleft = (25,60))
         screen.blit(score_surf, score_rect)
 
     def drop_heart(self):
@@ -321,7 +316,6 @@ class Game:
                 self.one_alien()
                 pygame.time.set_timer(ALIENSET,1700,loops = 1)
             else:
-                self.display_score_lives()
                 permit = False
                 self.level += 1
                 self.one_alien()
@@ -362,7 +356,7 @@ class Game:
 
 class Game2:
     def __init__(self):
-        player_sprite = Player((screen_width/2, screen_height - 10), screen_width)
+        player_sprite = Player((screen_width/2, screen_height - 60), screen_width)
         self.player = pygame.sprite.GroupSingle(player_sprite)
 
         self.hs = shelve.open('doc/score2.txt')
@@ -388,7 +382,7 @@ class Game2:
         self.blocks = pygame.sprite.Group()
         self.obstacle_amount = 3
         self.obstacle_x_positions = [num *(screen_width / self.obstacle_amount) for num in range(self.obstacle_amount)]
-        self.create_multiple_obstacles(*self.obstacle_x_positions, x_start = screen_width / 10, y_start = 850)
+        self.create_multiple_obstacles(*self.obstacle_x_positions, x_start = screen_width / 10, y_start = 800)
 
         self.aliens = pygame.sprite.Group()
         self.alien_direction = 1
@@ -539,7 +533,7 @@ class Game2:
                 if pygame.sprite.spritecollide(player, self.heart, True):
                     self.lives += 1
                 if pygame.sprite.spritecollide(player, self.shield, True):
-                    self.create_multiple_obstacles(*self.obstacle_x_positions, x_start = screen_width / 10, y_start = 850)
+                    self.create_multiple_obstacles(*self.obstacle_x_positions, x_start = screen_width / 10, y_start = 800)
                 if pygame.sprite.spritecollide(player, self.laser_speed, True):
                     player.laser_cooldown -= 100
                     player.speed += 1
@@ -955,6 +949,110 @@ class ButtonRestart:
         else:
             self.top_color = (r,g,b)
 
+class ButtonGameplay:
+    def __init__(self,width,height,pos):
+        self.pressed = False
+
+        self.top_rect = pygame.Rect(pos,(width,height))
+        self.top_color = (r,g,b)
+
+    def draw(self):
+        pygame.draw.rect(screen,self.top_color,self.top_rect)
+        self.check_click()
+
+    def check_click(self):
+        global credit, option, start, rul, power
+        mouse_pos = pygame.mouse.get_pos()
+        if self.top_rect.collidepoint(mouse_pos):
+            if pygame.mouse.get_pressed()[0]:
+                if self.pressed == True:
+                    if button_15.pressed:
+                        if game.player:
+                            for player in game.player:
+                                player.rect.x += player.speed
+                else: self.pressed = True
+            else: self.pressed = False
+                          
+class ButtonGameplay2:
+    def __init__(self,width,height,pos):
+        self.pressed = False
+
+        self.top_rect = pygame.Rect(pos,(width,height))
+        self.top_color = (r,g,b)
+
+    def draw(self):
+        pygame.draw.rect(screen,self.top_color,self.top_rect)
+        self.check_click()
+
+    def check_click(self):
+        global credit, option, start, rul, power
+        mouse_pos = pygame.mouse.get_pos()
+        if self.top_rect.collidepoint(mouse_pos):
+            if pygame.mouse.get_pressed()[0]:
+                if self.pressed == True:
+                    if button_16.pressed:
+                        if game.player:
+                            for player in game.player:
+                                player.rect.x -= player.speed
+                else: self.pressed = True
+            else: self.pressed = False
+
+class ButtonPause:
+    def __init__(self,text,width,height,pos):
+        self.pressed = False
+
+        self.top_rect = pygame.Rect(pos,(width,height))
+        self.top_color = (r,g,b)
+        self.text_surf = game_font.render(text,True,(30,30,30))
+        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
+
+    def draw(self):
+        pygame.draw.rect(screen,self.top_color,self.top_rect)
+        screen.blit(self.text_surf,self.text_rect)
+        self.check_click()
+
+    def check_click(self):
+        global credit, option, start, rul, power
+        mouse_pos = pygame.mouse.get_pos()
+        if self.top_rect.collidepoint(mouse_pos):
+            self.top_color = (r1,g1,b1)
+            if pygame.mouse.get_pressed()[0]:
+                self.pressed = True
+            else:
+                if self.pressed == True:
+                    if permit == True:
+                        pause()
+                    self.pressed = False   
+        else:
+            self.top_color = (r,g,b)
+class ButtonPause2:
+    def __init__(self,text,width,height,pos):
+        self.pressed = False
+
+        self.top_rect = pygame.Rect(pos,(width,height))
+        self.top_color = (r,g,b)
+        self.text_surf = game_font.render(text,True,(30,30,30))
+        self.text_rect = self.text_surf.get_rect(center = self.top_rect.center)
+
+    def draw(self):
+        pygame.draw.rect(screen,self.top_color,self.top_rect)
+        screen.blit(self.text_surf,self.text_rect)
+        self.check_click()
+
+    def check_click(self):
+        global credit, option, start, rul, power
+        mouse_pos = pygame.mouse.get_pos()
+        if self.top_rect.collidepoint(mouse_pos):
+            self.top_color = (r1,g1,b1)
+            if pygame.mouse.get_pressed()[0]:
+                self.pressed = True
+            else:
+                if self.pressed == True:
+                    rul = False
+                    self.pressed = False   
+        else:
+            self.top_color = (r,g,b)
+
 def gameplay():
     global permit, running
     running = True
@@ -963,10 +1061,6 @@ def gameplay():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    if permit == True:
-                        pause()
             if event.type == ALIENLASER:
                 if game.level <= 10:
                     laser_sound()
@@ -984,10 +1078,13 @@ def gameplay():
             if event.type == BOSS:
                 if game.level == 11:
                     game.boss_attack()
-
+        
+        button_16.draw()
+        button_15.draw()
         screen.fill((30, 30, 30))
         game.player.draw(screen)
         game.run()
+        button_17.draw()
         if style_on == True:
             styling.draw()
         pygame.display.flip()
@@ -1001,18 +1098,18 @@ def gameplay2():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    if permit == True:
-                        pause()
             if event.type == ALIENLASER:
                 laser_sound()
                 game2.alien_shot()
             if event.type == ALIENSET:
                 game2.alien_setup(rows = 8, cols = 5)
                 permit = True
+
+        button_16.draw()
+        button_15.draw()
         screen.fill((30, 30, 30))
         game2.run()
+        button_17.draw()
         if style_on == True:
             styling.draw()
         pygame.display.flip()
@@ -1236,6 +1333,7 @@ def rules():
 
         screen.fill((30,30,30))
 
+        n = 15
         title_text = str('Earth Invaders')
         title_surface = title_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
@@ -1243,45 +1341,45 @@ def rules():
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
-        game_text = str('Move with arrows')
-        game_surface = game_font.render(game_text,True,(r,g,b))
-        game_x = int(screen_width/2 - 100)
-        game_y = int(200)
+        game_text = str('Right: Right part')
+        game_surface = game_font.render(game_text,True,(r1,g1,b1))
+        game_x = int(screen_width/2)
+        game_y = int(200-n)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
         screen.blit(game_surface,game_rect)
 
-        game_text = str('Shot with spacebar')
-        game_surface = game_font.render(game_text,True,(r1,g1,b1))
-        game_x = int(screen_width/2 + 75)
-        game_y = int(295)
+        game_text = str('Left: Left Part')
+        game_surface = game_font.render(game_text,True,(r,g,b))
+        game_x = int(screen_width/2)
+        game_y = int(295-n)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
         screen.blit(game_surface,game_rect)
 
         game_text = str('Kill aliens')
-        game_surface = game_font.render(game_text,True,(r,g,b))
-        game_x = int(screen_width/2 - 170)
-        game_y = int(390)
+        game_surface = game_font.render(game_text,True,(r1,g1,b1))
+        game_x = int(screen_width/2)
+        game_y = int(390-n)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
         screen.blit(game_surface,game_rect)
 
         game_text = str('Collect perks')
         game_surface = game_font.render(game_text,True,(r1,g1,b1))
-        game_x = int(screen_width/2 + 145)
-        game_y = int(485)
+        game_x = int(screen_width/2)
+        game_y = int(580-n)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
         screen.blit(game_surface,game_rect)
 
         game_text = str('Defeat Master')
         game_surface = game_font.render(game_text,True,(r,g,b))
-        game_x = int(screen_width/2 - 140)
-        game_y = int(580)
+        game_x = int(screen_width/2)
+        game_y = int(485-n)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
         screen.blit(game_surface,game_rect)
 
         game_text = str('Earn best score')
-        game_surface = game_font.render(game_text,True,(r1,g1,b1))
-        game_x = int(screen_width/2 + 125)
-        game_y = int(675)
+        game_surface = game_font.render(game_text,True,(r,g,b))
+        game_x = int(screen_width/2)
+        game_y = int(675-n)
         game_rect = game_surface.get_rect(center = (game_x,game_y))
         screen.blit(game_surface,game_rect)
 
@@ -1301,9 +1399,6 @@ def pause():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    rul = False
 
         screen.fill((30,30,30))
 
@@ -1322,6 +1417,9 @@ def pause():
             button_8.draw()
         else: button_7.draw()
         button_13.draw()
+        button_18.draw()
+        game.display_lives()
+        game.display_score()
     
         if style_on == True:
             styling.draw()
@@ -1367,10 +1465,17 @@ def win():
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
-        title_text = str(f'Your Score: {game.score}')
+        title_text = str('Your Score:')
         title_surface = game_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
         title_y = int(screen_height/2 + screen_height/20)
+        title_rect = title_surface.get_rect(center = (title_x,title_y))
+        screen.blit(title_surface,title_rect)
+
+        title_text = str(f'{game.score}')
+        title_surface = game_font.render(title_text,True,(r,g,b))
+        title_x = int(screen_width/2)
+        title_y = int(screen_height/2 + screen_height/20 + 50)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
@@ -1412,10 +1517,17 @@ def lose():
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
-        title_text = str(f'Your Score: {game.score}')
+        title_text = str('Your Score:')
         title_surface = game_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
         title_y = int(screen_height/2)
+        title_rect = title_surface.get_rect(center = (title_x,title_y))
+        screen.blit(title_surface,title_rect)
+        
+        title_text = str(f'{game.score}')
+        title_surface = game_font.render(title_text,True,(r,g,b))
+        title_x = int(screen_width/2)
+        title_y = int(screen_height/2 + 50)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
@@ -1457,10 +1569,17 @@ def lose2():
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
-        title_text = str(f'Your Score: {game2.score}')
+        title_text = str('Your Score:')
         title_surface = game_font.render(title_text,True,(r,g,b))
         title_x = int(screen_width/2)
         title_y = int(screen_height/2)
+        title_rect = title_surface.get_rect(center = (title_x,title_y))
+        screen.blit(title_surface,title_rect)
+
+        title_text = str(f'{game2.score}')
+        title_surface = game_font.render(title_text,True,(r,g,b))
+        title_x = int(screen_width/2)
+        title_y = int(screen_height/2 + 50)
         title_rect = title_surface.get_rect(center = (title_x,title_y))
         screen.blit(title_surface,title_rect)
 
@@ -1552,5 +1671,11 @@ if __name__ == '__main__':
     button_12 = ButtonGame('Normal',screen_width/2 + screen_width/4,75,(screen_width/8,225))
 
     button_13 = ButtonRestart('Restart',screen_width/2 + screen_width/4,100,(screen_width/8,750))
+
+    button_15 = ButtonGameplay(screen_width/2,980,(screen_width/2,0))
+    button_16 = ButtonGameplay2(screen_width/2,980,(0,0))
+
+    button_17 = ButtonPause('Pause',160,35,(screen_width/22,60))
+    button_18 = ButtonPause2('UnPause',220,35,(screen_width/22,60))
 
     main_menu()

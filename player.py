@@ -16,14 +16,7 @@ class Player(pygame.sprite.Sprite):
         self.lasers = pygame.sprite.Group()
 
     def get_input(self):
-        keys = pygame.key.get_pressed()
-
-        if keys[pygame.K_RIGHT]:
-            self.rect.x += self.speed
-        elif keys[pygame.K_LEFT]:
-            self.rect.x -= self.speed
-
-        if keys[pygame.K_SPACE] and self.ready:
+        if self.ready:
             self.shoot_laser()
             laser_sound = pygame.mixer.Sound('sound/laser.wav')
             laser_sound.set_volume(1.0)
